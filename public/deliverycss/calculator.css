@@ -1,0 +1,643 @@
+:root {
+    --primary-color: #1F265B;
+    /* Main Dark Blue */
+    --secondary-color: #333;
+    --heading-color: #333;
+    --light-grey: #f8f9fa;
+    /* --primary-color: #1F265B;  -- Duplicated, removed */
+    --dark-blue-footer: #1F265B;
+    /* A dark blue for the footer background */
+    --white: #fff;
+    --border-color: #ddd;
+    --form-bg-color: #e6f0ff;
+    /* Light blue for calculator form fields */
+    --section-bg-color: #f0f4f7;
+    /* Overall page background */
+    --text-color: #4A5568;
+    /* General text color */
+    --tracking-active-bg: #E3F2FD;
+    /* Light blue background for active tracking link */
+    --tracking-active-text: #1F265B;
+    /* Dark blue text for active tracking link */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--light-grey);
+    display: flex;
+    /* Ensure body is a flex container for site-container */
+    flex-direction: column;
+    min-height: 100vh;
+    /* Ensure it takes full viewport height */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* New Main Header (Top Navigation) */
+.new-main-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    width: 100%;
+    z-index: 100;
+    position: fixed;
+    /* text-decoration: none; - This was on the header itself, moved to logo-link */
+}
+
+.new-main-header .logo-link {
+    /* New class for the <a> tag wrapping the logo */
+    text-decoration: none;
+    /* Remove underline from the logo link */
+    color: inherit;
+    /* Inherit color from parent, or set specifically if needed */
+}
+
+.new-main-header .logo {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--white);
+    /* Ensure logo text color is white, overriding any inherited link color */
+}
+
+.new-main-header .main-nav {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+}
+
+.new-main-header .main-nav .nav-item {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 5px 0;
+}
+
+.new-main-header .main-nav .nav-item:hover {
+    color: var(--white);
+}
+
+.new-main-header .main-nav .nav-item.tracking {
+    background-color: var(--tracking-active-bg);
+    color: var(--tracking-active-text);
+    padding: 8px 18px;
+    border-radius: 9999px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.new-main-header .main-nav .nav-item.tracking i {
+    color: var(--tracking-active-text);
+}
+
+.new-main-header .main-nav .login-button {
+    background-color: var(--white);
+    color: var(--primary-color);
+    padding: 8px 18px;
+    border: none;
+    border-radius: 9999px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.new-main-header .main-nav .login-button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Page Header */
+.page-header {
+    background-color: var(--section-bg-color);
+    padding: 60px 0;
+    text-align: center;
+    margin-top: 70px;
+}
+
+.page-header h1 {
+    font-size: 40px;
+    color: var(--heading-color);
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.page-header p i {
+    margin: 0 8px;
+    font-size: 14px;
+    color: #999;
+}
+
+/* Calculator Form Section */
+.calculator-form-section {
+    background-color: var(--form-bg-color);
+    padding: 60px 0;
+}
+
+.calculator-form-section .container {
+    background-color: var(--white);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.calculator-form-section .form-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    /* Changed from flex-end to flex-start for top alignment */
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.calculator-form-section .form-group {
+    flex: 1;
+    min-width: 200px;
+    /* margin-bottom: 20px; -- Removed as it caused vertical spacing */
+}
+
+.calculator-form-section label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--heading-color);
+}
+
+.calculator-form-section select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 16px;
+    appearance: none;
+    background-color: var(--white);
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.9a14.77%2014.77%200%2000-20.8%200L146.2%20190.2%2026.2%2069.9A14.77%2014.77%200%20005.4%2090.7l120%20120%20120-120A14.77%2014.77%200%2000287%2069.9z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 12px;
+    cursor: pointer;
+}
+
+.calculator-form-section .calculate-button {
+    background-color: var(--dark-blue-footer);
+    color: var(--white);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 150px;
+    /* Adjust top padding to align with selects */
+    padding-top: 12px;
+    /* Same as select padding */
+    padding-bottom: 12px;
+    /* Same as select padding */
+    margin-top: 26px;
+    /* Offset to align with the top of selects */
+}
+
+.calculator-form-section .calculate-button:hover {
+    background-color: #2c4a6e;
+}
+
+/* Calculation Guide Section */
+.calculation-guide-section {
+    padding: 60px 0;
+    background-color: var(--light-grey);
+}
+
+.calculation-guide-section .section-title-myanmar {
+    text-align: center;
+    font-size: 32px;
+    color: var(--heading-color);
+    margin-bottom: 40px;
+    font-weight: 600;
+}
+
+.calculation-guide-section .calculation-block {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+}
+
+.calculation-guide-section .calculation-block:last-child {
+    margin-bottom: 0;
+}
+
+.calculation-guide-section .title-myanmar {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--heading-color);
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.calculation-guide-section .calculation-item {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.calculation-guide-section .calculation-item:last-of-type {
+    margin-bottom: 0;
+}
+
+.calculation-guide-section .item-visual {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.calculation-guide-section .item-visual img {
+    max-width: 180px;
+    height: auto;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #fdfdfd;
+}
+
+.calculation-guide-section .item-visual .label-myanmar {
+    margin-top: 10px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.calculation-guide-section .formula {
+    flex-grow: 1;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px dashed #e0e0e0;
+}
+
+.calculation-guide-section .formula-text {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.calculation-guide-section .formula-description-myanmar {
+    font-size: 15px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.calculation-guide-section .irregular-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.calculation-guide-section .irregular-item {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.calculation-guide-section .irregular-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--dark-blue-footer);
+    color: var(--white);
+    padding: 60px 0;
+    margin-top: auto;
+    /* Pushes the footer to the bottom */
+}
+
+.footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+}
+
+.footer-content {
+    flex: 2;
+}
+
+.footer-content h3 {
+    font-size: 18px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.footer-content h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    line-height: 1.3;
+}
+
+.footer-content p {
+    font-size: 15px;
+    color: #ccc;
+    margin-bottom: 30px;
+    line-height: 1.7;
+}
+
+.footer-content .contact-now {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    background-color: var(--white);
+    color: var(--primary-color);
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.footer-content .contact-now i {
+    margin-left: 10px;
+}
+
+.footer-content .contact-now:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.footer-content .social-icons {
+    margin-top: 20px;
+}
+
+.footer-content .social-icons a {
+    color: var(--white);
+    font-size: 20px;
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+.footer-content .social-icons a:hover {
+    color: var(--primary-color);
+}
+
+.footer-image {
+    flex: 1;
+    text-align: center;
+}
+
+.footer-image .placeholder-image {
+    width: 250px;
+    height: 200px;
+    background-color: #4a5d7c;
+    border-radius: 10px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: #bbb;
+    font-size: 60px;
+}
+
+.footer-image .placeholder-image::before {
+    content: "\f016";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+}
+
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .new-main-header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .new-main-header .main-nav {
+        width: 100%;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .new-main-content {
+        padding: 20px;
+    }
+
+    .price-calculator-section {
+        padding: 25px;
+    }
+
+    .section-header h1 {
+        font-size: 28px;
+    }
+
+    .calculator-form-section .form-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .calculator-form-section .form-group {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .calculator-form-section .calculate-button {
+        width: 100%;
+    }
+
+    .calculation-guide-section .calculation-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .calculation-guide-section .item-visual {
+        margin-bottom: 20px;
+    }
+
+    .calculation-guide-section .formula {
+        width: 100%;
+    }
+
+    .calculation-guide-section .irregular-items-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .footer .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-image {
+        margin-top: 40px;
+    }
+
+    .footer-content .social-icons {
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 32px;
+    }
+
+    .calculation-guide-section .section-title-myanmar {
+        font-size: 28px;
+    }
+
+    .calculation-guide-section .title-myanmar {
+        font-size: 20px;
+    }
+
+    .calculation-guide-section .formula-text {
+        font-size: 16px;
+    }
+
+    .calculation-guide-section .irregular-items-grid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+
+    .footer-content h2 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .new-main-header .logo {
+        font-size: 22px;
+    }
+
+    .new-main-header .main-nav {
+        gap: 8px;
+        font-size: 14px;
+    }
+
+    .new-main-header .main-nav .nav-item {
+        padding: 3px 0;
+    }
+
+    .new-main-content {
+        padding: 10px;
+    }
+
+    .price-calculator-section {
+        padding: 15px;
+    }
+
+    .section-header h1 {
+        font-size: 20px;
+    }
+
+    .breadcrumbs {
+        font-size: 12px;
+    }
+
+    .calculator-form-section .container {
+        padding: 25px;
+    }
+
+    .calculator-form-section label {
+        font-size: 14px;
+    }
+
+    .calculator-form-section select,
+    .calculator-form-section .calculate-button {
+        padding: 10px 15px;
+        font-size: 15px;
+    }
+
+    .calculation-guide-section .section-title-myanmar {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+
+    .calculation-guide-section .title-myanmar {
+        font-size: 18px;
+    }
+
+    .calculation-guide-section .calculation-block {
+        padding: 20px;
+    }
+
+    .calculation-guide-section .item-visual img {
+        max-width: 150px;
+    }
+
+    .calculation-guide-section .formula {
+        padding: 15px;
+    }
+
+    .calculation-guide-section .formula-text {
+        font-size: 14px;
+    }
+
+    .calculation-guide-section .formula-description-myanmar {
+        font-size: 13px;
+    }
+
+    .irregular-items-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .irregular-item {
+        padding: 10px;
+    }
+
+    .footer-content h2 {
+        font-size: 22px;
+    }
+
+    .footer-content p {
+        font-size: 13px;
+    }
+
+    .footer-content .contact-now {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .footer-content .social-icons {
+        font-size: 18px;
+    }
+}

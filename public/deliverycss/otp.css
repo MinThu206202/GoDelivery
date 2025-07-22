@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f8f8f8;
+}
+
+.left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.left-content {
+    margin-top: 100px;
+    width: 80%;
+    max-width: 400px;
+    text-align: left;
+}
+
+.logo {
+    font-size: 2.5em;
+    font-weight: 800;
+    color: #000;
+    margin-bottom: 30px;
+    letter-spacing: -0.5px;
+}
+
+.logo span {
+    color: #ffb000;
+    font-weight: 800;
+}
+
+.otp-sent-title {
+    font-size: 1.6em;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.instruction-text {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.otp-input-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.otp-input-container input {
+    width: 50px;
+    height: 55px;
+    text-align: center;
+    font-size: 1.3em;
+    border: 2px solid #1a237e;
+    border-radius: 8px;
+    outline: none;
+    box-sizing: border-box;
+    font-weight: 600;
+    color: #000;
+}
+
+.otp-input-container .dash {
+    width: 10px;
+    height: 1px;
+    background-color: #ccc;
+    align-self: center;
+    margin: 0 5px;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #1a237e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 25px;
+}
+
+.submit-button:hover {
+    background-color: #303f9f;
+}
+
+.back-to-login {
+    font-size: 0.95em;
+    font-weight: 500;
+}
+
+.back-to-login a {
+    color: #1a237e;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.back-to-login a:hover {
+    text-decoration: underline;
+}
+
+.bottom-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    max-width: 400px;
+    margin-top: auto;
+    padding-bottom: 20px;
+}
+
+.back-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.95em;
+    font-weight: 600;
+}
+
+.dots-navigation {
+    display: flex;
+    gap: 10px;
+}
+
+.dot {
+    width: 60px;
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.dot.active {
+    background-color: #1a237e;
+}
+
+.right-panel {
+    flex: 1.3;
+    background-color: #1a237e;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.welcome-title {
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.tagline {
+    font-size: 1.1em;
+    line-height: 1.6;
+    max-width: 450px;
+    color: #e0e0e0;
+    margin-bottom: -10px;
+    text-align: left;
+    margin-left: -260px;
+}
+
+.delivery-image img {
+    max-width: 70%;
+    height: auto;
+    display: block;
+    margin-top: -20px;
+    margin-left: 80px;
+}
+
+@media (max-width: 900px) {
+    body {
+        flex-direction: column;
+    }
+
+    .left-panel,
+    .right-panel {
+        flex: none;
+        width: 100%;
+        height: auto;
+        padding: 40px 20px;
+    }
+
+    .left-content {
+        width: 90%;
+    }
+
+    .right-panel {
+        order: -1;
+    }
+
+    .delivery-image img {
+        max-height: 250px;
+        width: auto;
+    }
+
+    .bottom-navigation {
+        width: 90%;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 40px;
+    }
+
+    .back-link {
+        display: none;
+    }
+}
+
+@media (max-width: 500px) {
+    .logo {
+        font-size: 2em;
+    }
+
+    .otp-sent-title {
+        font-size: 1.5em;
+    }
+
+    .welcome-title {
+        font-size: 2em;
+    }
+
+    .tagline {
+        font-size: 1em;
+    }
+
+    .otp-input-container input {
+        width: 35px;
+        height: 40px;
+        font-size: 1em;
+    }
+}

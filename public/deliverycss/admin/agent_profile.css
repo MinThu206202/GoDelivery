@@ -1,0 +1,2813 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #1F265B;
+    /* NEW Main Color: Dark Blue */
+    --secondary-color: #333;
+    --text-color: #555;
+    --heading-color: #333;
+    --light-grey: #f8f9fa;
+    --dark-blue-footer: #1a2c42;
+    /* A dark blue for the footer background (can be updated to primary if desired) */
+    --white: #fff;
+    --border-color: #ddd;
+    --form-bg-color: #e6f0ff;
+    /* Light blue for the calculator form background */
+    --section-bg-color: #f0f4f7;
+    /* Slightly darker grey for general sections */
+
+    /* Dashboard Specific Colors */
+    --dashboard-bg: #e9eff5;
+    /* Overall dashboard background */
+    --sidebar-bg: #1F265B;
+    /* Updated to new primary color */
+    --sidebar-active: #007bff;
+    /* Keep a bright blue for active state or change to a lighter shade of primary */
+    --panel-bg: #fff;
+    --panel-border: #e0e0e0;
+    --table-header-bg: #f5f7fa;
+    --card-bg: #4c637a;
+    /* Darker blue for summary cards (can be updated to a shade of primary) */
+    --card-text: #fff;
+    --search-bg: #f0f2f5;
+    --search-border: #cdd2d7;
+    --detail-box-bg: #f2f5f8;
+    /* Light background for detail boxes */
+    --detail-label-color: #777;
+    /* Color for detail labels */
+
+    /* Login Page Specific Colors */
+    --login-bg-right: #1F265B;
+    /* Updated to new primary color */
+    --login-text-light: #f0f0f0;
+    /* Light text on dark background */
+
+    /* History Page Specific */
+    --status-button-bg: #e0e0e0;
+    /* Background for inactive status button */
+    --status-button-active-bg: #1F265B;
+    /* Updated to new primary color */
+    --status-button-active-text: #fff;
+
+    /* Agent View Specific */
+    --agent-profile-bg: #1F265B;
+    /* Background for agent profile section */
+    --agent-profile-text: #fff;
+    --agent-status-active: #28a745;
+    /* Green for active status */
+    --agent-status-inactive: #dc3545;
+    /* Red for inactive status */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--section-bg-color);
+    /* Default body background for non-dashboard/login */
+}
+
+/* --- General Website Styles (Navbar, Page Header, Footer) --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.navbar {
+    background-color: var(--white);
+    padding: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+    /* Updated to new primary color */
+}
+
+.navbar .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.navbar .nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar .nav-links a:hover {
+    color: var(--primary-color);
+    /* Updated to new primary color */
+}
+
+.navbar .nav-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.navbar .tracking-btn,
+.navbar .login-btn {
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.navbar .tracking-btn {
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.navbar .tracking-btn i {
+    font-size: 14px;
+}
+
+.navbar .tracking-btn:hover {
+    background-color: #151b43;
+    /* Darker shade of new primary color */
+}
+
+.navbar .login-btn {
+    background-color: transparent;
+    color: var(--primary-color);
+    /* Updated to new primary color */
+    border: 1px solid var(--primary-color);
+    /* Updated to new primary color */
+}
+
+.navbar .login-btn:hover {
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+}
+
+.page-header {
+    background-color: var(--dashboard-bg);
+    padding: 40px 0;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 36px;
+    color: var(--heading-color);
+    margin-bottom: 10px;
+}
+
+.page-header .breadcrumb {
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.main-content {
+    padding-bottom: 50px;
+}
+
+.footer {
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+    padding: 60px 0;
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.footer-left {
+    flex: 2;
+    text-align: left;
+    max-width: 600px;
+}
+
+.footer-left h3 {
+    color: var(--white);
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.footer-left h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.footer-left p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 30px;
+}
+
+.contact-now-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.contact-now-btn:hover {
+    background-color: #151b43;
+    /* Darker shade of new primary color */
+}
+
+.footer-right {
+    flex: 1;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+.footer-right .social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.footer-right .social-icons a {
+    color: var(--white);
+    font-size: 24px;
+    transition: color 0.3s ease;
+}
+
+.footer-right .social-icons a:hover {
+    color: var(--sidebar-active);
+    /* Can be primary or sidebar active */
+}
+
+.footer-image-placeholder {
+    width: 150px;
+    height: 100px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+}
+
+
+/* --- Login Page Styles --- */
+body.login-page {
+    background-color: var(--white);
+}
+
+.login-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.login-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background-color: var(--white);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 60px;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.login-header .logo-go {
+    color: var(--primary-color);
+    /* Updated to new primary color */
+}
+
+.login-header .logo-delivery {
+    color: var(--dark-blue-footer);
+    /* Can keep this or change to a darker shade of primary */
+}
+
+.login-title {
+    font-size: 28px;
+    color: var(--heading-color);
+    margin-bottom: 30px;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+}
+
+.login-form label {
+    display: block;
+    font-size: 14px;
+    color: var(--secondary-color);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--text-color);
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus {
+    border-color: var(--primary-color);
+    /* Updated to new primary color */
+}
+
+.login-form .forgot-password {
+    text-align: right;
+    margin-bottom: 25px;
+}
+
+.login-form .forgot-password a {
+    font-size: 14px;
+    color: var(--primary-color);
+    /* Updated to new primary color */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-form .login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-form .login-button:hover {
+    background-color: #151b43;
+    /* Darker shade of new primary color */
+}
+
+.login-form .signup-link {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.login-form .signup-link a {
+    color: var(--primary-color);
+    /* Updated to new primary color */
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+.login-right {
+    flex: 1.5;
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    color: var(--login-text-light);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-right .welcome-text h2 {
+    font-size: 42px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.login-right .welcome-text p {
+    font-size: 20px;
+    line-height: 1.5;
+    margin-bottom: 40px;
+}
+
+.login-right .login-graphic img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+
+/* --- Price Calculator Specific Styles --- */
+.price-calculator-section .calculator-form {
+    background-color: var(--form-bg-color);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.price-calculator-section .form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.price-calculator-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+.price-calculator-section select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--white);
+    font-size: 16px;
+    color: var(--text-color);
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23555%22%20d%3D%22M4.5%204L6%205.5%207.5%204%209%205.5%206%209%203%205.5%204.5%204z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+}
+
+.price-calculator-section .calculate-btn {
+    padding: 10px 25px;
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.price-calculator-section .calculate-btn:hover {
+    background-color: #151b43;
+    /* Darker shade of new primary color */
+}
+
+.cost-details-section {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.cost-of-delivery {
+    flex: 1;
+    min-width: 300px;
+}
+
+.cost-of-delivery .detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.cost-of-delivery .detail-item:last-of-type {
+    border-bottom: none;
+}
+
+.cost-of-delivery .detail-item .label {
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+.cost-of-delivery .detail-item .value {
+    color: var(--text-color);
+}
+
+.cost-of-delivery .total-amount .value {
+    font-weight: 600;
+    color: var(--primary-color);
+    /* Updated to new primary color */
+    font-size: 20px;
+}
+
+.calculator-note {
+    flex: 2;
+    min-width: 400px;
+}
+
+.calculator-note h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: var(--heading-color);
+}
+
+.calculator-note p {
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.calculator-note .phone-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.calculator-note .phone-numbers span {
+    background-color: var(--form-bg-color);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--primary-color);
+    /* Updated to new primary color */
+    font-weight: 500;
+}
+
+
+/* --- Our Network Specific Styles --- */
+.network-filters {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    background-color: var(--form-bg-color);
+    padding: 30px;
+}
+
+.network-filters .form-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.network-filters label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+.network-filters select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--white);
+    font-size: 16px;
+    color: var(--text-color);
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23555%22%20d%3D%22M4.5%204L6%205.5%207.5%204%209%205.5%206%209%203%205.5%204.5%204z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+}
+
+.network-locations {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.location-list {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.location-item {
+    padding: 20px;
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    background-color: var(--light-grey);
+}
+
+.location-item h4 {
+    font-size: 18px;
+    color: var(--heading-color);
+    margin-bottom: 10px;
+}
+
+.location-item p {
+    font-size: 15px;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.map-placeholder {
+    flex: 2;
+    min-width: 400px;
+    background-color: var(--light-grey);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    color: var(--text-color);
+    font-size: 18px;
+    border: 1px solid var(--panel-border);
+}
+
+
+/* --- Contact Us Specific Styles --- */
+.contact-section {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.contact-address {
+    flex: 1;
+    min-width: 300px;
+}
+
+.contact-address h3,
+.get-in-touch h3 {
+    font-size: 22px;
+    color: var(--heading-color);
+    margin-bottom: 25px;
+}
+
+.contact-address p {
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.contact-address h4 {
+    font-size: 18px;
+    color: var(--secondary-color);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.get-in-touch {
+    flex: 2;
+    min-width: 450px;
+}
+
+.get-in-touch form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.get-in-touch .form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.get-in-touch input[type="text"],
+.get-in-touch textarea {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--text-color);
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.get-in-touch input[type="text"]:focus,
+.get-in-touch textarea:focus {
+    border-color: var(--primary-color);
+    /* Updated to new primary color */
+}
+
+.get-in-touch textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.get-in-touch .send-btn {
+    align-self: flex-start;
+    padding: 10px 25px;
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.get-in-touch .send-btn:hover {
+    background-color: #151b43;
+    /* Darker shade of new primary color */
+}
+
+
+/* --- Dashboard General Styles (Fixed Sidebar, Header, Panels) --- */
+body.dashboard-page {
+    background-color: var(--dashboard-bg);
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    /* Using <aside> tag in HTML now */
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: var(--white);
+    padding: 20px 0;
+    flex-shrink: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+    /* Fixed Sidebar Properties */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    /* Using <aside> tag in HTML now */
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: var(--white);
+    padding: 20px 0;
+    flex-shrink: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+    /* Fixed Sidebar Properties */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* Sidebar header (logo section) */
+.sidebar-header {
+    text-align: center;
+    padding: 20px 0 40px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.sidebar-header .logo-go {
+    color: var(--primary-color);
+}
+
+.sidebar-header .logo-delivery {
+    color: var(--white);
+}
+
+/* Sidebar navigation */
+.sidebar-nav {
+    /* Using <nav> tag in HTML now */
+    list-style: none;
+    /* Removes default list bullets */
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar-nav .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease, border-left 0.3s ease, padding-left 0.3s ease;
+    /* Added transitions */
+    border-left: 5px solid transparent;
+    /* IMPORTANT: Initial transparent border for smooth transition */
+}
+
+.sidebar-nav .nav-item i {
+    margin-right: 15px;
+    font-size: 18px;
+}
+
+/* Hover state for navigation links */
+.sidebar-nav .nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Slight highlight on hover for non-active */
+    color: var(--white);
+    border-left-color: rgba(255, 255, 255, 0.3);
+    /* Optional: subtle border on hover */
+}
+
+/* Active state for navigation links */
+.sidebar-nav .nav-item.active {
+    background-color: var(--card-text);
+    /* White background as per your theme */
+    color: var(--card-bg);
+    /* Dark blue text as per your theme */
+    border-left-color: #FFA500;
+    /* The red border you want */
+    padding-left: 40px;
+    /* Adjust padding to account for the border width (25px - 5px border = 20px) */
+}
+
+/* Logout item specifically */
+.sidebar-nav .nav-item.logout {
+    margin-top: 40px;
+}
+
+.sidebar-nav .nav-item:hover {
+    background-color: var(--card-text);
+    color: var(--card-bg);
+    border-left-color: #FFA500;
+    /* The red border you want */
+    padding-left: 40px;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: var(--dashboard-bg);
+    margin-left: 250px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--white);
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.dashboard-header .header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.dashboard-header .page-title {
+    font-size: 24px;
+    color: var(--heading-color);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.dashboard-header .search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--search-border);
+    border-radius: 25px;
+    overflow: hidden;
+    background-color: var(--search-bg);
+    width: 300px;
+    max-width: 100%;
+}
+
+.dashboard-header .search-bar input {
+    flex-grow: 1;
+    border: none;
+    padding: 10px 20px;
+    outline: none;
+    background-color: transparent;
+    font-size: 15px;
+    color: var(--text-color);
+}
+
+.dashboard-header .search-bar button {
+    background-color: transparent;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    color: var(--primary-color);
+    /* Updated to new primary color */
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.dashboard-header .search-bar button:hover {
+    color: #151b43;
+    /* Darker shade of new primary color */
+}
+
+.dashboard-header .admin-profile {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--heading-color);
+    flex-shrink: 0;
+}
+
+.dashboard-header .admin-profile .profile-icon {
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.dashboard-header .admin-profile .profile-icon {
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.panel {
+    background-color: var(--panel-bg);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.panel h3 {
+    font-size: 22px;
+    color: var(--heading-color);
+    margin-bottom: 25px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    height: 300px;
+}
+
+.panel table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+    /* Default min-width for tables */
+}
+
+.panel th,
+.panel td {
+    text-align: left;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--login-bg--border);
+    white-space: normal;
+    /* Changed from nowrap to normal to allow text wrapping */
+}
+
+.panel th {
+    background-color: var(--agent-profile-bg);
+    color: var(--agent-profile-text);
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.panel tbody tr:hover {
+    background-color: #fcfcfc;
+}
+
+
+/* --- Dashboard Overview Specific Styles --- */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.summary-cards .card {
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--card-text);
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.summary-cards .card .value {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.summary-cards .card .label {
+    font-size: 16px;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+
+/* --- Dashboard Tracking Details & Manage Delivery Specific Styles --- */
+.tracking-details .detail-grid,
+.manage-delivery-panel .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.tracking-details .detail-box,
+.manage-delivery-panel .detail-box {
+    background-color: var(--detail-box-bg);
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--panel-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.tracking-details .detail-box.wide,
+.manage-delivery-panel .detail-box.wide {
+    grid-column: span 2;
+}
+
+.tracking-details .detail-box .label,
+.manage-delivery-panel .detail-box .label {
+    font-size: 14px;
+    color: var(--detail-label-color);
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.tracking-details .detail-box .value,
+.manage-delivery-panel .detail-box .value {
+    font-size: 16px;
+    color: var(--heading-color);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.tracking-details .graphic-box,
+.manage-delivery-panel .graphic-box {
+    background-color: transparent;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tracking-details .graphic-box i,
+.manage-delivery-panel .graphic-box i {
+    font-size: 40px;
+    color: var(--primary-color);
+    /* Updated to new primary color */
+}
+
+/* Specific styling for 'From' and 'To' boxes in tracking/manage details */
+.tracking-details .from-to-box,
+.manage-delivery-panel .from-to-box {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.back-button,
+.confirm-button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.back-button {
+    background-color: var(--light-grey);
+    color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-button:hover {
+    background-color: #e0e0e0;
+}
+
+.confirm-button {
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+    border: none;
+}
+
+.confirm-button:hover {
+    background-color: #151b43;
+    /* Darker shade of new primary color */
+}
+
+
+/* --- Dashboard Deliver History Specific Styles --- */
+.dashboard-header .dashboard-search-with-filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+    flex-wrap: wrap;
+}
+
+.dashboard-header .dashboard-search-with-filters input[type="text"] {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px 15px;
+    border: 1px solid var(--search-border);
+    border-radius: 25px;
+    outline: none;
+    background-color: var(--search-bg);
+    font-size: 15px;
+    color: var(--text-color);
+}
+
+.dashboard-header .dashboard-search-with-filters .filter-dropdown select {
+    padding: 10px 15px;
+    border: 1px solid var(--search-border);
+    border-radius: 25px;
+    background-color: var(--search-bg);
+    color: var(--text-color);
+    font-size: 15px;
+    outline: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23555%22%20d%3D%22M4.5%204L6%205.5%207.5%204%209%205.5%206%209%203%205.5%204.5%204z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+.dashboard-header .dashboard-search-with-filters .search-button {
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.dashboard-header .dashboard-search-with-filters .search-button:hover {
+    background-color: #151b43;
+    /* Darker shade of new primary color */
+}
+
+.delivery-status-buttons {
+    display: inline-flex;
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.delivery-status-buttons .status-button {
+    background-color: var(--status-button-bg);
+    color: var(--text-color);
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    flex-grow: 1;
+}
+
+.delivery-status-buttons .status-button:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.delivery-status-buttons .status-button:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.delivery-status-buttons .status-button.active,
+.delivery-status-buttons .status-button:hover {
+    background-color: var(--primary-color);
+    /* Updated to new primary color */
+    color: var(--status-button-active-text);
+}
+
+
+/* --- Agent List Specific Styles --- */
+.agent-list-panel .panel-header-with-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.agent-list-panel .panel-header-with-button h3 {
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.agent-list-panel .add-agent-button {
+    background-color: var(--primary-color);
+    /* Use primary color */
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.agent-list-panel .add-agent-button:hover {
+    background-color: #151b43;
+    /* Darker shade of new primary color */
+}
+
+.agent-list-panel .settings-button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.agent-list-panel .settings-button:hover {
+    background-color: var(--light-grey);
+}
+
+.agent-list-panel .panel table {
+    min-width: 650px;
+}
+
+
+/* --- Agent View Specific Styles --- */
+.agent-view-panel {
+    background-color: var(--panel-bg);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.agent-profile-section {
+    background-color: var(--primary-color);
+    /* Dark blue background */
+    color: var(--agent-profile-text);
+    padding: 25px 30px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
+}
+
+.agent-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    /* Lighter circle for avatar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    flex-shrink: 0;
+}
+
+.agent-avatar i {
+    color: var(--white);
+}
+
+.agent-details {
+    flex-grow: 1;
+    display: grid;
+    /* Changed from repeat(auto-fit, minmax(150px, 1fr)) to ensure consistent 2-column layout when space allows */
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    /* Explicitly two columns */
+    gap: 10px 20px;
+    /* Row and column gap */
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.agent-details .detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+
+
+.agent-details .detail-row .value {
+    font-weight: 600;
+    /* Allow value to take remaining space */
+}
+
+.agent-details .status-tag {
+    /* Green for active */
+    color: var(--white);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    /* Prevent tag from shrinking */
+}
+
+/* NEW: Hide labels within form-group elements specifically inside agent-view-panel */
+.agent-view-panel .form-group label {
+    display: none;
+}
+
+.agent-summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.agent-summary-cards .card {
+    background-color: var(--light-grey);
+    /* Light grey background for these cards */
+    color: var(--heading-color);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.agent-summary-cards .card .label {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.agent-summary-cards .card .value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary-color);
+    /* Use primary color for values */
+}
+
+.agent-action-buttons {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    /* Allow wrapping */
+}
+
+.update-info-button,
+.btn-red,
+.btn-green {
+    flex: 1;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    text-align: center;
+}
+
+.update-info-button {
+    background-color: var(--primary-color);
+    /* Primary color for update */
+    color: var(--white);
+    border: none;
+}
+
+.update-info-button:hover {
+    background-color: #151b43;
+    /* Darker shade */
+}
+
+.deactivate-agent-button {
+    background-color: var(--white);
+    color: var(--agent-status-inactive);
+    /* Red for deactivate */
+    border: 1px solid var(--agent-status-inactive);
+}
+
+.deactivate-agent-button:hover {
+    background-color: var(--agent-status-inactive);
+    color: var(--white);
+}
+
+.assigned-deliveries-heading {
+    font-size: 22px;
+    color: var(--heading-color);
+    margin-bottom: 25px;
+}
+
+/* Table styles are inherited from .panel table */
+.agent-view-panel .panel table {
+    min-width: 600px;
+    /* Adjust min-width for this table */
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    /* Ensure it's on top of other content */
+}
+
+.modal-content {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    /* Responsive width */
+    max-width: 500px;
+    /* Max width for larger screens */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    color: var(--heading-color);
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.save-button,
+.cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.save-button {
+    background-color: #28a745;
+    /* Green */
+    color: white;
+}
+
+.save-button:hover {
+    background-color: #218838;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+    /* Red */
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+}
+
+/* Reusing form-group and form-input classes from existing CSS for modal */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.form-input {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+    color: var(--text-color);
+    background-color: var(--white);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--sidebar-active);
+    /* Using an existing color for focus */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    /* Using a similar blue for shadow */
+}
+
+/* Utility class to hide elements */
+.hidden {
+    display: none !important;
+}
+
+/* New styles for the Confirmation Modal */
+.confirm-modal-content {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.confirm-modal-content p {
+    font-size: 1.1em;
+    color: var(--text-color);
+}
+
+.confirm-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.confirm-button {
+    background-color: #dc3545;
+    /* Red for Deactivate */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-button:hover {
+    background-color: #c82333;
+}
+
+.confirm-cancel-button {
+    background-color: #6c757d;
+    /* Grey for Cancel */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-cancel-button:hover {
+    background-color: #5a6268;
+}
+
+/* Specific styles for table headers to ensure consistent look */
+.table-responsive table thead th {
+    background-color: var(--agent-profile-bg);
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--agent-profile-text);
+    border-bottom: 1px solid var(--panel-border);
+    white-space: nowrap;
+    /* Prevents text from wrapping in header cells */
+}
+
+/* Base style for status cells to make them look like tags */
+.status-cell {
+    padding: 3px 12px;
+    /* Adjusted padding: reduced vertical and horizontal a bit */
+    border-radius: 15px;
+    display: inline-block;
+    /* Allows background to wrap content and padding to apply */
+    font-size: 0.9em;
+    line-height: 1.2;
+    /* Added line-height to control vertical spacing */
+    text-align: center;
+    white-space: nowrap;
+    /* Prevent status text from wrapping inside the badge */
+    /* Removed min-width to allow perfect content wrapping */
+    box-sizing: border-box;
+}
+
+/* New styles for status specific background colors in table cells */
+.status-delivered {
+    background-color: #e6ffe6;
+    /* Lighter green for background */
+    color: #28a745;
+    /* Darker green for text */
+    font-weight: 600;
+    /* Make text bolder */
+}
+
+.status-in-transmit {
+    background-color: #e0f2ff;
+    /* Lighter blue for background */
+    color: #007bff;
+    /* Darker blue for text */
+    font-weight: 600;
+}
+
+.status-pending {
+    background-color: #fffaf0;
+    /* Lighter yellow/orange for background */
+    color: #ffc107;
+    /* Darker yellow/orange for text */
+    font-weight: 600;
+}
+
+.status-on-hold {
+    background-color: #f0f0f0;
+    /* Light grey */
+    color: #6c757d;
+    /* Dark grey text */
+    font-weight: 600;
+}
+
+.status-failed-delivery {
+    background-color: #ffebe6;
+    /* Light red/pink */
+    color: #dc3545;
+    /* Dark red text */
+    font-weight: 600;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 992px) {
+
+    /* General Website Pages */
+    .navbar .nav-links {
+        display: none;
+    }
+
+    .navbar-content {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .navbar .nav-actions {
+        margin-top: 15px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-left,
+    .footer-right {
+        text-align: center;
+        align-items: center;
+        max-width: 100%;
+    }
+
+    /* Login Page */
+    .login-container {
+        flex-direction: column;
+    }
+
+    .login-left,
+    .login-right {
+        flex: none;
+        width: 100%;
+        padding: 30px;
+    }
+
+    .login-header {
+        margin-bottom: 40px;
+        font-size: 28px;
+    }
+
+    .login-title {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+
+    .login-right .welcome-text h2 {
+        font-size: 36px;
+    }
+
+    .login-right .welcome-text p {
+        font-size: 18px;
+    }
+
+    .login-right .login-graphic img {
+        max-width: 80%;
+    }
+
+    /* Price Calculator */
+    .price-calculator-section .calculator-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .price-calculator-section .form-group,
+    .price-calculator-section .calculate-btn {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .cost-details-section {
+        flex-direction: column;
+    }
+
+    .cost-of-delivery,
+    .calculator-note {
+        flex: none;
+        width: 100%;
+        min-width: unset;
+    }
+
+    /* Our Network */
+    .network-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .network-filters .form-group {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .network-locations {
+        flex-direction: column;
+    }
+
+    .location-list,
+    .map-placeholder {
+        flex: none;
+        width: 100%;
+        min-width: unset;
+    }
+
+    .map-placeholder {
+        height: 300px;
+    }
+
+    /* Contact Us */
+    .contact-section {
+        flex-direction: column;
+    }
+
+    .contact-address,
+    .get-in-touch {
+        flex: none;
+        width: 100%;
+        min-width: unset;
+    }
+
+    .get-in-touch .form-row {
+        flex-direction: column;
+    }
+
+    /* Dashboard General */
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: static;
+        height: auto;
+        overflow-y: visible;
+        width: 100%;
+        padding: 15px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-header {
+        padding: 10px 0 20px;
+        font-size: 24px;
+    }
+
+    .sidebar-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .sidebar-nav .nav-item {
+        padding: 10px 15px;
+        font-size: 15px;
+        margin-bottom: 0;
+        border-radius: 5px;
+    }
+
+    .sidebar-nav .nav-item i {
+        margin-right: 8px;
+        font-size: 16px;
+    }
+
+    .sidebar-nav .nav-item.logout {
+        margin-top: 10px;
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .main-content {
+        padding: 20px;
+        margin-left: 0;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+    }
+
+    .dashboard-header .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .dashboard-header .search-bar {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .dashboard-header .admin-profile {
+        margin-top: 10px;
+    }
+
+    .panel {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .panel h3 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .panel table {
+        min-width: 600px;
+    }
+
+    /* Dashboard Overview */
+    .summary-cards {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+    }
+
+    .summary-cards .card .value {
+        font-size: 30px;
+    }
+
+    /* Dashboard Tracking/Manage Details */
+    .tracking-details .detail-grid,
+    .manage-delivery-panel .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tracking-details .detail-box.wide,
+    .manage-delivery-panel .detail-box.wide {
+        grid-column: span 1;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .back-button,
+    .confirm-button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    /* Dashboard Deliver History */
+    .dashboard-header .dashboard-search-with-filters {
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+    }
+
+    .dashboard-header .dashboard-search-with-filters input,
+    .dashboard-header .dashboard-search-with-filters select,
+    .dashboard-header .dashboard-search-with-filters button {
+        width: 100%;
+        flex: none;
+    }
+
+    .delivery-status-buttons {
+        flex-direction: column;
+        width: 100%;
+        border-radius: 10px;
+        overflow: visible;
+    }
+
+    .delivery-status-buttons .status-button {
+        border-radius: 0;
+        margin-bottom: 1px;
+    }
+
+    .delivery-status-buttons .status-button:first-child {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .delivery-status-buttons .status-button:last-child {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        margin-bottom: 0;
+    }
+
+    /* Agent List Specific */
+    .agent-list-panel .panel-header-with-button {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .agent-list-panel .add-agent-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .agent-list-panel .panel table {
+        min-width: 550px;
+    }
+
+    /* Agent View Specific */
+    .agent-profile-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .agent-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 35px;
+    }
+
+    .agent-details {
+        grid-template-columns: 1fr;
+        /* Stack details vertically */
+        gap: 5px;
+    }
+
+    .agent-details .detail-row {
+        justify-content: center;
+        /* Center content in stacked rows */
+    }
+
+    .agent-summary-cards {
+        grid-template-columns: 1fr;
+        /* Stack summary cards */
+        gap: 15px;
+    }
+
+    .agent-summary-cards .card {
+        padding: 15px;
+    }
+
+    .agent-summary-cards .card .label {
+        font-size: 14px;
+    }
+
+    .agent-summary-cards .card .value {
+        font-size: 28px;
+    }
+
+    .agent-action-buttons {
+        flex-direction: column;
+        /* Stack action buttons */
+        gap: 10px;
+    }
+
+    .update-info-button,
+    .deactivate-agent-button {
+        width: 100%;
+    }
+
+    .assigned-deliveries-heading {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .agent-view-panel .panel table {
+        min-width: 500px;
+        /* Adjust min-width for this table */
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* General Website Pages */
+    .navbar .logo {
+        font-size: 22px;
+    }
+
+    .navbar .tracking-btn,
+    .navbar .login-btn {
+        font-size: 14px;
+        padding: 6px 15px;
+    }
+
+    .page-header h1 {
+        font-size: 30px;
+    }
+
+    .footer-left h2 {
+        font-size: 30px;
+    }
+
+    .footer-left p {
+        font-size: 14px;
+    }
+
+    .contact-now-btn {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+
+    .footer-right .social-icons a {
+        font-size: 20px;
+    }
+
+    /* Login Page */
+    .login-left {
+        padding: 25px;
+    }
+
+    .login-header {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+
+    .login-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .login-form label,
+    .login-form input {
+        font-size: 14px;
+    }
+
+    .login-form input {
+        padding: 10px 12px;
+    }
+
+    .login-form .login-button {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .login-right {
+        padding: 30px;
+    }
+
+    .login-right .welcome-text h2 {
+        font-size: 30px;
+    }
+
+    .login-right .welcome-text p {
+        font-size: 16px;
+    }
+
+    .login-right .login-graphic img {
+        max-width: 90%;
+    }
+
+    /* Price Calculator */
+    .price-calculator-section .calculator-form,
+    .cost-details-section {
+        gap: 15px;
+    }
+
+    .price-calculator-section label,
+    .price-calculator-section select {
+        font-size: 14px;
+    }
+
+    .price-calculator-section select {
+        padding: 8px 12px;
+    }
+
+    .price-calculator-section .calculate-btn {
+        font-size: 14px;
+        padding: 8px 20px;
+    }
+
+    .cost-of-delivery .detail-item .label,
+    .cost-of-delivery .detail-item .value {
+        font-size: 14px;
+    }
+
+    .cost-of-delivery .total-amount .value {
+        font-size: 18px;
+    }
+
+    .calculator-note h3 {
+        font-size: 16px;
+    }
+
+    .calculator-note p {
+        font-size: 13px;
+    }
+
+    .calculator-note .phone-numbers span {
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+
+    /* Our Network */
+    .network-filters,
+    .network-locations {
+        gap: 15px;
+    }
+
+    .network-filters label,
+    .network-filters select {
+        font-size: 14px;
+    }
+
+    .network-filters select {
+        padding: 8px 12px;
+    }
+
+    .location-item h4 {
+        font-size: 16px;
+    }
+
+    .location-item p {
+        font-size: 13px;
+    }
+
+    .map-placeholder {
+        height: 250px;
+        font-size: 16px;
+    }
+
+    /* Contact Us */
+    .contact-section {
+        gap: 20px;
+    }
+
+    .contact-address h3,
+    .get-in-touch h3 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .contact-address p,
+    .contact-address h4 {
+        font-size: 14px;
+    }
+
+    .get-in-touch input,
+    .get-in-touch textarea {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+
+    .get-in-touch textarea {
+        min-height: 100px;
+    }
+
+    .get-in-touch .send-btn {
+        font-size: 14px;
+        padding: 8px 20px;
+    }
+
+    /* Dashboard General */
+    .main-content {
+        padding: 15px;
+    }
+
+    .dashboard-header {
+        padding: 10px 15px;
+    }
+
+    .dashboard-header .page-title {
+        font-size: 20px;
+    }
+
+    .dashboard-header .search-bar input {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    .dashboard-header .search-bar button {
+        font-size: 16px;
+        padding: 8px 12px;
+    }
+
+    .dashboard-header .admin-profile span {
+        font-size: 14px;
+    }
+
+    .dashboard-header .admin-profile .profile-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }
+
+    .panel h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .panel th,
+    .panel td {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+
+    /* Dashboard Overview */
+    .summary-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .summary-cards .card .value {
+        font-size: 28px;
+    }
+
+    .summary-cards .card .label {
+        font-size: 14px;
+    }
+
+    /* Dashboard Tracking/Manage Details */
+    .tracking-details .detail-box,
+    .manage-delivery-panel .detail-box {
+        padding: 12px 15px;
+    }
+
+    .tracking-details .detail-box .label,
+    .manage-delivery-panel .detail-box .label {
+        font-size: 13px;
+    }
+
+    .tracking-details .detail-box .value,
+    .manage-delivery-panel .detail-box .value {
+        font-size: 15px;
+    }
+
+    .tracking-details .graphic-box i,
+    .manage-delivery-panel .graphic-box i {
+        font-size: 30px;
+    }
+
+    .back-button,
+    .confirm-button {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    /* Dashboard Deliver History */
+    .dashboard-header .dashboard-search-with-filters input,
+    .dashboard-header .dashboard-search-with-filters select,
+    .dashboard-header .dashboard-search-with-filters button {
+        font-size: 13px;
+        padding: 7px 10px;
+    }
+
+    .delivery-status-buttons .status-button {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+
+    /* Agent List Specific */
+    .agent-list-panel .panel-header-with-button {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .agent-list-panel .add-agent-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .agent-list-panel .panel table {
+        min-width: 500px;
+    }
+
+    /* Agent View Specific */
+    .agent-profile-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .agent-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 35px;
+    }
+
+    .agent-details {
+        gap: 5px;
+        font-size: 15px;
+    }
+
+    .agent-details .detail-row {
+        flex-direction: column;
+        /* Stack label and value */
+        align-items: center;
+        gap: 2px;
+    }
+
+    .agent-details .detail-row .label {
+        margin-bottom: 0;
+    }
+
+    .agent-summary-cards {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .agent-summary-cards .card {
+        padding: 15px;
+    }
+
+    .agent-summary-cards .card .label {
+        font-size: 14px;
+    }
+
+    .agent-summary-cards .card .value {
+        font-size: 28px;
+    }
+
+    .agent-action-buttons {
+        gap: 10px;
+    }
+
+    .update-info-button,
+    .deactivate-agent-button {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+
+    .assigned-deliveries-heading {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .agent-view-panel .panel table {
+        min-width: 450px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* General Website Pages */
+    .navbar .logo {
+        font-size: 20px;
+    }
+
+    .navbar .nav-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .navbar .tracking-btn,
+    .navbar .login-btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .page-header h1 {
+        font-size: 26px;
+    }
+
+    .footer-left h2 {
+        font-size: 26px;
+    }
+
+    .footer-left p {
+        font-size: 13px;
+    }
+
+    .contact-now-btn {
+        font-size: 13px;
+        padding: 8px 18px;
+    }
+
+    .footer-right .social-icons a {
+        font-size: 18px;
+    }
+
+    /* Login Page */
+    .login-left {
+        padding: 20px;
+    }
+
+    .login-header {
+        font-size: 22px;
+        margin-bottom: 25px;
+    }
+
+    .login-title {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .login-form label,
+    .login-form input {
+        font-size: 13px;
+    }
+
+    .login-form input {
+        padding: 8px 10px;
+    }
+
+    .login-form .login-button {
+        font-size: 15px;
+        padding: 8px;
+    }
+
+    .login-right {
+        padding: 20px;
+    }
+
+    .login-right .welcome-text h2 {
+        font-size: 26px;
+    }
+
+    .login-right .welcome-text p {
+        font-size: 14px;
+    }
+
+    .login-right .login-graphic img {
+        max-width: 100%;
+    }
+
+    /* Price Calculator */
+    .price-calculator-section .calculator-form,
+    .cost-details-section {
+        gap: 10px;
+        padding: 20px;
+    }
+
+    .price-calculator-section label,
+    .price-calculator-section select {
+        font-size: 13px;
+    }
+
+    .price-calculator-section select {
+        padding: 7px 10px;
+    }
+
+    .price-calculator-section .calculate-btn {
+        font-size: 13px;
+        padding: 7px 18px;
+    }
+
+    .cost-of-delivery .detail-item .label,
+    .cost-of-delivery .detail-item .value {
+        font-size: 13px;
+    }
+
+    .cost-of-delivery .total-amount .value {
+        font-size: 16px;
+    }
+
+    .calculator-note h3 {
+        font-size: 15px;
+    }
+
+    .calculator-note p {
+        font-size: 12px;
+    }
+
+    .calculator-note .phone-numbers span {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    /* Our Network */
+    .network-filters,
+    .network-locations {
+        gap: 10px;
+        padding: 20px;
+    }
+
+    .network-filters label,
+    .network-filters select {
+        font-size: 13px;
+    }
+
+    .network-filters select {
+        padding: 7px 10px;
+    }
+
+    .location-item h4 {
+        font-size: 15px;
+    }
+
+    .location-item p {
+        font-size: 12px;
+    }
+
+    .map-placeholder {
+        height: 200px;
+        font-size: 14px;
+    }
+
+    /* Contact Us */
+    .contact-section {
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .contact-address h3,
+    .get-in-touch h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .contact-address p,
+    .contact-address h4 {
+        font-size: 13px;
+    }
+
+    .get-in-touch input,
+    .get-in-touch textarea {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+
+    .get-in-touch textarea {
+        min-height: 80px;
+    }
+
+    .get-in-touch .send-btn {
+        font-size: 13px;
+        padding: 7px 15px;
+    }
+
+    /* Dashboard General */
+    .main-content {
+        padding: 10px;
+    }
+
+    .dashboard-header {
+        padding: 8px 10px;
+    }
+
+    .dashboard-header .page-title {
+        font-size: 16px;
+    }
+
+    .dashboard-header .search-bar input {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    .dashboard-header .search-bar button {
+        font-size: 14px;
+        padding: 6px 8px;
+    }
+
+    .dashboard-header .admin-profile span {
+        font-size: 13px;
+    }
+
+    .dashboard-header .admin-profile .profile-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+
+    .panel h3 {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .panel th,
+    .panel td {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+
+    /* Dashboard Overview */
+    .summary-cards {
+        gap: 10px;
+    }
+
+    .summary-cards .card .value {
+        font-size: 24px;
+    }
+
+    .summary-cards .card .label {
+        font-size: 12px;
+    }
+
+    /* Dashboard Tracking/Manage Details */
+    .tracking-details .detail-box,
+    .manage-delivery-panel .detail-box {
+        padding: 10px 12px;
+    }
+
+    .tracking-details .detail-box .label,
+    .manage-delivery-panel .detail-box .label {
+        font-size: 12px;
+    }
+
+    .tracking-details .detail-box .value,
+    .manage-delivery-panel .detail-box .value {
+        font-size: 14px;
+    }
+
+    .tracking-details .graphic-box i,
+    .manage-delivery-panel .graphic-box i {
+        font-size: 25px;
+    }
+
+    .back-button,
+    .confirm-button {
+        font-size: 13px;
+        padding: 7px 12px;
+    }
+
+    /* Dashboard Deliver History */
+    .dashboard-header .dashboard-search-with-filters input,
+    .dashboard-header .dashboard-search-with-filters select,
+    .dashboard-header .dashboard-search-with-filters button {
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    .delivery-status-buttons .status-button {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+
+    /* Agent List Specific */
+    .agent-list-panel .panel-header-with-button {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .agent-list-panel .add-agent-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .agent-list-panel .panel table {
+        min-width: 450px;
+    }
+
+    /* Agent View Specific */
+    .agent-profile-section {
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .agent-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+    }
+
+    .agent-details {
+        font-size: 14px;
+    }
+
+    .agent-summary-cards .card {
+        padding: 12px;
+    }
+
+    .agent-summary-cards .card .label {
+        font-size: 13px;
+    }
+
+    .agent-summary-cards .card .value {
+        font-size: 24px;
+    }
+
+    .update-info-button,
+    .deactivate-agent-button {
+        font-size: 13px;
+        padding: 8px 15px;
+    }
+
+    .assigned-deliveries-heading {
+        font-size: 16px;
+    }
+
+    .agent-view-panel .panel table {
+        min-width: 400px;
+    }
+}

@@ -1,0 +1,1193 @@
+:root {
+    --primary-color: #fff;
+    /* A white color, used for certain text/icons */
+    --secondary-color: #fff;
+    /* For text on dark backgrounds like table headers */
+    --text-color: #1F265B;
+    /* Dark blue for general text */
+    --heading-color: #333;
+    /* Dark grey for main headings */
+    --light-grey: #f8f9fa;
+    /* Very light grey for subtle backgrounds */
+    --dark-blue-footer: #1F265B;
+    /* Deep blue, used for sidebar, table headers, etc. */
+    --white: #fff;
+    /* Explicit white variable */
+    --border-color: #ddd;
+    /* Light grey for general borders */
+    --form-bg-color: #e6f0ff;
+    /* Light blue for form elements (if used) */
+    --section-bg-color: #f0f4f7;
+    /* Slightly darker grey for general sections */
+
+    /* Dashboard Specific Colors */
+    --dashboard-bg: #e9eff5;
+    /* Overall dashboard background */
+    --sidebar-bg: #1F265B;
+    /* Background for the navigation sidebar */
+    --sidebar-active: #1F265B;
+    /* Dark blue for active sidebar item */
+    --panel-bg: #fff;
+    /* Background for content panels */
+    --panel-border: #e0e0e0;
+    /* Border for panels */
+    --table-header-bg: #1F265B;
+    /* Dark blue for table headers */
+    --card-bg: #1F265B;
+    /* Darker blue for summary cards (if implemented) */
+    --card-text: #fff;
+    /* Text color on summary cards */
+    --search-bg: #f0f2f5;
+    /* Background for search input */
+    --search-border: #cdd2d7;
+    /* Border for search input */
+    --button-bg: #e0e0e0;
+    /* Default button background */
+    --active-button-bg: #fff;
+    /* Background for active tab/button */
+    --active-button-text: #007bff;
+    /* Text color for active tab/button */
+    --edit-button-bg: #e0e0e0;
+    /* Default button background */
+    --edit-button-text: #333;
+    /* Dark text for edit button */
+    --header-text-color: var(--white);
+    /* Text color for header on dark background */
+
+    /* New variables for active sidebar item styling */
+    --active-item-bg: #F0EDF6;
+    /* Light gray-purple for background */
+    --active-item-border: #fff;
+    /* MediumPurple for the left border line */
+}
+
+/* Universal box-sizing for consistent layout */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling: font, background, and text color */
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--dashboard-bg);
+}
+
+/* Dashboard container now uses a specific class */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    /* Using <aside> tag in HTML now */
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: var(--white);
+    padding: 20px 0;
+    flex-shrink: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+    /* Fixed Sidebar Properties */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    /* Using <aside> tag in HTML now */
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: var(--white);
+    padding: 20px 0;
+    flex-shrink: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+    /* Fixed Sidebar Properties */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* Sidebar header (logo section) */
+.sidebar-header {
+    text-align: center;
+    padding: 20px 0 40px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.sidebar-header .logo-go {
+    color: var(--primary-color);
+}
+
+.sidebar-header .logo-delivery {
+    color: var(--white);
+}
+
+/* Sidebar navigation */
+.sidebar-nav {
+    /* Using <nav> tag in HTML now */
+    list-style: none;
+    /* Removes default list bullets */
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar-nav .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease, border-left 0.3s ease, padding-left 0.3s ease;
+    /* Added transitions */
+    border-left: 5px solid transparent;
+    /* IMPORTANT: Initial transparent border for smooth transition */
+}
+
+.sidebar-nav .nav-item i {
+    margin-right: 15px;
+    font-size: 18px;
+}
+
+/* Hover state for navigation links */
+.sidebar-nav .nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Slight highlight on hover for non-active */
+    color: var(--white);
+    border-left-color: rgba(255, 255, 255, 0.3);
+    /* Optional: subtle border on hover */
+}
+
+/* Active state for navigation links */
+.sidebar-nav .nav-item.active {
+    background-color: var(--card-text);
+    /* White background as per your theme */
+    color: var(--card-bg);
+    /* Dark blue text as per your theme */
+    border-left-color: #FFA500;
+    /* The red border you want */
+    padding-left: 40px;
+    /* Adjust padding to account for the border width (25px - 5px border = 20px) */
+}
+
+/* Logout item specifically */
+.sidebar-nav .nav-item.logout {
+    margin-top: 40px;
+}
+
+.sidebar-nav .nav-item:hover {
+    background-color: var(--card-text);
+    color: var(--card-bg);
+    border-left-color: #FFA500;
+    /* The red border you want */
+    padding-left: 40px;
+}
+
+/* Main Content Area */
+.main-content {
+    /* Using <main> tag in HTML now */
+    flex-grow: 1;
+    padding: 30px;
+    background-color: var(--dashboard-bg);
+    margin-left: 250px;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    /* Using <header> tag in HTML now */
+    display: flex;
+    justify-content: space-between;
+    /* Pushes items to the ends */
+    align-items: center;
+    background-color: var(--white);
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    /* Allows header content to wrap on smaller screens */
+    gap: 15px;
+    /* Spacing between wrapped items */
+}
+
+/* Header Left Section (for page title) */
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-left h2.page-title {
+    /* Specific targeting for page title */
+    font-size: 1.5em;
+    font-weight: 600;
+    color: var(--dark-blue-footer);
+    margin: 0;
+}
+
+/* Header Right Section (for admin profile) */
+.header-right {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    /* Allows profile to wrap */
+    gap: 15px;
+    /* Spacing for profile */
+    margin-left: auto;
+    /* Pushes content to the right */
+}
+
+/* Filter Options Container (now a direct child of dashboard-header) */
+.filter-options {
+    display: flex;
+    flex-grow: 1;
+    /* Allows filters to take available space and center */
+    justify-content: center;
+    /* Centers the filter pills within their flexible space */
+    gap: 15px;
+    /* Spacing between individual filter pills */
+    align-items: center;
+    flex-wrap: wrap;
+    /* Allows filter pills to wrap */
+    margin: 0 20px;
+    /* Added horizontal margin to push them slightly from edges */
+}
+
+/* Styling for the pill-shaped filter buttons */
+.filter-item.pill-button {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    padding: 12px 25px;
+    /* Increased padding for better appearance */
+    display: flex;
+    justify-content: center;
+    /* Ensures content inside the pill is centered */
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+    /* Crucial for positioning content inside, like the transparent input */
+    font-size: 0.95em;
+    color: var(--text-color);
+    min-width: 120px;
+    /* Ensure a minimum width for the pills */
+    overflow: hidden;
+    /* Hide overflowing native select arrow */
+}
+
+.filter-item.pill-button label {
+    font-weight: 500;
+    margin-bottom: 0;
+    color: inherit;
+    cursor: pointer;
+    font-size: 1.1em;
+    /* Adjusted label font size */
+    flex-grow: 1;
+    /* Allows label to take available space */
+    text-align: center;
+    /* Centers the text within the label's expanded space */
+}
+
+/* CSS for hiding native select elements to allow custom styling */
+.filter-input-hidden {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Styling for the date input to match the second photo */
+.filter-item.pill-button input[type="date"] {
+    flex-grow: 1;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    /* Remove default input padding */
+    outline: none;
+    font-size: 1.1em;
+    /* Match label font size for consistent text size */
+    color: var(--text-color);
+    /* Default text color for the date */
+    cursor: pointer;
+    text-align: center;
+    /* Center the date text */
+    /* Hide default calendar icon on some browsers */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Style the placeholder text for date input */
+.filter-item.pill-button input[type="date"]::placeholder {
+    color: var(--text-color);
+    opacity: 1;
+}
+
+/* Hide the native calendar picker icon */
+.filter-item.pill-button input[type="date"]::-webkit-calendar-picker-indicator {
+    background: none;
+    opacity: 0;
+    cursor: pointer;
+    /* Keep cursor for interaction */
+    width: 100%;
+    /* Make it fill the input area */
+    height: 100%;
+    position: absolute;
+    /* Position it over the input */
+    top: 0;
+    left: 0;
+}
+
+/* Style for the dropdown icon */
+.dropdown-icon {
+    font-size: 0.8em;
+    color: #999;
+    pointer-events: none;
+    /* Ensure clicks go to the input/select, not the icon */
+}
+
+/* Search bar styling (now also a filter-item) */
+.filter-item.search-bar {
+    background-color: var(--search-bg);
+    border: 1px solid var(--search-border);
+    border-radius: 25px;
+    padding: 0px 15px;
+    display: flex;
+    align-items: center;
+    width: 170px;
+    /* Adjusted width for a smaller appearance */
+    min-height: 40px;
+}
+
+.filter-item.search-bar input {
+    flex-grow: 1;
+    border: none;
+    background-color: transparent;
+    padding: 8px 0;
+    outline: none;
+    font-size: 0.95em;
+    color: var(--text-color);
+}
+
+.filter-item.search-bar button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 8px;
+    color: var(--dark-blue-footer);
+    font-size: 1.2em;
+}
+
+/* New container for the heading and reset button */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    /* Space between header and table */
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
+    gap: 15px;
+    /* Spacing between items */
+}
+
+/* Adjust heading margin when inside the new container */
+.section-header h3 {
+    margin-bottom: 0;
+    /* Remove default bottom margin */
+}
+
+/* Style for the reset button */
+.filter-item.reset-button {
+    background-color: var(--dark-blue-footer);
+    /* A distinct color for reset */
+    color: var(--white);
+    border: 1px solid var(--dark-blue-footer);
+    border-radius: 25px;
+    padding: 12px 25px;
+    display: flex;
+    /* Changed to flex to align icon and text */
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    min-width: 120px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    /* Default to hidden */
+    display: none;
+}
+
+.filter-item.reset-button:hover {
+    background-color: #151d42;
+    /* Slightly darker on hover */
+    border-color: #151d42;
+}
+
+
+/* Admin profile */
+.admin-profile {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+.admin-profile .profile-icon {
+    background-color: var(--dark-blue-footer);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.admin-profile .profile-icon i {
+    font-size: 20px;
+    color: #fff;
+}
+
+/* Manage Delivery Section (Container for the Table) */
+.manage-delivery-section {
+    background-color: var(--panel-bg);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Scrollable Table Container */
+.table-responsive {
+    height: 500px;
+    overflow-y: auto;
+    /* This enables vertical scrolling for the table */
+    overflow-x: auto;
+    /* KEY FIX: This enables horizontal scrolling for the table */
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.02);
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+    /* Increased minimum width to accommodate new column */
+    background-color: #fff;
+}
+
+table thead th {
+    background-color: var(--table-header-bg);
+    color: var(--header-text-color);
+    font-weight: 600;
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--panel-border);
+    white-space: nowrap;
+    /* Keeps header text on a single line */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+table tbody td {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--panel-border);
+    color: var(--text-color);
+    white-space: nowrap;
+    /* KEY FIX: Ensures text stays on one line */
+    overflow: hidden;
+    /* Hides overflowing content */
+    text-overflow: ellipsis;
+    /* Adds "..." for overflowed text */
+    max-width: 150px;
+    /* Optional: set a max-width to make ellipsis visible sooner for long content */
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #FBFBFB;
+}
+
+table tbody tr:hover {
+    background-color: #F0F8FF;
+}
+
+/* Tracking ID Cell Styling - display: block on span is good for wrapping inside a wrapping td */
+.tracking-id-cell {
+    display: block;
+}
+
+/* Edit Button Styling */
+.edit-button {
+    background-color: #007bff;
+    /* Professional blue */
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    /* Increased padding */
+    border-radius: 8px;
+    /* Slightly more rounded */
+    cursor: pointer;
+    font-size: 15px;
+    /* Slightly larger font */
+    font-weight: 500;
+    transition: all 0.3s ease;
+    /* Smooth transition for all changes */
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+    /* Subtle shadow */
+    margin-right: 5px;
+    /* Space between edit and view buttons */
+}
+
+.edit-button:hover {
+    background-color: #0056b3;
+    /* Darker blue on hover */
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+    /* Enhanced shadow on hover */
+    transform: translateY(-2px);
+    /* Slight lift effect */
+}
+
+/* View Button Styling */
+.view-button {
+    background-color: #28a745;
+    /* Professional green */
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    /* Increased padding */
+    border-radius: 8px;
+    /* Slightly more rounded */
+    cursor: pointer;
+    font-size: 15px;
+    /* Slightly larger font */
+    font-weight: 500;
+    transition: all 0.3s ease;
+    /* Smooth transition for all changes */
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    /* More space between icon and text */
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+    /* Subtle shadow */
+}
+
+.view-button:hover {
+    background-color: #218838;
+    /* Darker green on hover */
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+    /* Enhanced shadow on hover */
+    transform: translateY(-2px);
+    /* Slight lift effect */
+}
+
+/* Custom Message Box Styles (reused for general notifications) */
+.message-box-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    /* Ensure it's on top of everything */
+    visibility: hidden;
+    /* Hidden by default */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s ease;
+}
+
+.message-box-overlay.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.message-box {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+    /* Ensure consistent font */
+}
+
+.message-box h4 {
+    /* Styling for the Notification title */
+    font-size: 1.5em;
+    color: #1F265B;
+    /* Dark blue color from your theme */
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.message-box p {
+    font-size: 1.1em;
+    color: var(--text-color);
+    margin-bottom: 20px;
+    line-height: 1.5;
+    /* Improve readability */
+}
+
+.message-box .close-button {
+    background-color: #1F265B;
+    /* Dark blue button color */
+    color: var(--white);
+    border: none;
+    padding: 12px 30px;
+    /* Larger padding for a more prominent button */
+    border-radius: 8px;
+    /* Slightly more rounded corners for the button */
+    cursor: pointer;
+    font-size: 1.1em;
+    /* Larger font size for the button text */
+    font-weight: 600;
+    /* Bolder text for the button */
+    transition: background-color 0.3s ease;
+}
+
+.message-box .close-button:hover {
+    background-color: #151d42;
+    /* Slightly darker hover state */
+}
+
+/* Styles for the new details modal */
+.details-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s ease;
+}
+
+.details-modal-overlay.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.details-modal-content {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 900px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 45px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.details-modal-content .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.details-modal-content .modal-header h4 {
+    font-size: 1.6em;
+    color: var(--dark-blue-footer);
+    margin: 0;
+    font-weight: 700;
+}
+
+.details-modal-content .modal-close-button {
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.details-modal-content .modal-close-button:hover {
+    color: #333;
+}
+
+.details-modal-content .detail-section-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--dark-blue-footer);
+    margin-top: 10px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+/* Grid for the top main information (Tracking Code, Paid/Prepaid, Date) */
+.top-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /* Adjusted minmax to fit more items */
+    gap: 20px;
+    /* Gap between grid items */
+    margin-bottom: 20px;
+    /* Space below this section */
+    border-bottom: 1px solid var(--border-color);
+    /* Separator line */
+    padding-bottom: 15px;
+    /* Padding above the separator */
+}
+
+.top-info-grid .grid-item {
+    display: flex;
+    flex-direction: column;
+    /* Stack label and value */
+    align-items: flex-start;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+.top-info-grid .grid-item strong {
+    margin-bottom: 0px;
+    color: #666;
+    font-size: 1em;
+}
+
+.top-info-grid .grid-item span {
+    margin-top: 0px;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 1em;
+}
+
+/* General styling for stacked detail groups (From, To, Pickup/Delivery, Item Details) */
+.detail-stacked-group {
+    display: flex;
+    flex-direction: column;
+    /* Always stack items vertically */
+    gap: 10px;
+    /* Space between each detail-item */
+    width: 100%;
+    /* Ensure it takes full width of its parent */
+    margin-bottom: 20px;
+    /* Space between sections */
+}
+
+.detail-stacked-group .detail-item {
+    /* Individual item within the stacked group, ensures label/value stack */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    /* Ensures each takes full width and stacks */
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+.detail-stacked-group .detail-item strong {
+    margin-bottom: 0px;
+    color: #666;
+    font-size: 1em;
+}
+
+.detail-stacked-group .detail-item span {
+    margin-top: 0px;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 1em;
+}
+
+/* Styles for status update section */
+.status-update-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 15px;
+}
+
+.status-update-section .status-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.status-update-section label {
+    font-weight: 600;
+    color: var(--dark-blue-footer);
+    font-size: 1em;
+}
+
+.status-update-section select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+    color: var(--text-color);
+    flex-grow: 1;
+    min-width: 150px;
+    max-width: 250px;
+    background-color: var(--light-grey);
+}
+
+.details-modal-content input[type="text"],
+.details-modal-content input[type="email"] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+    color: var(--text-color);
+    background-color: var(--light-grey);
+    margin-top: 5px;
+    /* Space between label and input */
+}
+
+
+.status-update-section .button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.status-update-section .save-button,
+.status-update-section .cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.status-update-section .save-button {
+    background-color: #28a745;
+    color: var(--white);
+}
+
+.status-update-section .save-button:hover {
+    background-color: #218838;
+}
+
+.status-update-section .cancel-button {
+    background-color: #dc3545;
+    color: var(--white);
+}
+
+.status-update-section .cancel-button:hover {
+    background-color: #c82333;
+}
+
+/* New CSS for Status Badges in Table */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 0.9em;
+    text-align: center;
+    white-space: nowrap;
+    /* Keep badge text on one line */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 90px;
+    /* Give it a consistent minimum width */
+}
+
+/* Specific Status Colors */
+.status-delivered {
+    background-color: #d4edda;
+    /* Light green */
+    color: #155724;
+    /* Dark green */
+}
+
+.status-in-transit {
+    background-color: #cce5ff;
+    /* Light blue */
+    color: #004085;
+    /* Dark blue */
+}
+
+.status-pending-pickup {
+    background-color: #fff3cd;
+    /* Light yellow */
+    color: #856404;
+    /* Dark yellow */
+}
+
+.status-on-hold {
+    background-color: #e2e3e5;
+    /* Light grey */
+    color: #383d41;
+    /* Dark grey */
+}
+
+.status-failed-delivery {
+    background-color: #f8d7da;
+    /* Light red */
+    color: #721c24;
+    /* Dark red */
+}
+
+/*
+ * Responsive Design: Adjusts layout for different screen sizes (mobile, tablet, desktop)
+ */
+
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 200px;
+        padding: 20px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .header-left {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filter-options {
+        justify-content: center;
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .filter-item.search-bar {
+        width: 100%;
+        max-width: none;
+    }
+
+    .admin-profile {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .sidebar-header {
+        padding: 10px;
+        font-size: 24px;
+        margin-bottom: 0;
+    }
+
+    .sidebar-nav {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0;
+        padding: 0;
+        justify-content: center;
+        width: auto;
+    }
+
+    .sidebar-nav .nav-item {
+        padding: 10px 12px;
+        font-size: 14px;
+        margin: 5px;
+    }
+
+    .sidebar-nav .nav-item.logout {
+        margin-top: 5px;
+        width: auto;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .header-left,
+    .header-right {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .header-left h2.page-title {
+        font-size: 1.2em;
+        margin-bottom: 0;
+    }
+
+    .filter-options {
+        justify-content: flex-start;
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .filter-item {
+        width: auto;
+    }
+
+    .filter-item.search-bar {
+        width: 100%;
+        max-width: none;
+    }
+
+    .admin-profile {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .manage-delivery-section {
+        padding: 15px;
+    }
+
+    .manage-delivery-section h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    table {
+        min-width: 500px;
+    }
+
+    .details-modal-content .detail-item {
+        min-width: 100%;
+    }
+
+    .status-update-section select {
+        max-width: 100%;
+    }
+
+    .status-update-section .button-group {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-header {
+        font-size: 20px;
+    }
+
+    .sidebar-nav .nav-item {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .sidebar-nav .nav-item i {
+        margin-right: 8px;
+    }
+
+    .dashboard-header h2.page-title {
+        font-size: 1em;
+    }
+
+    .filter-item.pill-button,
+    .filter-item.search-bar {
+        font-size: 0.85em;
+        padding: 8px 12px;
+    }
+
+    .filter-item.pill-button .dropdown-icon,
+    .filter-item.search-bar button i {
+        font-size: 0.9em;
+    }
+
+    .search-bar input {
+        font-size: 0.9em;
+        padding: 6px 0;
+    }
+
+    .admin-profile span {
+        display: none;
+    }
+
+    .admin-profile .profile-icon {
+        margin-right: 0;
+    }
+
+    table tbody td,
+    table thead th {
+        padding: 10px 15px;
+    }
+}
