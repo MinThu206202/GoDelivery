@@ -91,7 +91,7 @@ $name = $_SESSION['user'];
             <h3>Route List</h3>
             <div class="button-group">
                 <button class="add-agent-button" id="backButton" style="display: none;"><i class="fas fa-arrow-left"></i> Back</button>
-                 <button class="add-agent-button"><i class="fas fa-plus"></i> Add Route</button>
+                <button class="add-agent-button"><i class="fas fa-plus"></i> Add Route</button>
             </div>
         </div>
 
@@ -128,16 +128,18 @@ $name = $_SESSION['user'];
     </section>
 </main>
 
-<script>
+<scrip>
     const filterButtons = document.querySelectorAll(".filter-button");
     const applyFilterButton = document.getElementById("applyFilterButton");
+    const backButton = document.getElementById("backButton");
 
     let selectedStatus = "all";
 
-    // Function to filter table rows
     function filterTable() {
         const fromCityInput = document.getElementById("filterAccessCode").value.trim().toLowerCase();
         const toCityInput = document.getElementById("filterCity").value.trim().toLowerCase();
+
+        let anyFilterApplied = fromCityInput || toCityInput || selectedStatus !== "all";
 
         document.querySelectorAll("#agentTableBody tr").forEach(row => {
             const rowFrom = row.children[0].textContent.trim().toLowerCase();
@@ -154,6 +156,9 @@ $name = $_SESSION['user'];
                 row.style.display = "none";
             }
         });
+
+        // Show back button if any filter is applied
+        backButton.style.display = anyFilterApplied ? "inline-block" : "none";
     }
 
     // Listen for status button clicks
@@ -165,12 +170,25 @@ $name = $_SESSION['user'];
             filterButtons.forEach(btn => btn.classList.remove("active"));
             button.classList.add("active");
 
-            filterTable(); // Apply both city and status filters
+            filterTable();
         });
     });
 
-    // Listen for city search button click
+    // Listen for city search
     applyFilterButton.addEventListener("click", () => {
-        filterTable(); // Apply both city and status filters
+        filterTable();
     });
-</script>
+
+    // Back button clears filters and shows all rows
+    backButton.addEventListener("click", () => {
+        document.getElementById("filterAccessCode").value = "";
+        document.getElementById("filterCity").value = "";
+        selectedStatus = "all";
+
+        // Reset status filter button UI
+        filterButtons.forEach(btn => btn.classList.remove("active"));
+        document.querySelector('[data-status="all"]').classList.add("active");
+
+        filterTable();
+    });
+</scrip
