@@ -473,7 +473,7 @@ body {
 
 /* Manage Delivery Section (Container for the Table) */
 .manage-delivery-section {
-    background-color: var(--panel-bg);
+    background-color: var(--card-bg);
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);

@@ -104,7 +104,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <th>Created Date</th>
                     </tr>
                 </thead>
-                <?php foreach ($data['code'] as $user): ?>
+                <?php foreach ($data['allUserData'] as $user): ?>
                     <tbody>
                         <tr>
                             <td>Code</td>

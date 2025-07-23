@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,11 +24,13 @@
             <div class="instruction-text">
                 Enter your registered mobile number and we'll send you an OTP.
             </div>
+            <?php require APPROOT . '/views/components/auth_message.php'; ?>
+            <?php if (!empty($email_err = $data['email-err'] ?? '')) : ?>
+                <p class="error"><?= $email_err ?></p>
+            <?php endif; ?>
 
             <!-- ✅ FORM START -->
             <form method="POST" action="<?php echo URLROOT; ?>/auth/forgetpassword">
-                <?php require APPROOT . '/views/components/auth_message.php'; ?>
-
                 <div class="input-container">
                     <i class="fas fa-mobile-alt icon"></i>
                     <input type="text" placeholder="Enter Email Address" name="email" required>

@@ -92,53 +92,31 @@ class Database
         }
     }
 
-
-    public function getByRoleIdWithNames($table)
+    public function getByRoleAndStatus($table, $roleName, $statusList = [])
     {
-        $sql = "SELECT 
-                    u.*, 
-                    r.name AS region_name,
-                    c.name AS city_name,
-                    t.name AS township_name,
-                    w.name AS ward_name,
-                    s.name AS status_name
-                FROM $table u
-                LEFT JOIN regions r ON u.region_id = r.id
-                LEFT JOIN cities c ON u.city_id = c.id
-                LEFT JOIN townships t ON u.township_id = t.id
-                LEFT JOIN wards w ON u.ward_id = w.id
-                LEFT JOIN statuses s ON u.status_id = s.id
-                WHERE u.role_id = :role_id";
+        $placeholders = implode(',', array_fill(0, count($statusList), '?'));
+        $sql = "SELECT * FROM {$table} WHERE role_name = ? AND status_name IN ($placeholders)";
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':role_id', 2); // Role 2 = agent
-        if (!$stmt->execute()) {
-            $error = $stmt->errorInfo();
-            die("SQL Error: " . $error[2]);
-        }
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stm = $this->pdo->prepare($sql);
+
+        // Merge parameters: roleName first, then statusList
+        $params = array_merge([$roleName], $statusList);
+        $success = $stm->execute($params);
+
+        $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
+        return $success ? $rows : [];
     }
 
-    public function getById($email)
+    public function getById($table, $id)
     {
-        $sql = "SELECT * FROM users WHERE email = :email";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':email', $email);
-        $stmt->execute();
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $rows ?: [];
+        $sql = 'SELECT * FROM ' . $table . ' WHERE `id` =:id';
+        // print_r($sql);
+        $stm = $this->pdo->prepare($sql);
+        $stm->bindValue(':id', $id);
+        $success = $stm->execute();
+        $row = $stm->fetch(PDO::FETCH_ASSOC);
+        return ($success) ? $row : [];
     }
-
-    // public function getById($table, $id)
-    // {
-    //     $sql = 'SELECT * FROM ' . $table . ' WHERE `id` =:id';
-    //     // print_r($sql);
-    //     $stm = $this->pdo->prepare($sql);
-    //     $stm->bindValue(':id', $id);
-    //     $success = $stm->execute();
-    //     $row = $stm->fetch(PDO::FETCH_ASSOC);
-    //     return ($success) ? $row : [];
-    // }
 
     // public function getByRole($table, $id)
     // {
@@ -147,59 +125,13 @@ class Database
     //     $stm = $this->pdo->prepare($sql);
     //     $stm->bindValue(':id', 2);
     //     $success = $stm->execute();
-    //     $row = $stm->fetch(PDO::FETCH_ASSOC);
+    //     $row = $stm->fetchAll(PDO::FETCH_ASSOC);
     //     return ($success) ? $row : [];
     // }
 
-    public function agentbyid($id)
-    {
 
-        $sql = "
-        SELECT u.*, s.name AS status_name
-        FROM users u
-        LEFT JOIN statuses s ON u.status_id = s.id
-        WHERE u.id = :id
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        // var_dump($stmt);
-        // die();        // ✔ Prepared statement
-        $stmt->bindValue(':id', $id);              // ✔ Binding ID safely
-        $stmt->execute();                          // ✔ Executes the query
-        $rows = $stmt->fetch(PDO::FETCH_ASSOC);    // ✔ Gets one row as an associative array
-        return $rows ?: [];
-        // ✔ Returns empty array if no result
-    }
 
-    public function deliverybyid($id)
-    {
-        $stmt = $this->pdo->prepare("
-            SELECT 
-                id,
-                sender_name, sender_phone, sender_email, sender_address,
-                receiver_name, receiver_phone, receiver_email, receiver_address,
-                from_region_id, to_region_id, address,
-                total_amount, payment_status_id, delivery_status_id,
-                created_at
-            FROM deliveries 
-            WHERE sender_id = :sender_id
-            ORDER BY created_at DESC
-        ");
 
-        $stmt->bindValue(':sender_id', $id);
-        $stmt->execute();
-
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $rows ?: [];
-    }
-
-    // public function registermailcheck($email){
-    //     $sql = "SELECT * FROM users WHERE `email` = :email";
-    //     $stmt = $this->pdo->prepare($sql);
-    //     $stmt->bindValue(':email',$email);
-    //     $success = $stmt->execute();
-    //     $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //     return ($success) ? $row : [];
-    // }
 
     public function columnFilter($table, $column, $value)
     {
@@ -211,6 +143,7 @@ class Database
         $row = $stm->fetch(PDO::FETCH_ASSOC);
         return ($success) ? $row : [];
     }
+    
     public function columnFilterAll($table, $column, $value)
     {
         $sql = 'SELECT * FROM ' . $table . ' WHERE `' . str_replace('`', '', $column) . '` = :value';
@@ -219,6 +152,18 @@ class Database
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getByDeliveryId($table, $id)
+    {
+        $sql = 'SELECT * FROM ' . $table . ' WHERE `sender_id` =:sender_id';
+        $stm = $this->pdo->prepare($sql);
+        $stm->bindValue(':sender_id', $id);
+        $success = $stm->execute();
+        $row = $stm->fetchAll(PDO::FETCH_ASSOC);
+       //  print_r($row);
+        return ($success) ? $row : [];
+    }
+
     public function readAll($table)
     {
         $sql = "SELECT * FROM $table";
@@ -313,4 +258,4 @@ class Database
 //         echo($e);
 //     }
 
-// }///
+// }

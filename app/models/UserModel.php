@@ -14,6 +14,11 @@ class UserModel{
     private $created_at;
     private $status_id;
 
+    private $otp_code;
+    private $otp_expiry;
+    private $security_code;
+
+
     //call get and set for name
     public function setName($name){
         $this->name = $name;
@@ -139,6 +144,38 @@ class UserModel{
         return $this->role_id;
     }
 
+    public function setOtp_code($otp_code)
+    {
+        $this->otp_code = $otp_code;
+    }
+
+    public function getOtp_code()
+    {
+        return $this->otp_code;
+    }
+
+    //call get and set for email
+    public function setOtp_expiry($otp_expiry)
+    {
+        $this->otp_expiry = $otp_expiry;
+    }
+
+    public function getOtp_expiry()
+    {
+        return $this->otp_expiry;
+    }
+
+    //call get and set for region
+    public function setSecurity_code($security_code)
+    {
+        $this->security_code = $security_code;
+    }
+
+    public function getSecurity_code()
+    {
+        return $this->security_code;
+    }
+
     public function toArray(){
         return [
             "name" => $this->getName(),
@@ -152,7 +189,10 @@ class UserModel{
             "address" => $this->getAddress(),
             "created_at" => $this->getCreated_at(),
             "status_id" => $this->getStatus_id(),
-            "role_id" => $this->getRole_id()
+            "role_id" => $this->getRole_id(),
+            "otp_code" => $this->getOtp_code(),
+            "otp_expiry" => $this->getOtp_expiry(),
+            "security_code" => $this->getSecurity_code(),
 
         ];
     }

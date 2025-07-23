@@ -939,8 +939,8 @@ body.dashboard-page {
 .table-responsive {
     /* Existing horizontal scroll */
     overflow-x: auto;
-    /* Added for vertical scroll */
-    height: 500px;
+    
+    height: 450px;
     /* Set a maximum height for the table container */
     overflow-y: auto;
     /* Enable vertical scrolling */
@@ -1485,7 +1485,7 @@ body.dashboard-page {
 .dashboard-header .agent-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 6px;
     /* Adjust gap between filter groups */
     flex-grow: 1;
     /* Allow filters to take available space */
@@ -1511,7 +1511,7 @@ body.dashboard-page {
 
 .dashboard-header .agent-filters input[type="text"],
 .dashboard-header .agent-filters input[type="email"] {
-    width: 100%;
+    width: 50%;
     padding: 10px 15px;
     border: 1px solid var(--search-border);
     border-radius: 8px;

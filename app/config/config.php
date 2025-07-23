@@ -14,3 +14,5 @@ define('URLROOT', 'http://localhost/Delivery');
 
 //Define SITENAME
 define('SITENAME','GODELIVERY');
+define('ADMIN' , 'Admin');
+define('AGENT', 'Agent');

@@ -9,8 +9,6 @@ $currentRoute = $_SERVER['REQUEST_URI'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoDelivery - Admin Dashboard</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/home.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/deliveryhistory.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/managedelivery.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/agent.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/profile.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/agent_profile.css">
@@ -46,8 +44,8 @@ $currentRoute = $_SERVER['REQUEST_URI'];
                     <i class="fas fa-user-tie"></i> Agent
                 </a>
 
-                <a href="<?= URLROOT ?>/admin/accesscode"
-                    class="nav-item <?= strpos($currentRoute, '/admin/accesscode') !== false ? 'active' : '' ?>">
+                <a href="<?= URLROOT ?>/admin/access_code"
+                    class="nav-item <?= strpos($currentRoute, '/admin/access_code') !== false ? 'active' : '' ?>">
                     <i class="fas fa-key"></i> Access Code
                 </a>
 

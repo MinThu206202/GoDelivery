@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
 :root {
     --primary-color: #1F265B;
     /* NEW Main Color: Dark Blue */
@@ -937,11 +935,9 @@ body.dashboard-page {
 }
 
 .table-responsive {
-    /* Existing horizontal scroll */
     overflow-x: auto;
-    /* Added for vertical scroll */
     height: 500px;
-    /* Set a maximum height for the table container */
+    /* Set a fixed height for stability */
     overflow-y: auto;
     /* Enable vertical scrolling */
 }
@@ -1004,6 +1000,7 @@ body.dashboard-page {
     background-color: var(--status-not-active-bg);
     color: var(--status-not-active-text);
 }
+
 
 /* --- Dashboard Overview Specific Styles --- */
 .summary-cards {
@@ -1421,7 +1418,7 @@ body.dashboard-page {
 }
 
 /* Adjustments for text within the settings box */
-.settings-box #agentData p {
+.settings-box #accessCodeData p {
     margin-bottom: 8px;
     /* Slightly reduce space between paragraphs */
     font-size: 15px;
@@ -1432,12 +1429,12 @@ body.dashboard-page {
     /* Small left padding for text */
 }
 
-.settings-box #agentData p:last-child {
+.settings-box #accessCodeData p:last-child {
     margin-bottom: 0;
     /* Remove bottom margin for the last paragraph */
 }
 
-.settings-box #agentData p strong {
+.settings-box #accessCodeData p strong {
     display: inline-block;
     /* Allows setting a fixed width if desired */
     min-width: 100px;
@@ -1536,6 +1533,7 @@ body.dashboard-page {
     /* Match input height for alignment */
 }
 
+/* Custom Alert Box Styles */
 .custom-alert-overlay {
     position: fixed;
     top: 0;
@@ -1624,44 +1622,21 @@ body.dashboard-page {
     }
 }
 
-/* Sorting Icons */
+/* Sorting Icons - These styles will no longer apply as 'sortable' class is removed */
 .sortable {
-    cursor: pointer;
+    cursor: default;
+    /* Changed to default as sorting is removed */
     position: relative;
     padding-right: 25px;
     /* Space for the icon */
 }
 
 .sort-icon {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: opacity 0.3s ease, color 0.3s ease;
+    display: none;
+    /* Hide sort icons completely */
 }
 
-.sort-icon i {
-    opacity: 0;
-    /* Hide default sort icon by default */
-    color: var(--text-color);
-    /* Default color for the icon */
-    transition: opacity 0.3s ease, color 0.3s ease;
-}
-
-.sortable:hover .sort-icon i {
-    opacity: 0.5;
-    /* Make it subtly visible on hover */
-}
-
-/* Only show the icon clearly when a column is actively sorted */
-.sortable .sort-icon i.fa-sort-up,
-.sortable .sort-icon i.fa-sort-down {
-    opacity: 1;
-    color: var(--primary-color);
-    /* Primary color when active */
-}
-
-/* Copy Icon */
+/* Copy Icon (not needed for route list, but keeping styles general if needed elsewhere) */
 .copy-access-code {
     cursor: pointer;
     margin-left: 5px;
@@ -1693,7 +1668,9 @@ body.dashboard-page {
 }
 
 /* Adjustments for settings box details */
-.settings-box #agentData p {
+.settings-box #accessCodeData p,
+.settings-box #accessCodeData .form-group {
+    /* Added form-group for status dropdown */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1704,7 +1681,14 @@ body.dashboard-page {
     /* Space between label and value */
 }
 
-.settings-box #agentData p strong {
+.settings-box #accessCodeData .form-group {
+    margin-bottom: 15px;
+    /* Add some margin for dropdown */
+}
+
+.settings-box #accessCodeData p strong,
+.settings-box #accessCodeData label {
+    /* Adjusted for label in form-group */
     flex-shrink: 0;
     /* Prevent label from shrinking */
     min-width: 80px;
@@ -1713,7 +1697,8 @@ body.dashboard-page {
     /* Align labels to left */
 }
 
-.settings-box #agentData p span {
+.settings-box #accessCodeData p span {
+    /* Changed from #agentData to #accessCodeData */
     flex-grow: 1;
     /* Allow value to take remaining space */
     text-align: right;
@@ -1724,18 +1709,37 @@ body.dashboard-page {
     /* Increased padding-right for better spacing */
 }
 
-.settings-box #agentData p span .copy-access-code {
+.settings-box #accessCodeData select {
+    /* Styling for the new select dropdown */
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--text-color);
+    outline: none;
+    background-color: var(--search-bg);
+    appearance: none;
+    /* Remove default select arrow */
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23555%22%20d%3D%22M4.5%204L6%205.5%207.5%204%209%205.5%206%209%203%205.5%204.5%204z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+}
+
+
+/* Copy icon and feedback styles might not be relevant for route details,
+    but kept general for consistency if used elsewhere or if re-added for routes */
+.settings-box #accessCodeData p span .copy-access-code {
     position: absolute;
     right: 15px;
-    /* Adjusted to create space between code and icon */
     top: 50%;
     transform: translateY(-50%);
 }
 
-.settings-box #agentData p span .copied-feedback {
+.settings-box #accessCodeData p span .copied-feedback {
     position: absolute;
     right: 40px;
-    /* Adjusted to align with the copy icon's new position */
     top: 50%;
     transform: translateY(-50%);
     color: green;
@@ -1744,11 +1748,11 @@ body.dashboard-page {
     padding: 2px 5px;
     border-radius: 3px;
     z-index: 1;
-    /* Ensure it's above other content */
 }
 
 /* Ensure status badge works in the settings box too */
-.settings-box #agentData .status-badge {
+.settings-box #accessCodeData .status-badge {
+    /* Changed from #agentData to #accessCodeData */
     margin-left: auto;
     /* Push badge to the right */
     flex-shrink: 0;
@@ -1760,7 +1764,9 @@ body.dashboard-page {
 }
 
 /* Icon styling within the settings box */
-.settings-box #agentData p .detail-icon {
+.settings-box #accessCodeData p .detail-icon,
+.settings-box #accessCodeData .form-group label i {
+    /* Applied to new dropdown label too */
     margin-right: 10px;
     /* Space between icon and text */
     color: var(--primary-color);
@@ -1774,26 +1780,15 @@ body.dashboard-page {
 /* New status filter buttons styles - updated to match the image */
 .status-filter-buttons {
     display: flex;
-    background-color: var(--white);
-    /* White background for the container */
-    border-radius: 8px;
-    /* Rounded corners for the container */
-    overflow: hidden;
-    /* Hide overflow from inner buttons' border-radius */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    /* Subtle shadow */
-    margin-bottom: 30px;
-    /* Increased space below filter buttons */
+    /* Removed background, border-radius, overflow, box-shadow to integrate with parent panel */
+    margin-bottom: 20px;
+    /* Adjusted spacing from panel header below */
     flex-wrap: wrap;
-    /* Allow wrapping on smaller screens */
     justify-content: flex-start;
-    /* Align to start, as in the image */
-    padding: 0 20px;
-    /* Add padding to the container for space from edges */
+    /* Removed padding from container, as buttons will have padding and parent panel has its own padding */
     align-items: center;
-    /* Vertically center buttons */
-    height: 60px;
-    /* Fixed height for the button container as seen in the image */
+    height: auto;
+    /* Changed to auto to ensure full content visibility including underline */
 }
 
 .status-filter-buttons .filter-button {
@@ -1803,14 +1798,12 @@ body.dashboard-page {
     /* Default text color */
     border: none;
     /* No border for individual buttons */
-    padding: 15px 0;
-    /* Adjusted padding to create space for underline, remove horizontal padding here */
-    margin: 0 15px;
-    /* Add horizontal margin between buttons */
+    padding: 15px 25px;
+    /* Adjusted padding to create internal spacing and remove external margin */
+    margin: 0;
+    /* Removed horizontal margin to make buttons visually connected */
     font-size: 16px;
-    /* Font size matching the image */
     font-weight: 500;
-    /* Default font weight */
     cursor: pointer;
     transition: color 0.3s ease, font-weight 0.3s ease;
     /* Transition for text and weight */
@@ -1823,7 +1816,7 @@ body.dashboard-page {
     /* Prevent text wrapping */
 }
 
-/* Remove border-right between buttons, as per image */
+/* Removed border-right between buttons, as per image (this rule is now redundant if no margin is present) */
 .status-filter-buttons .filter-button:not(:last-child) {
     border-right: none;
 }
@@ -1862,6 +1855,187 @@ body.dashboard-page {
 .status-filter-buttons .filter-button:not(.active):not(:hover)::after {
     width: 0;
 }
+
+/* Centering the filter inputs */
+.dashboard-search-with-filters {
+    display: flex;
+    justify-content: center;
+    /* This centers the items horizontally */
+    flex-wrap: wrap;
+    /* Allow items to wrap on smaller screens */
+    gap: 15px;
+    /* Space between filter groups */
+}
+
+/* Add Access Code Modal Specific Styles */
+.add-access-code-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+    /* Between settings and alert */
+    backdrop-filter: blur(5px);
+}
+
+.add-access-code-box {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    /* Increased max-width */
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* Space between form groups */
+    animation: fadeIn 0.3s ease-out;
+}
+
+.add-access-code-box h4 {
+    font-size: 22px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    /* Added for icon alignment */
+    align-items: center;
+    /* Added for icon alignment */
+    gap: 10px;
+    /* Space between icon and text */
+}
+
+.add-access-code-box .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-access-code-box label {
+    font-size: 14px;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+    font-weight: 500;
+    display: flex;
+    /* Make label a flex container */
+    align-items: center;
+    /* Vertically align icon and text */
+}
+
+.add-access-code-box label i {
+    margin-right: 8px;
+    /* Space between icon and label text */
+    color: var(--primary-color);
+    /* Color for the icons */
+    font-size: 1.1em;
+    /* Slightly larger icon size */
+}
+
+.add-access-code-box input[type="text"],
+.add-access-code-box input[type="number"],
+.add-access-code-box textarea,
+.add-access-code-box select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--text-color);
+    outline: none;
+    transition: border-color 0.3s ease;
+    background-color: var(--search-bg);
+    /* Use a consistent background */
+}
+
+.add-access-code-box input:focus,
+.add-access-code-box textarea:focus,
+.add-access-code-box select:focus {
+    border-color: var(--primary-color);
+}
+
+.add-access-code-box textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.add-access-code-box .add-access-code-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.add-access-code-box .add-access-code-actions button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.add-access-code-box .add-access-code-actions .add-button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+}
+
+.add-access-code-box .add-access-code-actions .add-button:hover {
+    background-color: #151b43;
+}
+
+.add-access-code-box .add-access-code-actions .cancel-button {
+    background-color: var(--light-grey);
+    color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+}
+
+.add-access-code-box .add-access-code-actions .cancel-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Responsive adjustments for add route box */
+@media (max-width: 768px) {
+    .add-access-code-box {
+        padding: 20px;
+        gap: 10px;
+    }
+
+    .add-access-code-box h4 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .add-access-code-box label {
+        font-size: 13px;
+    }
+
+    .add-access-code-box input,
+    .add-access-code-box textarea,
+    .add-access-code-box select {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .add-access-code-box .add-access-code-actions {
+        margin-top: 15px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .add-access-code-box .add-access-code-actions button {
+        width: 100%;
+        justify-content: center;
+    }   }
+
 
 /* --- Responsive Design --- */
 @media (max-width: 992px) {
@@ -1991,6 +2165,11 @@ body.dashboard-page {
         flex-direction: column;
     }
 
+    .get-in-touch input[type="text"],
+    .get-in-touch textarea {
+        width: 100%;
+    }
+
     /* Dashboard General */
     .dashboard-container {
         flex-direction: column;
@@ -2091,7 +2270,7 @@ body.dashboard-page {
 
     .table-responsive {
         overflow-x: auto;
-        max-height: 70vh;
+        height: 300px;
         /* Adjusted for smaller screens */
         overflow-y: auto;
     }
@@ -2109,6 +2288,10 @@ body.dashboard-page {
 
     .summary-cards .card .value {
         font-size: 30px;
+    }
+
+    .summary-cards .card .label {
+        font-size: 14px;
     }
 
     /* Dashboard Tracking/Manage Details */
@@ -2170,314 +2353,6 @@ body.dashboard-page {
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
         margin-bottom: 0;
-    }
-
-    /* Agent List Specific */
-    .agent-list-panel .panel-header-with-button {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .agent-list-panel .add-agent-button {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .agent-list-panel .button-group {
-        /* Added for button group */
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .agent-list-panel .back-to-all-agents-button {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .agent-list-panel .panel table {
-        min-width: unset;
-        /* Removed min-width for mobile */
-        width: 100%;
-        /* Ensure it takes full width */
-    }
-}
-
-@media (max-width: 768px) {
-
-    /* General Website Pages */
-    .navbar .logo {
-        font-size: 22px;
-    }
-
-    .navbar .tracking-btn,
-    .navbar .login-btn {
-        font-size: 14px;
-        padding: 6px 15px;
-    }
-
-    .page-header h1 {
-        font-size: 30px;
-    }
-
-    .footer-left h2 {
-        font-size: 30px;
-    }
-
-    .footer-left p {
-        font-size: 14px;
-    }
-
-    .contact-now-btn {
-        font-size: 14px;
-        padding: 10px 20px;
-    }
-
-    .footer-right .social-icons a {
-        font-size: 20px;
-    }
-
-    /* Login Page */
-    .login-left {
-        padding: 25px;
-    }
-
-    .login-header {
-        font-size: 24px;
-        margin-bottom: 30px;
-    }
-
-    .login-title {
-        font-size: 20px;
-        margin-bottom: 20px;
-    }
-
-    .login-form label,
-    .login-form input {
-        font-size: 14px;
-    }
-
-    .login-form input {
-        padding: 10px 12px;
-    }
-
-    .login-form .login-button {
-        font-size: 16px;
-        padding: 10px;
-    }
-
-    .login-right {
-        padding: 30px;
-    }
-
-    .login-right .welcome-text h2 {
-        font-size: 30px;
-    }
-
-    .login-right .welcome-text p {
-        font-size: 16px;
-    }
-
-    .login-right .login-graphic img {
-        max-width: 90%;
-    }
-
-    /* Price Calculator */
-    .price-calculator-section .calculator-form,
-    .cost-details-section {
-        gap: 15px;
-    }
-
-    .price-calculator-section label,
-    .price-calculator-section select {
-        font-size: 14px;
-    }
-
-    .price-calculator-section select {
-        padding: 8px 12px;
-    }
-
-    .price-calculator-section .calculate-btn {
-        font-size: 14px;
-        padding: 8px 20px;
-    }
-
-    .cost-of-delivery .detail-item .label,
-    .cost-of-delivery .detail-item .value {
-        font-size: 14px;
-    }
-
-    .cost-of-delivery .total-amount .value {
-        font-size: 18px;
-    }
-
-    .calculator-note h3 {
-        font-size: 16px;
-    }
-
-    .calculator-note p {
-        font-size: 13px;
-    }
-
-    .calculator-note .phone-numbers span {
-        font-size: 13px;
-        padding: 6px 12px;
-    }
-
-    /* Our Network */
-    .network-filters,
-    .network-locations {
-        gap: 15px;
-    }
-
-    .network-filters label,
-    .network-filters select {
-        font-size: 14px;
-    }
-
-    .network-filters select {
-        padding: 8px 12px;
-    }
-
-    .location-item h4 {
-        font-size: 16px;
-    }
-
-    .location-item p {
-        font-size: 13px;
-    }
-
-    .map-placeholder {
-        height: 250px;
-        font-size: 16px;
-    }
-
-    /* Contact Us */
-    .contact-section {
-        gap: 20px;
-    }
-
-    .contact-address h3,
-    .get-in-touch h3 {
-        font-size: 20px;
-        margin-bottom: 20px;
-    }
-
-    .contact-address p,
-    .contact-address h4 {
-        font-size: 14px;
-    }
-
-    .get-in-touch input,
-    .get-in-touch textarea {
-        font-size: 14px;
-        padding: 10px 12px;
-    }
-
-    .get-in-touch textarea {
-        min-height: 100px;
-    }
-
-    .get-in-touch .send-btn {
-        font-size: 14px;
-        padding: 8px 20px;
-    }
-
-    /* Dashboard General */
-    .main-content {
-        padding: 15px;
-    }
-
-    .dashboard-header {
-        padding: 10px 15px;
-    }
-
-    .dashboard-header .page-title {
-        font-size: 20px;
-    }
-
-    .dashboard-header .search-bar input {
-        font-size: 14px;
-        padding: 8px 15px;
-    }
-
-    .dashboard-header .search-bar button {
-        font-size: 16px;
-        padding: 8px 12px;
-    }
-
-    .dashboard-header .admin-profile span {
-        font-size: 14px;
-    }
-
-    .dashboard-header .admin-profile .profile-icon {
-        width: 35px;
-        height: 35px;
-        font-size: 18px;
-    }
-
-    .panel h3 {
-        font-size: 18px;
-        margin-bottom: 15px;
-    }
-
-    .panel th,
-    .panel td {
-        font-size: 13px;
-        padding: 10px 12px;
-    }
-
-    /* Dashboard Overview */
-    .summary-cards {
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }
-
-    .summary-cards .card .value {
-        font-size: 28px;
-    }
-
-    .summary-cards .card .label {
-        font-size: 14px;
-    }
-
-    /* Dashboard Tracking/Manage Details */
-    .tracking-details .detail-box,
-    .manage-delivery-panel .detail-box {
-        padding: 12px 15px;
-    }
-
-    .tracking-details .detail-box .label,
-    .manage-delivery-panel .detail-box .label {
-        font-size: 13px;
-    }
-
-    .tracking-details .detail-box .value,
-    .manage-delivery-panel .detail-box .value {
-        font-size: 15px;
-    }
-
-    .tracking-details .graphic-box i,
-    .manage-delivery-panel .graphic-box i {
-        font-size: 30px;
-    }
-
-    .back-button,
-    .confirm-button {
-        font-size: 14px;
-        padding: 8px 15px;
-    }
-
-    /* Dashboard Deliver History */
-    .dashboard-header .dashboard-search-with-filters input,
-    .dashboard-header .dashboard-search-with-filters select,
-    .dashboard-header .dashboard-search-with-filters button {
-        font-size: 13px;
-        padding: 7px 10px;
-    }
-
-    .delivery-status-buttons .status-button {
-        font-size: 14px;
-        padding: 10px 15px;
     }
 
     /* Agent List Specific */

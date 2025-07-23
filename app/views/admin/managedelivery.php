@@ -1,4 +1,5 @@
 <?php require_once APPROOT . '/views/inc/sidebar.php'; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/managedelivery.css">
 
 
 <!-- Main Content Area -->

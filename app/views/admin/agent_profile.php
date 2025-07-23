@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+
 $status = $data['agent']['status_name'];
 $statusLower = strtolower($status);
 
@@ -17,7 +18,16 @@ if ($statusLower === 'active') {
     $buttonClass = 'btn-green';
 }
 ?>
-
+<?php if (!empty($data['success'])): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const successBox = document.getElementById('successBox');
+            successBox.textContent = '✅ Agent status changed. Email sent!';
+            successBox.classList.remove('hidden');
+            setTimeout(() => successBox.classList.add('hidden'), 3000);
+        });
+    </script>
+<?php endif; ?>
 <style>
     /* Unified button styling */
     .agent-action-buttons button {
@@ -170,7 +180,8 @@ if ($statusLower === 'active') {
 <main class="main-content">
     <header class="dashboard-header">
         <div class="header-left">
-            <h2 class="page-title">Agent View</h2>
+            <h2 class="value" > <a href=""> Agent</a>/</h2>
+                        <h2 class="page-title">Agent View</h2>
         </div>
         <div class="header-right">
             <div class="admin-profile">
@@ -207,10 +218,14 @@ if ($statusLower === 'active') {
                     <span class="label">Password:</span>
                     <span class="value">********</span>
                 </div>
+                <div class="detail-row">
+                    <span class="label">Address:</span>
+                    <span class="value"><?= htmlspecialchars($data['agent']['address']) ?></span>
+                </div>
             </div>
         </div>
 
-        <div class="agent-summary-cards">
+        <div class=" agent-summary-cards">
             <div class="card"><span class="label">Assigned Deliveries</span><span class="value">10</span></div>
             <div class="card"><span class="label">Pending Deliveries</span><span class="value">10</span></div>
             <div class="card"><span class="label">Complete Deliveries</span><span class="value">10</span></div>
@@ -236,9 +251,9 @@ if ($statusLower === 'active') {
                     <?php if (!empty($data['delivery'])): ?>
                         <?php foreach ($data['delivery'] as $delivery): ?>
                             <tr>
-                                <td><?= htmlspecialchars($delivery['sender_name']) ?></td>
-                                <td><?= htmlspecialchars($delivery['sender_email']) ?></td>
-                                <td><?= htmlspecialchars($delivery['sender_phone']) ?></td>
+                                <td><?= htmlspecialchars($delivery['customer_sender_name']) ?></td>
+                                <td><?= htmlspecialchars($delivery['customer_sender_email']) ?></td>
+                                <td><?= htmlspecialchars($delivery['delivery_status_name']) ?></td>
                                 <td><?= htmlspecialchars($delivery['created_at']) ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -252,6 +267,8 @@ if ($statusLower === 'active') {
         </div>
     </section>
 </main>
+
+<input type="hidden" id="agentId" value="<?= htmlspecialchars($data['agent']['id']) ?>">
 
 <!-- ✅ Confirmation Modal -->
 <div id="customConfirmBox" class="modal-overlay hidden">
@@ -269,16 +286,18 @@ if ($statusLower === 'active') {
 <div id="successBox" class="success-box hidden"></div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
         const statusText = document.getElementById('currentAgentStatus');
-        const actionButton = document.getElementById('deactivateAccountButton');
+        const actionBtn = document.getElementById('deactivateAccountButton');
         const confirmBox = document.getElementById('customConfirmBox');
+        const confirmText = document.getElementById('confirmText');
+        const successBox = document.getElementById('successBox');
         const confirmYes = document.getElementById('confirmYes');
         const confirmNo = document.getElementById('confirmNo');
-        const successBox = document.getElementById('successBox');
-        const confirmText = document.getElementById('confirmText');
+        const agentId = document.getElementById('agentId').value;
 
-        actionButton.addEventListener('click', () => {
+        // When action button is clicked, show confirmation
+        actionBtn.addEventListener('click', () => {
             const isActive = statusText.textContent.trim().toLowerCase() === 'active';
             confirmText.textContent = isActive ?
                 'Are you sure you want to deactivate this agent?' :
@@ -286,29 +305,34 @@ if ($statusLower === 'active') {
             confirmBox.classList.remove('hidden');
         });
 
+        // When confirm YES is clicked
         confirmYes.addEventListener('click', () => {
-            const isActive = statusText.textContent.trim().toLowerCase() === 'active';
-            statusText.textContent = isActive ? 'Inactive' : 'Active';
-            statusText.classList.remove('status-active', 'status-inactive');
-            statusText.classList.add(isActive ? 'status-inactive' : 'status-active');
+            // Submit POST form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '<?= URLROOT ?>/admincontroller/changestatus';
 
-            actionButton.textContent = isActive ? 'Activate Agent' : 'Deactivate Agent';
-            actionButton.classList.remove('btn-red', 'btn-green');
-            actionButton.classList.add(isActive ? 'btn-green' : 'btn-red');
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'id';
+            input.value = agentId;
 
-            confirmBox.classList.add('hidden');
-            successBox.textContent = isActive ?
-                '✅ Agent has been deactivated and email sent.' :
-                '✅ Agent has been activated and email sent.';
-            successBox.classList.remove('hidden');
-
-            setTimeout(() => {
-                successBox.classList.add('hidden');
-            }, 3000);
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         });
 
+        // When NO is clicked
         confirmNo.addEventListener('click', () => {
             confirmBox.classList.add('hidden');
         });
+
+        // ✅ Show success message if redirected with ?success=1
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === '1') {
+            successBox.textContent = '✅ Agent status changed. Email sent!';
+            successBox.classList.remove('hidden');
+            setTimeout(() => successBox.classList.add('hidden'), 3000);
+        }
     });
 </script>

@@ -11,16 +11,24 @@ class Admin extends Controller
 
     public function home()
     {
-        $code = $this->db->getByRoleIdWithNames('users');
+        $allowedStatuses = ['Active', 'Inactive']; // Exclude 'Suspended'
+        $allUserData = $this->db->getByRoleAndStatus('user_full_info', 'AGENT', $allowedStatuses);
+
         $data = [
-            'code' => $code
+            'allUserData' => $allUserData
         ];
+
         $this->view('admin/home', $data);
     }
 
     public function deliveryhistory()
     {
-        $this->view('admin/deliveryhistory');
+
+        $user = $this->db->readAll('delivery_info');
+        $data = [
+            'alldeliverydata' => $user
+        ];
+        $this->view('admin/deliveryhistory',$data);
     }
 
     public function managedelivery()
@@ -35,13 +43,12 @@ class Admin extends Controller
 
     public function agent()
     {
-        $code = $this->db->getByRoleIdWithNames('users');
-        // Each item in $code must include: name, email, city_name, access_code, status_name
+        $allowedStatuses = ['Active', 'Inactive']; // Exclude 'Suspended'
+        $allUserData = $this->db->getByRoleAndStatus('user_full_info', 'AGENT', $allowedStatuses);
 
         $data = [
-            'code' => $code
+            'allUserData' => $allUserData
         ];
-
         $this->view('admin/agent', $data);
     }
 
@@ -49,4 +56,25 @@ class Admin extends Controller
     {
         $this->view('admin/profile');
     }
+
+    public function access_code()
+    {
+        $allowedStatuses = ['Suspended']; // Exclude 'Suspended'
+        $allUserData = $this->db->getByRoleAndStatus('user_full_info', 'AGENT', $allowedStatuses);
+
+        $data = [
+            'allUserData' => $allUserData
+        ];
+        $this->view('admin/access_code',$data);
+    }
+
+    public function route()
+    {
+        $code = $this->db->readAll('route_full_info');
+        $data = [
+            'allroutedata' =>$code
+        ];
+        $this->view('admin/route',$data);
+    }
+
 }

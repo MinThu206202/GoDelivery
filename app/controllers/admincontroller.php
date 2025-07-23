@@ -7,84 +7,124 @@ class admincontroller extends Controller{
         $this->db = new Database();
     }
 
-    public function changephone(){
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $new_phone = $_POST['new_phone'];
+    public function changephone()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            session_start();
+            $newPhone = $_POST['new_phone'];
             $password = $_POST['password'];
-            session_start();
             $user = $_SESSION['user'];
-            $password_id = $user['password'];
-            $id = $user['id'];
-            $checkphone = $this->db->columnFilter('users','phone',$new_phone);
-            if($checkphone){
-                setMessage ('error','New Phone Number is already taken');
-                redirect('admin/profile');
-            }else{
-                if(!$checkphone && $password == $password_id){
-                    $data = [
-                        'phone' => $new_phone
-                    ];
-                    $change = $this->db->update('users',$id,$data);
-                    if($change){
-                        redirect('admin/profile');
-                    }else{
-                        echo "Fail";
-                        die();
-                    }
+
+            if ($this->db->columnFilter('users', 'phone', $newPhone)) {
+                setMessage('error', 'Phone number already in use');
+            } elseif ($password === $user['password']) {
+                $updated = $this->db->update('users', $user['id'], ['phone' => $newPhone]);
+                if (!$updated) {
+                    setMessage('error', 'Phone number update failed');
                 }
+            } else {
+                setMessage('error', 'Incorrect password');
             }
+
+            redirect('admin/profile');
         }
     }
 
 
-    public function changepassword(){
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $password = $_POST['current_password'];
-            $newpassword = $_POST['new_password'];
-            $confirmpassword = $_POST['confirm_password'];
+    public function changepassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_start();
             $user = $_SESSION['user'];
-            $id = $user['id'];
-            $pass = $user['password'];
-            $newpassword = base64_encode($newpassword);
-            $password = base64_encode($password);
-            // echo base64_decode($pass);
-            // die();
-            if($newpassword !== $confirmpassword){
-                setMessage ('error','Password do not match');
-                redirect('admin/profile');
-            }
-            if($password !== $user['password']){
-                setMessage ('error' , 'Current Password is not Match');
-                redirect('admin/profile');
-            }else{
-                $data = [
-                    'password' => $newpassword
-                ];
-                $ischange = $this->db->update('users',$id,$data);
-                if($ischange){
-                    redirect('admin/profile');
-                }else{
-                    setMessage('error','Password can not change');
-                    redirect('admin/profile');
+
+            $current = base64_encode($_POST['current_password']);
+            $new     = base64_encode($_POST['new_password']);
+            $confirm = base64_encode($_POST['confirm_password']);
+
+            if ($new !== $confirm) {
+                setMessage('error', 'Passwords do not match');
+            } elseif ($current !== $user['password']) {
+                setMessage('error', 'Incorrect current password');
+            } else {
+                $updated = $this->db->update('users', $user['id'], ['password' => $new]);
+                if (!$updated) {
+                    setMessage('error', 'Password change failed');
                 }
             }
+
+            redirect('admin/profile');
         }
     }
 
-    public function  set_agent_session(){
+    public function  agent_profile(){
         session_start();
 
         $agentId = $_GET['id'] ?? null;            
-        $isagent = $this->db->agentbyid($agentId);
-        $isdelivery = $this->db->deliverybyid($agentId);
-        // var_dump($agentId);
-        // die();
+        $isagent = $this->db->columnFilter('user_full_info','id',$agentId);
+        $isdelivery = $this->db->getByDeliveryId('delivery_full_info',$isagent['id']);
+        
         $data = [
             'agent' => $isagent,
             'delivery' => $isdelivery
         ];
         $this->view('admin/agent_profile',$data);
+    }
+
+    public function changestatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            session_start();
+
+            $agentId = $_POST['id'] ?? null;
+            $user = $this->db->columnFilter('users', 'id', $agentId);
+
+            if ($user['status_id'] == 1) {
+                $this->db->update('users', $agentId, ['status_id' => 2]);
+                $mail = new Mail();
+                $ismail = $mail->activeagent($user['email'],$user['name']);
+
+            } elseif ($user['status_id'] == 2) {
+                $this->db->update('users', $agentId, ['status_id' => 1]);
+                $mail = new Mail();
+                $ismail = $mail->dectivateagent($user['email'], $user['name']);
+            }
+            $isagent = $this->db->columnFilter('user_full_info', 'id', $agentId);
+            $isdelivery = $this->db->getByDeliveryId('delivery_full_info', $isagent['id']);
+
+            $data = [
+                'agent' => $isagent,
+                'delivery' => $isdelivery,
+                'success' => true
+            ];
+            $this->view('admin/agent_profile', $data);
+        }
+    }
+
+    public function sendmail()
+    {
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            redirect('admin/access_code');
+        }
+
+        $user = $this->db->columnFilter('users', 'id', $id);
+
+        if ($user && !empty($user['email']) && !empty($user['name']) && !empty($user['security_code'])) {
+            (new Mail())->acceptagent($user['email'], $user['name'], $user['security_code']);
+            $this->db->update('users', $id, ['status_id' => 1]);
+            // Redirect with success flag
+            redirect('admin/access_code?success=1'); // or ?success=0 if failed
+            } else {
+            redirect('admin/access_code?mail=error');
+        }
+    }
+
+
+    public function delivery_detail(){
+        $tracking_code = $_GET['tracking_code'];
+
+        echo $tracking_code;
+        die();
     }
 
 }

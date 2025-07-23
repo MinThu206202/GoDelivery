@@ -8,7 +8,6 @@ class Auth extends Controller
     public function __construct()
     {
         $this->model('UserModel');
-        $this->model('SecurityCodeModel');
         $this->db = new Database();
     }
 
@@ -27,7 +26,7 @@ class Auth extends Controller
     {
         $cityId = $_GET['city_id'] ?? null;
         if ($cityId) {
-            $townships = $this->db->columnFilterAll('townships', 'city_id', $cityId);
+            $townships = $this->db->columnFilterall('townships', 'city_id', $cityId);
             echo json_encode($townships);
         }
     }
@@ -36,45 +35,39 @@ class Auth extends Controller
     {
         $townshipId = $_GET['township_id'] ?? null;
         if ($townshipId) {
-            $wards = $this->db->columnFilterAll('wards', 'township_id', $townshipId);
+            $wards = $this->db->columnFilterall('wards', 'township_id', $townshipId);
             echo json_encode($wards);
         }
     }
 
     public function login()
     {
-        //  echo "Hello Bo Kaw";
-        //  exit;
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if (isset($_POST['security_code']) && isset($_POST['password'])) {
-                $array = $_POST['security_code'];
-                $security_code = implode('', $array);
-                $password = base64_encode($_POST['password']);
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
-                $ischeck = $this->db->columnFilter('user_security', 'security_code', $security_code);
-                $id = $ischeck['user_id'];
+        $codeArray = $_POST['security_code'] ?? null;
+        $passwordRaw = $_POST['password'] ?? null;
 
-
-                $isLogin = $this->db->columnFilter('users', 'id', $id);
-
-                // var_dump($data);
-                // die();
-                if ($isLogin && $isLogin['role_id'] == 1) {
-
-                    session_start();
-                    $_SESSION['user'] = $isLogin;
-                    redirect('admin/home');
-                } elseif ($isLogin && $isLogin['role_id'] == 2) {
-                    $this->view('agent/home');
-                } else {
-                    setMessage('error', 'Login Fail!');
-                    redirect('pages/login');
-                }
-            } else {
-                setMessage('error', 'Error');
-                redirect('pages/login');
-            }
+        if (!$codeArray || !$passwordRaw) {
+            setMessage('error', 'Missing credentials');
+            return redirect('pages/login');
         }
+
+        $securityCode = implode('', $codeArray);
+        $encodedPassword = base64_encode($passwordRaw);
+
+        $user = $this->db->columnFilter('users', 'security_code', $securityCode);
+      
+        if (!$user || $user['password'] !== $encodedPassword) {
+            setMessage('error', 'Invalid security code');
+            return redirect('pages/login');
+        }
+
+        session_start();
+        $_SESSION['user'] = $user;
+
+        return $user['role_id'] == 1
+            ? redirect('admin/home')
+            : redirect('agent/home');
     }
 
 
@@ -82,11 +75,10 @@ class Auth extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
-        session_start();
+        $email = trim($_POST['email'] ?? '');
 
-        $email = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL);
-        if (!$email) {
-            setMessage('error', 'Invalid email format');
+        if (empty($email)) {
+            setMessage('error', 'Email is required');
             return redirect('pages/forgetpassword');
         }
 
@@ -96,28 +88,32 @@ class Auth extends Controller
             return redirect('pages/forgetpassword');
         }
 
-        $security = $this->db->columnFilter('user_security', 'user_id', $user['id']);
+        $security = $this->db->columnFilter('users', 'id', $user['id']);
         if (!$security) {
             setMessage('error', 'Security record not found');
             return redirect('pages/forgetpassword');
         }
 
-        $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-        $expiry = date('Y-m-d H:i:s', strtotime('+5 minutes'));
+        $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        date_default_timezone_set('Asia/Yangon');
+        $expiry = date('Y-m-d H:i:s', strtotime('+1 minutes'));
 
-        $updated = $this->db->update('user_security', $security['id'], [
+        $updated = $this->db->update('users', $security['id'], [
             'otp_code' => $otp,
             'otp_expiry' => $expiry
         ]);
 
-        if ($updated) {
-            (new Mail())->sendOTP($email, $otp);
-            $_SESSION['post_email'] = $email;
-            return redirect('pages/otp');
+        if (!$updated) {
+            setMessage('error', 'Failed to generate OTP');
+            return redirect('pages/forgetpassword');
         }
 
-        setMessage('error', 'Failed to send OTP');
-        redirect('pages/forgetpassword');
+        (new Mail())->sendOTP($email, $otp);
+
+        session_start();
+        $_SESSION['post_email'] = $email;
+
+        return redirect('pages/otp');
     }
 
 
@@ -125,140 +121,127 @@ class Auth extends Controller
 
     public function otp()
     {
-        // echo "kyaw";
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_start();
-            if (isset($_SESSION['post_email']) && isset($_POST['otp'])) {
-                $otpArray = $_POST['otp'];
-                $otp = implode('', $otpArray);
-                $email = $_SESSION['post_email'];
 
-                $checkid = $this->db->columnFilter('users', 'email', $email);
-                $id = $checkid['id'];
+            $email = $_SESSION['post_email'] ?? null;
+            $otp = isset($_POST['otp']) ? implode('', array_map('trim', $_POST['otp'])) : null;
 
-                $otpcheck = $this->db->columnFilter('user_security', 'user_id', $id);
-                $confirmotp = $otpcheck['otp_code'];
-
-                if ($otpcheck && $confirmotp == $otp) {
-                    $_SESSION['change_mail'] = $email;
-                    redirect('pages/changepassword');
-                } else {
-                    setMessage('error', 'Invalid OTP');
-                    redirect('pages/otp');
-                }
+            if (!$email || !$otp) {
+                setMessage('error', 'Missing email or OTP.');
+                return redirect('pages/otp');
             }
+
+            $user = $this->db->columnFilter('users', 'email', $email);
+
+            date_default_timezone_set('Asia/Yangon');
+            $currenttime =  date('Y-m-d H:i:s');
+
+            if (time() > strtotime($user['otp_expiry'])) {
+                setMessage('error', 'OTP expired');
+                redirect('pages/otp');
+            }
+
+
+            if (!empty($user) && ($user['otp_code'] ?? '') === $otp) {
+                $_SESSION['change_mail'] = $email;
+                return redirect('pages/changepassword');
+            }
+
+            setMessage('error', 'Invalid OTP');
+            redirect('pages/otp');
         }
     }
 
     public function changepassword()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_start();
-            if (isset($_SESSION['post_email']) && isset($_POST['new_password']) && isset($_POST['confirm_password'])) {
-                $email = $_SESSION['post_email'];
-                $password = $_POST['new_password'];
-                $confirm_password = $_POST['confirm_password'];
-                $password = base64_encode($password);
-                $confirm_password = base64_encode($confirm_password);
 
-                $checkid = $this->db->columnFilter('users', 'email', $email);
-                $id = $checkid['id'];
+            $email = $_SESSION['post_email'] ?? null;
+            $newPass = $_POST['new_password'] ?? null;
+            $confirmPass = $_POST['confirm_password'] ?? null;
 
-                $data = [
-                    'password' => $password
-                ];
-
-                if ($password !== $confirm_password) {
-                    setMessage('error', 'Password not match');
-                    redirect('pages/changepassword');
-                }
-                $checkmail = $this->db->update('users', $id, $data);
-                if ($checkmail) {
-                    redirect('pages/login');
-                } else {
-                    setMessage('error', 'Password not changed');
-                    redirect('pages/changepassword');
-                }
+            if (!$email || !$newPass || !$confirmPass) {
+                setMessage('error', 'All fields are required.');
+                return redirect('pages/changepassword');
             }
+
+            if ($newPass !== $confirmPass) {
+                setMessage('error', 'Passwords do not match.');
+                return redirect('pages/changepassword');
+            }
+
+            $user = $this->db->columnFilter('users', 'email', $email);
+
+            if (!$user || empty($user['id'])) {
+                setMessage('error', 'User not found.');
+                return redirect('pages/changepassword');
+            }
+
+            // Use password_hash for real security instead of base64
+            $hashedPassword = password_hash($newPass, PASSWORD_BCRYPT);
+
+            $updated = $this->db->update('users', $user['id'], ['password' => $hashedPassword]);
+
+            if ($updated) {
+                unset($_SESSION['post_email']); // optional: clear session
+                return redirect('pages/login');
+            }
+
+            setMessage('error', 'Failed to update password.');
+            redirect('pages/changepassword');
         }
     }
 
     public function register()
     {
-        // echo "kyaw";
-        // die();
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_start();
+            date_default_timezone_set('Asia/Yangon');
+
             $email = $_POST['email'];
             $phone = $_POST['phonenumber'];
+            $password = $_POST['password'];
+            $confirm = $_POST['confirm_password'];
 
-            $emailcheck = $this->db->columnFilter('users', 'email', $email);
-            $phonecheck = $this->db->columnFilter('users', 'phone', $phone);
-            if ($emailcheck || $phonecheck) {
-                setMessage('error', 'This email or phone is already registered');
+            if ($this->db->columnFilter('users', 'email', $email) || $this->db->columnFilter('users', 'phone', $phone)) {
+                setMessage('error', 'Email or phone already registered');
                 redirect('pages/register');
-            } else {
-                $name = $_POST['name'];
-                $password = $_POST['password'];
-                $confirmpassword = $_POST['confirm_password'];
-                $region_id = $_POST['region_id'];
-                $city_id = $_POST['city_id'];
-                $township_id = $_POST['township_id'];
-                $ward_id = $_POST['ward_id'];
-                $address = $_POST['address'];
-               
-                if ($password !== $confirmpassword) {
-                    setMessage('error', 'Password not match');
-                    redirect('pages/register');
-                } else {
-                    $password = base64_encode($password);
-
-
-                    $user = new UserModel;
-                    $user->setName($name);
-                    $user->setEmail($email);
-                    $user->setPhone($phone);
-                    $user->setPassword($password);
-                    $user->setRegion($region_id);
-                    $user->setCity($city_id);
-                    $user->setTownship($township_id);
-                    $user->setWard($ward_id);
-                    $user->setAddress($address);
-                    $user->setrole_id(2);
-                    $user->setCreated_at(date('Y-m-d h:i:s'), time());
-                    $user->setStatus_id(3);
-
-
-                    $create = $this->db->create('users', $user->toArray());
-
-                    if ($create) {
-
-                        $getid = $this->db->columnFilter('users', 'email', $email);
-                        $id = $getid['id'];
-                        $security_code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-
-                        $security = new SecurityCodeModel;
-                        $security->setUser_id($id);
-                        $security->setOtp_code(null);
-                        $security->setOtp_expiry(null);
-                        $security->setSecurity_code($security_code);
-                        $security_create = $this->db->create('user_security', $security->toArray());
-                        if ($security_create) {
-                            $new =  new Mail();
-                            $sentmail = $new->welcomeamil($email, $name);
-                            redirect('pages/login');
-                        } else {
-                            echo "kyaw";
-                            die();
-                        }
-                    } else {
-                        setMessage('error', 'Failed to register');
-                        redirect('pages/register');
-                    }
-                }
             }
-        } else {
-            echo "POST";
+
+            if ($password !== $confirm) {
+                setMessage('error', 'Password not match');
+                redirect('pages/register');
+            }
+
+            $userId = $this->db->columnFilter('users', 'email', $email)['id'];
+            $securityCode = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+
+            $user = new UserModel;
+            $user->setName($_POST['name']);
+            $user->setEmail($email);
+            $user->setPhone($phone);
+            $user->setPassword(base64_encode($password));
+            $user->setRegion($_POST['region_id']);
+            $user->setCity($_POST['city_id']);
+            $user->setTownship($_POST['township_id']);
+            $user->setWard($_POST['ward_id']);
+            $user->setAddress($_POST['address']);
+            $user->setRole_id(2);
+            $user->setStatus_id(3);
+            $user->setCreated_at(date('Y-m-d H:i:s'));
+            $user->setSecurity_code($securityCode);
+
+            if ($this->db->create('users', $user->toArray())) {
+                    (new Mail)->welcomeamil($email, $_POST['name']);
+                    redirect('pages/login');
+            }else{
+            setMessage('error', 'Registration failed');
+            redirect('pages/register');
+            }
         }
     }
+
 }
+

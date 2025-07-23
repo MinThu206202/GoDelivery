@@ -1,4 +1,8 @@
-<?php require_once APPROOT . '/views/inc/sidebar.php'; ?>
+<?php require_once APPROOT . '/views/inc/sidebar.php';
+session_start();
+$name = $_SESSION['user'];
+?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/agent.css">
 
 <style>
     .detail-modal {
@@ -188,7 +192,7 @@
         <div class="header-right">
             <div class="admin-profile">
                 <div class="profile-icon"><i class="fas fa-user-circle"></i></div>
-                <span>Admin</span>
+                <span><?= htmlspecialchars($name['name']) ?></span>
             </div>
         </div>
     </header>
@@ -220,7 +224,7 @@
                     </tr>
                 </thead>
                 <tbody id="agentTableBody">
-                    <?php foreach ($data['code'] as $agent): ?>
+                    <?php foreach ($data['allUserData'] as $agent): ?>
                         <?php
                         $statusClass = 'bg-gray';
                         if ($agent['status_name'] === 'Active') {
@@ -235,7 +239,7 @@
                             <td><?= htmlspecialchars($agent['name']) ?></td>
                             <td><?= htmlspecialchars($agent['email']) ?></td>
                             <td><?= htmlspecialchars($agent['city_name']) ?></td>
-                            <td><?= htmlspecialchars($agent['phone']) ?></td>
+                            <td><?= htmlspecialchars($agent['security_code']) ?></td>
                             <td><span class="<?= $statusClass ?>"><?= htmlspecialchars($agent['status_name']) ?></span></td>
                             <td><button class="open-settings" data-agent='<?= htmlspecialchars(json_encode($agent), ENT_QUOTES, 'UTF-8') ?>'>⚙️</button></td>
                         </tr>
@@ -254,7 +258,7 @@
         <p><span>Name:</span> <span id="detailName"></span></p>
         <p><span>Email:</span> <span id="detailEmail"></span></p>
         <p><span>City:</span> <span id="detailCity"></span></p>
-        <p><span>Access Code:</span> <span id="detailAccessCode"></span></p>
+        <p><span>Security Code:</span> <span id="detailAccessCode"></span></p>
         <p><span>Status:</span> <span id="detailStatus" class="status-label"></span></p>
         <div class="modal-buttons">
             <!-- Inside the modal -->
@@ -275,7 +279,7 @@
 </div>
 
 <script>
-    const allAgents = <?= json_encode($data['code']) ?>;
+    const allAgents = <?= json_encode($data['allUserData']) ?>;
     const backButton = document.getElementById('backButton');
     const detailViewBtn = document.getElementById('detailViewBtn'); // Get the button element
 
@@ -304,13 +308,13 @@
 
             if (agent.status_name === 'Active') {
                 statusClass = 'bg-green';
-                icon = '✅';
+                icon = '';
             } else if (agent.status_name === 'Inactive') {
                 statusClass = 'bg-red';
-                icon = '❌';
+                icon = '';
             } else if (agent.status_name === 'Suspended') {
                 statusClass = 'bg-yellow';
-                icon = '⚠️';
+                icon = '';
             }
 
             const row = document.createElement('tr');
@@ -318,7 +322,7 @@
                 <td>${agent.name}</td>
                 <td>${agent.email}</td>
                 <td>${agent.city_name}</td>
-                <td>${agent.access_code}</td>
+                <td>${agent.security_code}</td>
                 <td><span class="${statusClass}">${icon} ${agent.status_name}</span></td>
                 <td><button class="open-settings" data-agent='${JSON.stringify(agent)}'>⚙️</button></td>
             `;
@@ -360,7 +364,7 @@
 
     // Search filter with custom alert overlay
     document.getElementById('applyFilterButton').addEventListener('click', () => {
-        const code = document.getElementById('filterAccessCode').value.trim().toLowerCase();
+        const security_code = document.getElementById('filterSecurity_code').value.trim().toLowerCase();
         const email = document.getElementById('filterEmail').value.trim().toLowerCase();
         const city = document.getElementById('filterCity').value.trim().toLowerCase();
 
@@ -370,7 +374,7 @@
         }
 
         const filtered = allAgents.filter(agent => {
-            return (!code || agent.access_code.toLowerCase().includes(code)) &&
+            return (!code || agent.security_code.toLowerCase().includes(security_code)) &&
                 (!email || agent.email.toLowerCase().includes(email)) &&
                 (!city || agent.city_name.toLowerCase().includes(city));
         });
@@ -381,7 +385,7 @@
 
     // Back button resets to All Agents + clears filters
     backButton.addEventListener('click', () => {
-        document.getElementById('filterAccessCode').value = '';
+        document.getElementById('filterSecurity_code').value = '';
         document.getElementById('filterEmail').value = '';
         document.getElementById('filterCity').value = '';
 
@@ -401,7 +405,7 @@
             document.getElementById('detailName').textContent = agent.name;
             document.getElementById('detailEmail').textContent = agent.email;
             document.getElementById('detailCity').textContent = agent.city_name;
-            document.getElementById('detailAccessCode').textContent = agent.access_code;
+            document.getElementById('detailAccessCode').textContent = agent.security_code;
 
             const detailStatus = document.getElementById('detailStatus');
             detailStatus.textContent = agent.status_name;
@@ -460,7 +464,7 @@
         if (agentId) {
             // Assuming URLROOT is defined in your PHP context and accessible globally
             // Or you might need to pass it as a JS variable from PHP
-            window.location.href = `<?php echo URLROOT; ?>/admincontroller/set_agent_session?id=${agentId}`;
+            window.location.href = `<?php echo URLROOT; ?>/admincontroller/agent_profile?id=${agentId}`;
         } else {
             showCustomAlert("Agent ID not found for full detail view.");
         }
