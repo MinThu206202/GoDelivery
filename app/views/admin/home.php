@@ -10,10 +10,12 @@ if (session_status() === PHP_SESSION_NONE) {
     <header class="dashboard-header">
         <!-- Restructured header to allow flexible centering -->
         <h2 class="page-title">Agent</h2>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Enter Customer WayBill Number">
-            <button id="searchButton"><i class="fas fa-search"></i></button>
-        </div>
+        <form method="POST" action="<?php echo URLROOT; ?>/admincontroller/search">
+            <div class="search-bar">
+                <input type="text" name="tracking_code" id="searchInput" placeholder="Enter Customer WayBill Number">
+                <button id="searchButton"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
         <div class="admin-profile">
             <div class="profile-icon"><i class="fas fa-user-circle"></i></div>
             <span><?= htmlspecialchars($_SESSION['user']['name']) ?></span>
@@ -40,7 +42,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </section>
 
     <section class="recent-deliveries-process panel">
-        <h3>Agent List</h3>
+        <h3>Delivery List</h3>
         <div class="table-responsive">
             <table>
                 <thead>
@@ -53,40 +55,21 @@ if (session_status() === PHP_SESSION_NONE) {
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Code</td>
-                        <td>Yangon</td>
-                        <td>Mandalay</td>
-                        <td>23,June</td>
-                        <td>3,000.0</td>
-                        <td>In Transmit</td>
-                    </tr>
-                    <tr>
-                        <td>Code</td>
-                        <td>Yangon</td>
-                        <td>Mandalay</td>
-                        <td>23,June</td>
-                        <td>3,000.0</td>
-                        <td>In Transmit</td>
-                    </tr>
-                    <tr>
-                        <td>Code</td>
-                        <td>Yangon</td>
-                        <td>Mandalay</td>
-                        <td>23,June</td>
-                        <td>3,000.0</td>
-                        <td>In Transmit</td>
-                    </tr>
-                    <tr>
-                        <td>Code</td>
-                        <td>Yangon</td>
-                        <td>Mandalay</td>
-                        <td>23,June</td>
-                        <td>3,000.0</td>
-                        <td>In Transmit</td>
-                    </tr>
-                </tbody>
+                <?php foreach ($data['allDeliveryData'] as $user): ?>
+                    <tbody>
+                        <tr>
+
+                            <td><?= htmlspecialchars($user['tracking_code']); ?></td>
+                            <td><?= htmlspecialchars($user['from_region_name']); ?></td>
+                            <td><?= htmlspecialchars($user['to_region_name']); ?></td>
+                            <td><?= htmlspecialchars($user['created_at']); ?></td>
+                            <td><?= htmlspecialchars($user['total_amount']); ?></td>
+                            <td><?= htmlspecialchars($user['delivery_status_name']); ?></td>
+
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                    </tbody>
             </table>
         </div>
     </section>

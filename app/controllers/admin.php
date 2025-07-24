@@ -13,9 +13,10 @@ class Admin extends Controller
     {
         $allowedStatuses = ['Active', 'Inactive']; // Exclude 'Suspended'
         $allUserData = $this->db->getByRoleAndStatus('user_full_info', 'AGENT', $allowedStatuses);
-
+        $alldeliveryData = $this->db->readAll('delivery_info');
         $data = [
-            'allUserData' => $allUserData
+            'allUserData' => $allUserData,
+            'allDeliveryData' => $alldeliveryData
         ];
 
         $this->view('admin/home', $data);
@@ -76,5 +77,12 @@ class Admin extends Controller
         ];
         $this->view('admin/route',$data);
     }
+
+
+
+    // public function search()
+    // {
+    //     $this->view('admin/search');
+    // }
 
 }

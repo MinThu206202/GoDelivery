@@ -122,12 +122,41 @@ class admincontroller extends Controller{
 
     public function delivery_detail(){
         $tracking_code = $_GET['tracking_code'];
-
-        echo $tracking_code;
-        die();
+        $id = $this->db->columnFilter('deliveries','tracking_code',$tracking_code);
+        if ($id) {
+            $data['detaildelivery'] = [$this->db->getById('delivery_info', $id['id'])];
+            return $this->view('admin/search', $data);
+        }
     }
 
+    public function search()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['tracking_code'])) {
+            $id = $this->db->columnFilter('deliveries', 'tracking_code', $_POST['tracking_code'])['id'] ?? null;
+            if ($id) {
+                $data['detaildelivery'] = [$this->db->getById('delivery_info', $id)];
+                return $this->view('admin/search', $data);
+            }
+        }
+        setMessage('error', 'Tracking code not found or invalid.');
+    }
+
+    // public function addroute(){
+    //     if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    //         $fromcity = $_POST['form_city'];
+    //         $tocity = $_POST['to_city'];
+    //         $distance = $_POST['distance'];
+    //         $price = $_POST['price'];
+
+    //     }
+    // }
+
+
+
 }
+
+
+
 
 
 ?>
