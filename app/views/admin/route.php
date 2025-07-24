@@ -128,7 +128,7 @@ $name = $_SESSION['user'];
     </section>
 </main>
 
-<scrip>
+<script>
     const filterButtons = document.querySelectorAll(".filter-button");
     const applyFilterButton = document.getElementById("applyFilterButton");
     const backButton = document.getElementById("backButton");
@@ -191,4 +191,4 @@ $name = $_SESSION['user'];
 
         filterTable();
     });
-</scrip
+</script>
