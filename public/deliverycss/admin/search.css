@@ -1,0 +1,696 @@
+/* Import general admin dashboard styles for consistency */
+@import url('admin.css');
+
+/* Custom styles specific to the delivery details page */
+
+/* Adjust main content offset for fixed sidebar */
+.delivery-details-main-content {
+    margin-left: 250px;
+    /* Offset for fixed sidebar */
+}
+
+/* Specific header adjustments for this page if needed, inherited from admin.css */
+.delivery-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding-bottom: 20px;
+    /* Add padding below header */
+    border-bottom: 1px solid #e0e0e0;
+    /* Separator line below header */
+    margin-bottom: 20px;
+}
+
+.delivery-details-header .page-title {
+    font-size: 24px;
+    color: var(--heading-color);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.delivery-details-header .search-bar {
+    display: flex;
+    align-items: left;
+    border: 1px solid var(--search-border);
+    border-radius: 25px;
+    overflow: hidden;
+    background-color: var(--search-bg);
+    flex-grow: 1;
+    /* Allow search bar to expand */
+    max-width: 400px;
+    /* Limit max-width for aesthetics */
+}
+
+.delivery-details-header .search-bar input {
+    flex-grow: 1;
+    border: none;
+    padding: 10px 20px;
+    outline: none;
+    background-color: transparent;
+    font-size: 15px;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.delivery-details-header .search-bar button {
+    background-color: transparent;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    color: var(--primary-color);
+    /* Updated to new primary color */
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+.admin-profile .profile-icon {
+    background-color: var(--primary-color);
+    color: var(--white);
+    /* Changed to white */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+
+/* Overall panel styling */
+.delivery-details-panel {
+    background-color: var(--panel-bg);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 0;
+    /* No padding here, grid will handle it */
+    overflow: hidden;
+    /* Ensures child borders don't spill out */
+}
+
+/* Main Grid Container */
+.delivery-details-grid {
+    display: grid;
+    /* Updated to a 4-column grid to accommodate the Weight/Pieces/Pay row */
+    grid-template-columns: repeat(4, 1fr);
+    /* Now a 4-column grid */
+    gap: 0;
+    /* No gaps between cells, borders will create separation */
+    background-color: var(--white);
+    /* White background for the main container */
+    border: 1px solid #dcdcdc;
+    /* Lighter outer border similar to image */
+    border-radius: 8px;
+    overflow: hidden;
+    /* Important for border-radius on children */
+}
+
+/* General Cell Styling */
+.delivery-details-grid .grid-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Center content vertically */
+    align-items: flex-start;
+    /* Align text to the left */
+    padding: 20px 25px;
+    /* Default padding for cells */
+    box-sizing: border-box;
+    /* Include padding in element's total size */
+    border-bottom: 1px solid #e0e0e0;
+    /* Horizontal separator */
+    border-right: 1px solid #e0e0e0;
+    /* Vertical separator */
+}
+
+/* Remove right border for cells in the rightmost column (4th column in this case) */
+
+
+/* Specific Cell Layouts and Borders */
+
+/* Row 1: Tracking Code and Paid/Perpaid Amount */
+/* These now span 2 columns each in a 4-column grid */
+.tracking-code-cell {
+    grid-column: span 2;
+    /* Spans 2 columns */
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--heading-color);
+    padding-top: 25px;
+    /* More padding at top */
+    padding-bottom: 25px;
+    /* More padding at bottom */
+}
+
+.tracking-code-cell .label {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.paid-amount-cell {
+    grid-column: span 2;
+    /* Spans 2 columns */
+    justify-content: center;
+    align-items: flex-end;
+    /* Align to the right for amount */
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-color);
+    /* Make it stand out */
+    padding-top: 25px;
+    padding-bottom: 25px;
+    border-right: none;
+    /* No right border for the last cell in the row */
+}
+
+.paid-amount-cell .label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--detail-label-color);
+    margin-bottom: 5px;
+    /* Space between label and amount */
+}
+
+
+/* Row 2: From Section and To Section */
+/* These now span 2 columns each in a 4-column grid */
+.from-to-section {
+    grid-column: span 2;
+    /* Spans 2 columns */
+    padding-top: 25px;
+    padding-bottom: 25px;
+    gap: 5px;
+    /* Small gap between values */
+}
+
+.from-to-section .section-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+    /* Space below "From:" / "To:" */
+}
+
+.from-to-section .value {
+    font-size: 15px;
+    font-weight: 400;
+    color: #000;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.from-to-section .value.label-small {
+    /* For "From City", "To City" labels */
+    font-size: 12px;
+    color: var(--detail-label-color);
+    margin-top: 10px;
+    /* Space above city label */
+    font-weight: 500;
+}
+
+.to-section {
+    border-right: none;
+    /* No right border for the last cell in the row */
+}
+
+
+/* Row 3: Truck icon and associated Address/Phone numbers */
+/* Re-aligning to a 4-column grid, making truck span 2, others 1 */
+.truck-row-cell {
+    display: flex;
+    flex-direction: row;
+    /* Horizontal layout for icon and text */
+    align-items: center;
+    justify-content: center;
+    /* Center content horizontally within the cell */
+    padding: 20px 10px;
+    border-top: 1px solid #e0e0e0;
+    /* Top border for this row */
+    gap: 8px;
+    /* Space between icon and text */
+}
+
+/* Address/Phone cells take 1 column */
+.from-address-phone,
+.to-address-phone {
+    grid-column: span 1;
+}
+
+.truck-row-cell i {
+    font-size: 20px;
+    color: #555;
+}
+
+.truck-row-cell .value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+    text-align: center;
+    white-space: nowrap;
+    /* Prevent wrapping for these values */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Truck icon container spans 2 columns */
+.truck-icon-container {
+    grid-column: span 2;
+    /* Truck icon spans 2 columns */
+    border-right: 1px solid #e0e0e0;
+    /* Vertical border for truck icon cell */
+    border-left: 1px solid #e0e0e0;
+    /* Vertical border for truck icon cell */
+}
+
+.truck-icon-container i {
+    font-size: 45px;
+    color: var(--primary-color);
+}
+
+/* Ensure the last cell in this row has no right border */
+.truck-row-cell:nth-child(4n) {
+    /* Apply to the 4th truck-row-cell (e.g. the to-address-phone if there were 4) */
+    border-right: none;
+}
+
+/* Manually clear border for to-address-phone as it's the last in its effective row in a 4-col grid */
+.to-address-phone {
+    border-right: none;
+}
+
+
+/* Row 4: Weight, Number of Pieces, Sender/Receiver Pay, Pay/Perpaid pay */
+/* These cells now naturally fit into the 4-column grid */
+.bottom-details-cell {
+    grid-column: span 1;
+    /* Each takes 1 column */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Center horizontally for these items */
+    padding: 15px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+}
+
+.bottom-details-cell .label {
+    font-size: 13px;
+    color: var(--detail-label-color);
+    font-weight: 500;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.bottom-details-cell .value {
+    font-size: 16px;
+    color: var(--heading-color);
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Remove right border for the last cell in this 4-column row (Pay/Perpaid pay) */
+.delivery-details-grid>.bottom-details-cell:last-of-type {
+    /* Targets the last of the bottom-details-cell group */
+    border-right: none;
+}
+
+/* Ensure the last .bottom-details-cell that's actually the 4th in the row has no right border */
+/* This specific selector targets the 4th of its type in a row, assuming the HTML order is consistent */
+.delivery-details-grid>.bottom-details-cell:nth-child(4) {
+    /* Assuming it's the 4th item overall in the .bottom-details-cell group within the grid */
+    border-right: none;
+}
+
+/* More robust way to target the last in the group without relying on exact nth-child count from beginning of grid */
+.delivery-details-grid>.bottom-details-cell:nth-last-of-type(1) {
+    border-right: none;
+}
+
+
+/* Content Description (Half Width, now side-by-side with Status) */
+.content-description-cell {
+    grid-column: span 2;
+    /* Now spans 2 columns */
+    padding: 20px 25px;
+    /* Ensure border-right is present for the divider */
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    /* Bottom border */
+    /* Changed to row direction for label and value */
+    flex-direction: row;
+    /* Label and value side-by-side */
+    justify-content: space-between;
+    /* Push label to left, value to right */
+    align-items: center;
+    /* Vertically align items */
+    gap: 10px;
+    /* Space between label and value */
+}
+
+.content-description-cell .label {
+    font-size: 16px;
+    /* Match From/To section-label */
+    color: #333;
+    /* Match From/To section-label */
+    font-weight: 700;
+    /* Match From/To section-label */
+    margin-bottom: 0;
+    /* No bottom margin, as it's a row layout */
+    white-space: nowrap;
+    /* Prevent label from wrapping */
+}
+
+.content-description-cell .value {
+    font-size: 15px;
+    /* Match From/To value */
+    color: #000;
+    /* Match From/To value */
+    font-weight: 400;
+    /* Match From/To value */
+    white-space: normal;
+    /* Allow text to wrap */
+    word-break: break-word;
+    /* Break long words if necessary */
+    text-align: right;
+    /* Align content to the right within its space */
+    flex-grow: 1;
+    /* Allow value to take up remaining space */
+}
+
+
+/* Status (Half Width, now side-by-side with Content Description) */
+.status-cell {
+    grid-column: span 2;
+    /* Now spans 2 columns */
+    /* Changed to row direction for label and value */
+    flex-direction: row;
+    /* Label and value side-by-side */
+    justify-content: space-between;
+    /* Push label to left, value to right */
+    align-items: center;
+    /* Vertically align items */
+    padding: 20px 25px;
+    border-right: none;
+    /* No right border for the last cell in the row */
+    border-bottom: none;
+    /* No bottom border for the last row in the grid */
+    gap: 10px;
+    /* Space between label and value, consistent with Content Description */
+}
+
+.status-cell .label {
+    font-size: 16px;
+    /* Match From/To section-label and Content Description label */
+    color: #333;
+    /* Match From/To section-label and Content Description label */
+    font-weight: 700;
+    /* Match From/To section-label and Content Description label */
+    margin-bottom: 0;
+    /* No bottom margin, as it's a row layout */
+    white-space: nowrap;
+    /* Prevent label from wrapping */
+}
+
+/* Status badge styling */
+.status-badge {
+    display: inline-block;
+    /* Revert to inline-block as it's in a row now */
+    padding: 6px 12px;
+    /* Slightly larger padding */
+    border-radius: 20px;
+    /* More rounded corners */
+    font-weight: 600;
+    /* Bolder text */
+    font-size: 0.9em;
+    /* Keep relative size for the badge */
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 100px;
+    /* Slightly wider */
+    flex-shrink: 0;
+    /* Prevent badge from shrinking */
+}
+
+/* Existing status colors */
+.status-in-transit {
+    background-color: #ffeeba;
+    color: #856404;
+}
+
+.status-delivered {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-pending {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.status-failed {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status-out-for-delivery {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+
+/* Back Button */
+.back-button-container {
+    grid-column: 1 / -1;
+    /* Span full width, outside the grid */
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 25px;
+    padding-left: 25px;
+    /* Align with left padding of grid items */
+    padding-bottom: 25px;
+    background-color: var(--white);
+    /* Match grid background */
+    border-radius: 0 0 8px 8px;
+    /* Round bottom corners if grid has them */
+}
+
+.back-button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-button:hover {
+    background-color: #151b43;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .delivery-details-main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .delivery-details-grid {
+        grid-template-columns: 1fr;
+        /* Stack items vertically on smaller screens */
+    }
+
+    .delivery-details-grid .grid-cell {
+        border-right: none;
+        /* Remove vertical borders when stacked */
+        border-bottom: 1px solid #e0e0e0;
+        /* Ensure bottom border for all cells */
+    }
+
+    /* Specific cells need their bottom border removed if they are the very last one */
+    .delivery-details-grid .grid-cell:last-child {
+        border-bottom: none;
+    }
+
+    /* Adjust truck row cells to stack or fit better */
+    .truck-row-cell {
+        flex-direction: column;
+        /* Stack phone and address */
+        text-align: center;
+    }
+
+    .truck-row-cell .value {
+        white-space: normal;
+        /* Allow wrapping */
+    }
+
+    .truck-icon-container {
+        border-left: none;
+        /* Remove left border when stacked */
+        border-right: none;
+        /* Remove right border when stacked */
+    }
+
+    .from-address-phone,
+    .to-address-phone {
+        border-right: none;
+    }
+
+    /* Reset columns for these sections to span full width */
+    .tracking-code-cell,
+    .paid-amount-cell,
+    .from-to-section,
+    .bottom-details-cell,
+    .content-description-cell,
+    .status-cell {
+        grid-column: span 1;
+        /* Revert content and status to column on small screens */
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        text-align: left;
+        /* Align text to left when stacked */
+    }
+
+    .content-description-cell .label,
+    .status-cell .label {
+        margin-bottom: 10px;
+        /* Restore margin for labels when stacked */
+        white-space: normal;
+        /* Allow label to wrap again */
+    }
+
+    .content-description-cell .value {
+        text-align: left;
+        /* Align value to left when stacked */
+    }
+
+    .status-badge {
+        text-align: left;
+        /* Align badge to left when stacked */
+        min-width: unset;
+        /* Remove min-width to allow full width */
+    }
+
+
+    /* Adjust 4-column cells to stack or re-arrange */
+    .bottom-details-cell {
+        /* If 4 cells are on one row, this needs to be 2x2 or 1x4 */
+        /* Simplest for mobile is stacking */
+        width: 100%;
+        /* Take full width */
+        border-right: none;
+        /* No right border when stacked */
+    }
+
+    /* Ensure only last bottom-details-cell has no bottom border on mobile if it's the last in its group */
+    .delivery-details-grid>.bottom-details-cell:nth-last-of-type(1) {
+        border-bottom: 1px solid #e0e0e0;
+        /* Add it back for consistency */
+    }
+
+    /* If the content-description-cell is immediately after, its border will be handled */
+
+
+    .back-button-container {
+        grid-column: span 1;
+        justify-content: center;
+        /* Center button on smaller screens */
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .delivery-details-header {
+        padding: 15px 20px;
+    }
+
+    .delivery-details-header .page-title {
+        font-size: 20px;
+    }
+
+    .delivery-details-grid .grid-cell {
+        padding: 15px 20px;
+    }
+
+    .truck-row-cell i {
+        font-size: 18px;
+    }
+
+    .truck-row-cell .value {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .delivery-details-main-content {
+        padding: 10px;
+    }
+
+    .delivery-details-header {
+        padding: 10px 15px;
+    }
+
+    .delivery-details-header .page-title {
+        font-size: 18px;
+    }
+
+    .delivery-details-grid .grid-cell {
+        padding: 10px 15px;
+    }
+
+    .tracking-code-cell .label,
+    .paid-amount-cell .value {
+        font-size: 18px;
+    }
+
+    .paid-amount-cell .label {
+        font-size: 12px;
+    }
+
+    .from-to-section .section-label {
+        font-size: 14px;
+    }
+
+    .from-to-section .value {
+        font-size: 13px;
+    }
+
+    .bottom-details-cell .label {
+        font-size: 12px;
+    }
+
+    .bottom-details-cell .value {
+        font-size: 14px;
+    }
+
+    .status-badge {
+        font-size: 0.8em;
+        padding: 4px 8px;
+        min-width: 80px;
+    }
+
+    .back-button {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+}
