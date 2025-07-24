@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once APPROOT . '/views/inc/sidebar.php';
 $name = $_SESSION['user'];
 ?>

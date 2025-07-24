@@ -59,7 +59,7 @@ $currentRoute = $_SERVER['REQUEST_URI'];
                     <i class="fas fa-user"></i> Profile
                 </a>
 
-                <a href="<?= URLROOT ?>/auth/logout"
+                <a href="<?= URLROOT ?>/admincontroller/logout"
                     class="nav-item logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>

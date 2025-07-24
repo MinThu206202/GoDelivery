@@ -1,5 +1,4 @@
 <?php require_once APPROOT . '/views/inc/sidebar.php';
-session_start();
 $name = $_SESSION['user'];
 ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/agent.css">

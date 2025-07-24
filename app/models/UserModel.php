@@ -18,6 +18,7 @@ class UserModel{
     private $otp_expiry;
     private $security_code;
 
+    private $islogin;
 
     //call get and set for name
     public function setName($name){
@@ -176,6 +177,16 @@ class UserModel{
         return $this->security_code;
     }
 
+    public function setisLogin($islogin)
+    {
+        $this->islogin = $islogin;
+    }
+
+    public function getisLogin()
+    {
+        return $this->islogin;
+    }
+
     public function toArray(){
         return [
             "name" => $this->getName(),
@@ -193,6 +204,7 @@ class UserModel{
             "otp_code" => $this->getOtp_code(),
             "otp_expiry" => $this->getOtp_expiry(),
             "security_code" => $this->getSecurity_code(),
+            "is_login" => $this->getisLogin()
 
         ];
     }

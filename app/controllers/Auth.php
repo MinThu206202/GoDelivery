@@ -40,35 +40,38 @@ class Auth extends Controller
         }
     }
 
-    public function login()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
-        $codeArray = $_POST['security_code'] ?? null;
-        $passwordRaw = $_POST['password'] ?? null;
 
-        if (!$codeArray || !$passwordRaw) {
-            setMessage('error', 'Missing credentials');
-            return redirect('pages/login');
-        }
+// In your controller
+public function login()
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
-        $securityCode = implode('', $codeArray);
-        $encodedPassword = base64_encode($passwordRaw);
+    $code = implode('', $_POST['security_code'] ?? []);
+    $password = $_POST['password'] ?? '';
 
-        $user = $this->db->columnFilter('users', 'security_code', $securityCode);
-      
-        if (!$user || $user['password'] !== $encodedPassword) {
-            setMessage('error', 'Invalid security code');
-            return redirect('pages/login');
-        }
-
-        session_start();
-        $_SESSION['user'] = $user;
-
-        return $user['role_id'] == 1
-            ? redirect('admin/home')
-            : redirect('agent/home');
+    if (!$code || !$password) {
+        setMessage('error', 'Missing credentials');
+        return redirect('pages/login');
     }
+
+    $user = $this->db->columnFilter('users', 'security_code', $code);
+    if (!$user || $user['password'] !== base64_encode($password)) {
+        setMessage('error', 'Invalid credentials');
+        return redirect('pages/login');
+    }
+
+    $this->db->setLogin($user['id']);
+
+    session_start();
+    $_SESSION['user'] = $user;
+   
+    $route = (int)$user['role_id'] === ADMIN_ROLE ? 'admin/home' : 'agent/home';
+    redirect($route);
+}
+
+       
+    
 
 
     public function forgetpassword()

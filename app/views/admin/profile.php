@@ -1,5 +1,6 @@
-<?php session_start(); ?>
-<?php require_once APPROOT . '/views/inc/sidebar.php'; ?>
+<?php require_once APPROOT . '/views/inc/sidebar.php';
+
+ ?>
 
 <!-- Main Content Area -->
 <main class="main-content">

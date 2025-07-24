@@ -37,14 +37,13 @@ class routepage extends Controller{
     public function createroute()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $input = array_map('trim', $_POST); // Remove whitespace
+            $input = array_map('trim', $_POST);
 
             $fromCity = $input['fromCity'] ?? null;
             $toCity = $input['toCity'] ?? null;
             $distance = $input['distance'] ?? null;
             $price = $input['price'] ?? null;
 
-            // Basic validation
             if (!$fromCity || !$toCity || !$distance || !$price) {
                 echo "Missing required fields.";
                 return;
@@ -69,7 +68,19 @@ class routepage extends Controller{
 
             $created = $this->db->create('route', $route->toArray());
 
-            $created ? redirect('admin/route?success=1') : die("Error saving route");
+            if ($created) {
+                // Redirect to GET with success param to trigger notification modal
+                header('Location: ' . URLROOT . '/routepage/createroute?success=1');
+                exit;
+            } else {
+                die("Error saving route");
+            }
+        } else {
+            // GET request, just load form with regions
+            $regions = $this->db->readAll('regions');
+            $this->view('admin/addroute', [
+                'regions' => $regions
+            ]);
         }
     }
 
