@@ -1,17 +1,17 @@
 <?php
-session_start();
 require_once APPROOT . '/views/inc/sidebar.php';
+session_start();
 $name = $_SESSION['user'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Create Route</title>
-    <link rel="stylesheet" href="<?= URLROOT; ?>/public/deliverycss/admin/addroute.css">
+    <link rel="stylesheet" href="<?= URLROOT; ?>/public/deliverycss/admin/addroute.css" />
     <style>
-        /* Your CSS styles here, unchanged */
+        /* Form container styles */
         .route-form-container {
             max-width: 500px;
             margin: 30px auto;
@@ -64,70 +64,36 @@ $name = $_SESSION['user'];
             background-color: #151b40;
         }
 
+        /* Centered Notification Modal Styles */
         #notificationOverlay {
-            display: none;
             position: fixed;
             inset: 0;
             background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 2000;
         }
 
-        #notificationOverlay.show {
-            display: flex;
-        }
-
-        #notificationBox {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 400px;
-            max-width: 90%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .notification-title {
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: #1F265B;
-            font-weight: 600;
-        }
-
-        .success-toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #28a745;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-size: 16px;
-            z-index: 1001;
-            animation: fadeInOut 3s forwards;
-        }
-
-        .hidden {
+        #notificationOverlay.hidden {
             display: none;
         }
 
-        @keyframes fadeInOut {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-20px);
-            }
+        #notificationBox {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
 
-            10%,
-            90% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-20px);
-            }
+        .notification-title {
+            color: #1F265B;
+            margin-bottom: 15px;
+            font-weight: 700;
+            font-size: 22px;
         }
     </style>
 </head>
@@ -193,13 +159,13 @@ $name = $_SESSION['user'];
                 <!-- Distance -->
                 <div class="form-group">
                     <label for="distance">Distance (km)</label>
-                    <input type="number" id="distance" name="distance" placeholder="Enter Distance" required>
+                    <input type="number" id="distance" name="distance" placeholder="Enter Distance" required />
                 </div>
 
                 <!-- Price -->
                 <div class="form-group">
                     <label for="price">Price (MMK)</label>
-                    <input type="number" id="price" name="price" placeholder="Enter Price" required>
+                    <input type="number" id="price" name="price" placeholder="Enter Price" required />
                 </div>
 
                 <div class="form-actions">
@@ -209,22 +175,14 @@ $name = $_SESSION['user'];
             </form>
         </div>
 
-        <!-- ✅ Toast -->
-        <div id="successToast" class="success-toast hidden">
-            ✅ Route successfully created!
-        </div>
     </main>
 
-    <!-- ❗ Notification Modal -->
-    <div id="notificationOverlay">
+    <!-- Notification Modal -->
+    <div id="notificationOverlay" class="hidden">
         <div id="notificationBox">
-            <h2 class="notification-title">Notification</h2>
-            <div class="notification-content">
-                <p id="notificationMessage"></p>
-            </div>
-            <div class="notification-footer">
-                <button onclick="closeNotificationBox()" class="modal-button-primary">OK</button>
-            </div>
+            <h2 class="notification-title">Success</h2>
+            <p>✅ Route successfully created!</p>
+            <button onclick="closeNotificationAndGoToRoute()" class="modal-button-primary">OK</button>
         </div>
     </div>
 
@@ -238,26 +196,18 @@ $name = $_SESSION['user'];
             const price = document.getElementById("price").value.trim();
 
             if (!fromCity || !toCity || !distance || !price) {
-                showNotificationBox("All fields are required. Please complete the form.");
+                alert("All fields are required. Please complete the form.");
                 return false;
             }
 
             if (fromCity === toCity) {
-                showNotificationBox("From City and To City cannot be the same.");
+                alert("From City and To City cannot be the same.");
                 return false;
             }
 
+            // Submit the form normally after validation
             document.getElementById("routeForm").submit();
             return true;
-        }
-
-        function showNotificationBox(message) {
-            document.getElementById("notificationMessage").textContent = message;
-            document.getElementById("notificationOverlay").classList.add("show");
-        }
-
-        function closeNotificationBox() {
-            document.getElementById("notificationOverlay").classList.remove("show");
         }
 
         function loadCities(regionId, targetId) {
@@ -278,27 +228,19 @@ $name = $_SESSION['user'];
                 .catch(error => console.error("Error loading cities:", error));
         }
 
-        window.onload = function() {
+        function closeNotificationAndGoToRoute() {
+            document.getElementById('notificationOverlay').classList.add('hidden');
+            window.location.href = '<?php echo URLROOT ?>/admin/route'; // redirect here
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const isSuccess = urlParams.get('success');
-
-            if (isSuccess === '1') {
-                // Show toast notification
-                const toast = document.getElementById('successToast');
-                toast.classList.remove('hidden');
-
-                // Also show alert if you want
-                alert("✅ Route successfully created!");
-
-                // Hide toast after 3 seconds
-                setTimeout(() => {
-                    toast.classList.add('hidden');
-
-                    // Optional: Remove the query parameter from URL without reloading
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }, 3000);
+            if (urlParams.get('success') === '1') {
+                document.getElementById('notificationOverlay').classList.remove('hidden');
+                // Remove success param so it won't show again on reload
+                window.history.replaceState({}, document.title, window.location.pathname);
             }
-        };
+        });
     </script>
 </body>
 

@@ -1,5 +1,4 @@
 <?php 
-
 class admincontroller extends Controller{
     private $db;
     public function __construct(){
@@ -150,6 +149,21 @@ class admincontroller extends Controller{
 
     //     }
     // }
+
+    public function logout()
+    {
+        session_start();
+
+        $id = $_SESSION['user']['id'] ?? null;
+        if ($id) {
+            $this->db->unsetLogin($id);
+        }
+
+        session_destroy();
+
+        $this->view('pages/login');        
+        exit();
+    }
 
 
 

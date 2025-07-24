@@ -1,7 +1,5 @@
 <?php require_once APPROOT . '/views/inc/nav.php'; ?>
-<?php require_once APPROOT . '/views/inc/header.php'; 
-session_start();
-?>
+<?php require_once APPROOT . '/views/inc/header.php'; ?>
 
 <section class="hero-section">
     <div class="container">

@@ -16,3 +16,5 @@ define('URLROOT', 'http://localhost/Delivery');
 define('SITENAME','GODELIVERY');
 define('ADMIN' , 'Admin');
 define('AGENT', 'Agent');
+define('ADMIN_ROLE', 1);
+define('AGENT_ROLE', 2);
