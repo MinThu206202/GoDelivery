@@ -1,7 +1,8 @@
 <?php
+session_start(); // ✅ Must be before any HTML output
 require_once APPROOT . '/views/inc/sidebar.php';
-session_start();
-$name = $_SESSION['user'];
+
+$name = isset($_SESSION['user']) ? $_SESSION['user'] : ['name' => 'Admin']; // fallback name
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -99,7 +100,6 @@ $name = $_SESSION['user'];
 </head>
 
 <body>
-
     <main class="main-content">
         <header class="dashboard-header">
             <div class="header-left">
@@ -162,11 +162,13 @@ $name = $_SESSION['user'];
                     <input type="number" id="distance" name="distance" placeholder="Enter Distance" required />
                 </div>
 
-                <!-- Price -->
+                <!-- Duration Time -->
                 <div class="form-group">
-                    <label for="price">Price (MMK)</label>
-                    <input type="number" id="price" name="price" placeholder="Enter Price" required />
+                    <label for="time">Duration Time</label>
+                    <input type="time" id="time" name="time" required />
                 </div>
+
+
 
                 <div class="form-actions">
                     <button type="submit" class="modal-button-primary">Create Route</button>
@@ -174,7 +176,6 @@ $name = $_SESSION['user'];
                 </div>
             </form>
         </div>
-
     </main>
 
     <!-- Notification Modal -->
@@ -193,9 +194,9 @@ $name = $_SESSION['user'];
             const fromCity = document.getElementById("fromCity").value.trim();
             const toCity = document.getElementById("toCity").value.trim();
             const distance = document.getElementById("distance").value.trim();
-            const price = document.getElementById("price").value.trim();
+            const time = document.getElementById("time").value.trim();
 
-            if (!fromCity || !toCity || !distance || !price) {
+            if (!fromCity || !toCity || !distance  || !time) {
                 alert("All fields are required. Please complete the form.");
                 return false;
             }
@@ -205,7 +206,6 @@ $name = $_SESSION['user'];
                 return false;
             }
 
-            // Submit the form normally after validation
             document.getElementById("routeForm").submit();
             return true;
         }
@@ -230,14 +230,13 @@ $name = $_SESSION['user'];
 
         function closeNotificationAndGoToRoute() {
             document.getElementById('notificationOverlay').classList.add('hidden');
-            window.location.href = '<?php echo URLROOT ?>/admin/route'; // redirect here
+            window.location.href = '<?= URLROOT ?>/admin/route';
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('success') === '1') {
                 document.getElementById('notificationOverlay').classList.remove('hidden');
-                // Remove success param so it won't show again on reload
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         });

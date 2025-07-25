@@ -355,8 +355,8 @@ $name = $_SESSION['user'];
                         <th>To</th>
                         <th>Distance (km)</th>
                         <th>Price</th>
+                        <th>Duration Time</th>
                         <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="agentTableBody">
@@ -367,12 +367,12 @@ $name = $_SESSION['user'];
                             $statusClass = $status === 'active' ? 'status-active' : 'status-inactive';
                             ?>
                             <tr data-status="<?= $status ?>">
-                                <td><?= htmlspecialchars($route['from_city_name']) ?></td>
-                                <td><?= htmlspecialchars($route['to_city_name']) ?></td>
+                                <td><?= htmlspecialchars($route['from_city']) ?></td>
+                                <td><?= htmlspecialchars($route['to_city']) ?></td>
                                 <td><?= htmlspecialchars($route['distance']) ?></td>
                                 <td><?= htmlspecialchars($route['price']) ?></td>
+                                <td><?= htmlspecialchars($route['time'])?></td>
                                 <td><span class="<?= $statusClass ?>"><?= htmlspecialchars($route['status']) ?></span></td>
-                                <td><button class="view-button">View</button></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>

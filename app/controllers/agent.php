@@ -20,5 +20,39 @@ class Agent extends Controller
         $this->view('agent/home');
     }
 
+    public function mydelivery()
+    {
+        $this->view('agent/mydelivery');
+    }
+
+    public function profile()
+    {
+        $this->view('agent/profile');
+    }
+
+    public function voucher()
+    {
+        $this->view('agent/voucher');
+    }
+
+    public function notification()
+    {
+        $this->view('agent/notification');
+    }
+
+    public function request()
+    {
+        $this->view('agent/request');
+    }
+
+    public function voucher_detail()
+    {
+        $this->view('agent/voucher_detail');
+    }
+
+    public function update_status()
+    {
+        $this->view('agent/update_status');
+    }
 
 }
