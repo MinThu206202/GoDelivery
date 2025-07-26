@@ -1,7 +1,10 @@
-<?php 
+<?php
+require_once APPROOT . '/middleware/AuthMiddleware.php';
+
 class admincontroller extends Controller{
     private $db;
     public function __construct(){
+        AuthMiddleware::adminOnly();
         $this->model('UserModel');
         $this->db = new Database();
     }

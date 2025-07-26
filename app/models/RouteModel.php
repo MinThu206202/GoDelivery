@@ -7,6 +7,7 @@ class RouteModel{
     private $distnce;
     private $price;
     private $status;
+    private $time;
     private $created_at;
     private $updated_at;
 
@@ -74,6 +75,16 @@ public function getFromcity(){
         return $this->updated_at;
     }
 
+    public function setTime($time)
+    {
+        $this->time = $time;
+    }
+
+    public function getTime()
+    {
+        return $this->time;
+    }
+
     public function toArray()
     {
         return [
@@ -83,7 +94,8 @@ public function getFromcity(){
             "price" => $this->getPrice(),
             "status" => $this->getStatus(),
             "created_at" => $this->getCreatedat(),
-            "updated_at" => $this->getUpdatedat()
+            "updated_at" => $this->getUpdatedat(),
+            "time" => $this->getTime()
         ];
     }
 

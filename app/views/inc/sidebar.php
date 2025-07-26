@@ -54,6 +54,11 @@ $currentRoute = $_SERVER['REQUEST_URI'];
                     <i class="fas fa-route"></i> Route
                 </a>
 
+                <a href="<?= URLROOT ?>/available_place/available"
+                    class="nav-item <?= strpos($currentRoute, '/available_place/available') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-map-marker-alt"></i> Available Place
+                </a>
+
                 <a href="<?= URLROOT ?>/admin/profile"
                     class="nav-item <?= strpos($currentRoute, '/admin/profile') !== false ? 'active' : '' ?>">
                     <i class="fas fa-user"></i> Profile

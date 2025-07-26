@@ -42,9 +42,9 @@ class routepage extends Controller{
             $fromCity = $input['fromCity'] ?? null;
             $toCity = $input['toCity'] ?? null;
             $distance = $input['distance'] ?? null;
-            $price = $input['price'] ?? null;
+            $time = $input['time'] ?? null;
 
-            if (!$fromCity || !$toCity || !$distance || !$price) {
+            if (!$fromCity || !$toCity || !$distance || !$time) {
                 echo "Missing required fields.";
                 return;
             }
@@ -57,11 +57,18 @@ class routepage extends Controller{
                 return;
             }
 
+            $Base_free =1000;
+            $Distance_free = 20;
+            $Duration_free = 15;
+
+            $price = $Base_free + ($distance * $Distance_free) + ($time * $Duration_free);
+
             $route = new RouteModel();
             $route->setFromcity($from['id']);
             $route->setTocity($to['id']);
             $route->setDistance($distance);
             $route->setPrice($price);
+            $route->setTime($time);
             $route->setStatus('active');
             $route->setCreatedat(date('Y-m-d H:i:s'));
             $route->setUpdatedat(null);
