@@ -1,6 +1,5 @@
 <?php
-// This line should be present at the top of your PHP view file
-// where this sidebar is included.
+$agent = $_SESSION['user'];
 $currentRoute = $_SERVER['REQUEST_URI'];
 ?>
 <!DOCTYPE html>

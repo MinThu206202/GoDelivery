@@ -11,13 +11,11 @@
                 <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
-                    <p class="text-lg font-medium text-gray-800">John Doe</p>
+                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
                     <p class="text-sm text-gray-500">Agent ID: #007</p>
                 </div>
             </div>
-            <a href="#"
-                class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">Back
-                to Dashboard</a>
+
         </div>
     </header>
 
@@ -80,115 +78,48 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200" id="deliveryTableBody">
-                        <!-- Sample Data - Statuses updated to match filter options -->
-                        <tr data-status="Delivered">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD0998</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Michael Scott</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-07-24</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-delivered">
-                                    Delivered
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$15.00</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="viewDeliveryDetails('ORD0998')"
-                                    class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
-                                    View
-                                </button>
-                            </td>
-                        </tr>
-                        <tr data-status="In Transit">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD0997</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Pam Beesly</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-07-23</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-intransit">
-                                    In Transit
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$12.50</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="viewDeliveryDetails('ORD0997')"
-                                    class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
-                                    View
-                                </button>
-                            </td>
-                        </tr>
-                        <tr data-status="Pending">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD0996</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dwight Schrute</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-07-22</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-pending">
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$20.00</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="viewDeliveryDetails('ORD0996')"
-                                    class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
-                                    View
-                                </button>
-                            </td>
-                        </tr>
-                        <tr data-status="Delivered">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD0995</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jim Halpert</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-07-21</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-delivered">
-                                    Delivered
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$18.75</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="viewDeliveryDetails('ORD0995')"
-                                    class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
-                                    View
-                                </button>
-                            </td>
-                        </tr>
-                        <tr data-status="Cancelled">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD0994</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Angela Martin</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-07-20</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-cancelled">
-                                    Cancelled
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$10.00</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="viewDeliveryDetails('ORD0994')"
-                                    class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
-                                    View
-                                </button>
-                            </td>
-                        </tr>
-                        <tr data-status="Return">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD0993</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Andy Bernard</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-07-19</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-return">
-                                    Return
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$5.00</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="viewDeliveryDetails('ORD0993')"
-                                    class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
-                                    View
-                                </button>
-                            </td>
-                        </tr>
+                        <?php foreach ($data['delivery'] as $delivery):
+                            $statusClass = '';
+                            switch ($delivery['delivery_status_name']) {
+                                case 'Delivered':
+                                    $statusClass = 'bg-green-100 text-green-800';
+                                    break;
+                                case 'Pending':
+                                    $statusClass = 'bg-yellow-100 text-yellow-800';
+                                    break;
+                                case 'In Transit':
+                                    $statusClass = 'bg-blue-100 text-blue-800';
+                                    break;
+                                case 'Cancelled':
+                                    $statusClass = 'bg-red-100 text-red-800';
+                                    break;
+                                case 'Return':
+                                    $statusClass = 'bg-purple-100 text-purple-800';
+                                    break;
+                                default:
+                                    $statusClass = 'bg-gray-100 text-gray-800'; // Default neutral color
+                                    break;
+                            }
+                        ?>
+                            <tr data-status="<?= htmlspecialchars($delivery['delivery_status_name']) ?>">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><span><?= htmlspecialchars($delivery['tracking_code']) ?></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['customer_sender_name']) ?></span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['created_at']) ?></span></td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
+                                        <?= htmlspecialchars($delivery['delivery_status_name']) ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span>MMK<?= htmlspecialchars(number_format($delivery['total_amount'] ?? 0.00, 2)) ?></span></td> <!-- New Amount Column Data -->
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="<?= URLROOT; ?>/agent/deliverydetails/<?= htmlspecialchars($delivery['tracking_code']) ?>"
+                                        class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

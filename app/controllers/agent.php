@@ -9,20 +9,30 @@ class Agent extends Controller
 {
 
     private $db;
+    private $agent;
     public function __construct()
     {
         AuthMiddleware::agentOnly();
         $this->db = new Database();
+        $this->agent = $_SESSION['user'];
     }
 
     public function home()
     {
-        $this->view('agent/home');
+        $delivery = $this->db->columnFilterAll('delivery_info','sender_id',$this->agent['id']);
+        $data = [
+            'delivery' => $delivery,
+        ];
+        $this->view('agent/home',$data);
     }
 
     public function mydelivery()
     {
-        $this->view('agent/mydelivery');
+        $delivery = $this->db->columnFilterAll('delivery_info', 'sender_id', $this->agent['id']);
+        $data = [
+            'delivery' => $delivery,
+        ];
+        $this->view('agent/mydelivery',$data);
     }
 
     public function profile()
@@ -30,9 +40,24 @@ class Agent extends Controller
         $this->view('agent/profile');
     }
 
+
+    public function getCitiesByRegion()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $regionId = $_GET['region_id'] ?? null;
+            if ($regionId) {
+                $cities = $this->db->columnFilterAll('cities', 'region_id', $regionId);
+                echo json_encode($cities);
+            }
+        }
+    }
     public function voucher()
     {
-        $this->view('agent/voucher');
+        $getregion = $this->db->readAll('regions');
+        $data = [
+            'region' => $getregion
+        ];
+        $this->view('agent/voucher',$data);
     }
 
     public function notification()

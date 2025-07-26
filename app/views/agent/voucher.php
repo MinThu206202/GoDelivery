@@ -1,4 +1,8 @@
-<?php require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
+<?php
+
+use Soap\Url;
+
+require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- Inter Font -->
@@ -7,8 +11,6 @@
     body {
         font-family: 'Inter', sans-serif;
         background-color: #f3f4f6;
-        /* Removed centering and padding from body to allow sidebar to align correctly */
-        /* display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 2rem; */
     }
 
     /* Styles for print */
@@ -92,13 +94,10 @@
                 <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
-                    <p class="text-lg font-medium text-gray-800">John Doe</p>
+                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
                     <p class="text-sm text-gray-500">Agent ID: #007</p>
                 </div>
             </div>
-            <a href="#"
-                class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">Back
-                to Dashboard</a>
         </div>
     </header>
 
@@ -113,167 +112,126 @@
             </div>
 
             <!-- Sender Information -->
-            <div class="mb-8">
-                <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Sender Information (Customer)
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
-                    <div>
-                        <label for="senderName" class="block text-sm text-gray-500">Name:</label>
-                        <input type="text" id="senderName" value="Sender Logistics Co."
-                            class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div>
-                        <label for="senderPhone" class="block text-sm text-gray-500">Phone:</label>
-                        <input type="tel" id="senderPhone" value="+1 (111) 222-3333"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div>
-                        <label for="senderEmail" class="block text-sm text-gray-500">Email:</label>
-                        <input type="email" id="senderEmail" value="sender@example.com"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div>
-                        <label for="senderRegion" class="block text-sm text-gray-500">Region:</label>
-                        <input type="text" id="senderRegion" value="North America"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="senderCities" class="block text-sm text-gray-500">Cities:</label>
-                        <input type="text" id="senderCities" value="Anytown, USA"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="senderAddress" class="block text-sm text-gray-500">Address:</label>
-                        <textarea id="senderAddress" rows="2"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">123 Main Street</textarea>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recipient Information -->
-            <div class="mb-8">
-                <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Recipient Information</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
-                    <div>
-                        <label for="recipientName" class="block text-sm text-gray-500">Name:</label>
-                        <input type="text" id="recipientName" value="Emily White"
-                            class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div>
-                        <label for="recipientPhone" class="block text-sm text-gray-500">Phone:</label>
-                        <input type="tel" id="recipientPhone" value="+1 (444) 555-6666"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div>
-                        <label for="recipientEmail" class="block text-sm text-gray-500">Email:</label>
-                        <input type="email" id="recipientEmail" value="emily.white@example.com"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div>
-                        <label for="recipientRegion" class="block text-sm text-gray-500">Region:</label>
-                        <input type="text" id="recipientRegion" value="West Coast"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="recipientCities" class="block text-sm text-gray-500">Cities:</label>
-                        <input type="text" id="recipientCities" value="Villagetown, USA"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="recipientAddress" class="block text-sm text-gray-500">Address:</label>
-                        <textarea id="recipientAddress" rows="2"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">456 Oak Avenue</textarea>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Package Details -->
-            <div class="mb-8">
-                <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Package Details</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 mb-4">
-                    <div>
-                        <label for="packageWeight" class="block text-sm text-gray-500">Weight (kg):</label>
-                        <input type="number" id="packageWeight" value="2.5" step="0.1"
-                            class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div>
-                        <label for="packageTotal" class="block text-sm text-gray-500">Total ($):</label>
-                        <input type="number" id="packageTotal" value="50.00" step="0.01"
-                            class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="packageDescription" class="block text-sm text-gray-500">Overall
-                            Description:</label>
-                        <textarea id="packageDescription" rows="3"
-                            class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">A mix of electronics and books. Fragile items included.</textarea>
-                    </div>
-                </div>
-                <!-- Removed the table for Item and Quantity -->
-                <label for="specialInstructions" class="block text-sm text-gray-500 mt-4">Special
-                    Instructions:</label>
-                <textarea id="specialInstructions" rows="2"
-                    class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">Leave at front door if no answer.</textarea>
-            </div>
-
-            <!-- Agent Cities & Payment -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Agent Locations</h2>
-                    <div class="space-y-4">
+            <form method="POST" action="<?= URLROOT; ?>/agentcontroller/voucher">
+                <input type="hidden" name="agent_data" value='<?= json_encode($_SESSION['user']); ?>'>
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Sender Information (Customer)
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                         <div>
-                            <label for="senderAgentCities" class="block text-sm text-gray-500">Sender Agent
-                                City:</label>
-                            <input type="text" id="senderAgentCities" value="New York"
+                            <label for="senderName" class="block text-sm text-gray-500">Name:</label>
+                            <input type="text" name="sender_name" id="senderName" placeholder="Enter sender's name"
+                                class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                        </div>
+                        <div>
+                            <label for="senderPhone" class="block text-sm text-gray-500">Phone:</label>
+                            <input type="tel" name="sender_phone" id="senderPhone" placeholder="Enter sender's phone number"
                                 class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                         </div>
                         <div>
-                            <label for="receiverAgentCities" class="block text-sm text-gray-500">Receiver Agent
-                                City:</label>
-                            <input type="text" id="receiverAgentCities" value="Los Angeles"
-                                class="text-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                            <label for="senderEmail" class="block text-sm text-gray-500">Email:</label>
+                            <input type="email" name="sender_email" id="senderEmail" placeholder="Enter sender's email"
+                                class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="senderAddress" class="block text-sm text-gray-500">Address:</label>
+                            <textarea id="senderAddress" name="sender_address" rows="2" placeholder="Enter sender's address"
+                                class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]"></textarea>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Payment Details</h2>
-                    <label for="paymentType" class="block text-sm text-gray-500">Payment Type:</label>
-                    <select id="paymentType"
-                        class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                        <option value="Prepaid">Prepaid</option>
-                        <option value="Pay on Delivery">Pay on Delivery</option>
-                    </select>
-                </div>
-            </div>
 
-            <!-- Delivery Status -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Delivery Status</h2>
-                    <label for="deliveryStatus" class="block text-sm text-gray-500">Status:</label>
-                    <select id="deliveryStatus"
-                        class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full mb-2 focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                        <option value="In Transit">In Transit</option>
-                        <option value="Delivered">Delivered</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Cancelled">Cancelled</option>
-                    </select>
-                    <label for="estimatedDelivery" class="block text-sm text-gray-500">Estimated Delivery:</label>
-                    <input type="datetime-local" id="estimatedDelivery" value="2024-07-26T17:00"
-                        class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                <!-- Recipient Information -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Recipient Information</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                        <div>
+                            <label for="recipientName" class="block text-sm text-gray-500">Name:</label>
+                            <input type="text" name="receiver_name" id="recipientName" placeholder="Enter recipient's name"
+                                class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                        </div>
+                        <div>
+                            <label for="recipientPhone" class="block text-sm text-gray-500">Phone:</label>
+                            <input type="tel" name="receiver_phone" id="recipientPhone" placeholder="Enter recipient's phone number"
+                                class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                        </div>
+                        <div>
+                            <label for="recipientEmail" class="block text-sm text-gray-500">Email:</label>
+                            <input type="email" name="receiver_email" id="recipientEmail" placeholder="Enter recipient's email"
+                                class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="recipientAddress" class="block text-sm text-gray-500"></label>
+                            <textarea id="recipientAddress" name="receiver_address" rows="2" placeholder="Enter recipient's address"
+                                class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]"></textarea>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Action Buttons -->
-            <div class="flex justify-end space-x-4 mt-6 no-print">
-                <button onclick="window.print()"
-                    class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200">
-                    Print Voucher
-                </button>
-                <button
-                    class="px-6 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
-                    Save Voucher
-                </button>
-            </div>
+                <!-- Package Details -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Package Details</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 mb-4">
+                        <div>
+                            <label for="packageWeight" class="block text-sm text-gray-500">Weight (kg):</label>
+                            <input type="number" name="weight" id="packageWeight" step="0.1" placeholder="Enter package weight"
+                                class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                        </div>
+                    </div>
+                    <label for="specialInstructions" class="block text-sm text-gray-500 mt-4">Special
+                        Product Type:</label>
+                    <textarea id="specialInstructions" name="product_type" rows="2" placeholder="Any special delivery instructions"
+                        class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]"></textarea>
+                </div>
+
+                <!-- Agent Cities & Payment -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Agent Locations</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="senderAgentCity" class="block text-sm text-gray-500">Receiver Agent City:</label>
+                                <select id="senderAgentCity" name="senderAgentCity"
+                                    class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                                    <option value="" disabled selected>Select City</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="senderAgentRegion" class="block text-sm text-gray-500">Receiver Agent Region:</label>
+                                <select id="senderAgentRegion" name="senderAgentRegion"
+                                    class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                                    <option value="" disabled selected>Select Region</option>
+                                    <?php foreach ($data['region'] as $region) : ?>
+                                        <option value="<?= htmlspecialchars($region['id']); ?>">
+                                            <?= htmlspecialchars($region['name']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Payment Details</h2>
+                        <label for="paymentType" class="block text-sm text-gray-500">Payment Type:</label>
+                        <select id="paymentType" name="payment"
+                            class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                            <option value="Prepaid">Unpaid</option>
+                            <option  value="Pay on Delivery">Paid</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <!-- Action Buttons -->
+                <div class="flex justify-end space-x-4 mt-6 no-print">
+                    <button
+                        type="submit"
+                        class="px-6 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
+                        Save Voucher
+                    </button>
+                </div>
+            </form>
 
             <!-- Footer -->
             <div class="text-center text-gray-600 text-sm pt-6 border-t border-gray-200 mt-6">
@@ -283,6 +241,31 @@
         </div>
     </main>
 </div>
+
+<script>
+    document.getElementById('senderAgentRegion').addEventListener('change', function() {
+        const regionId = this.value;
+        const citySelect = document.getElementById('senderAgentCity');
+
+        citySelect.innerHTML = '<option value="">Select City</option>';
+
+        if (!regionId) return;
+
+        fetch(`<?= URLROOT; ?>/agent/getCitiesByRegion?region_id=${regionId}`)
+            .then(response => response.json())
+            .then(cities => {
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city.id;
+                    option.textContent = city.name;
+                    citySelect.appendChild(option);
+                });
+            })
+            .catch(err => {
+                console.error('Error loading cities:', err);
+            });
+    });
+</script>
 
 </body>
 

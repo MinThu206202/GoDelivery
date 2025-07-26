@@ -128,7 +128,7 @@
                 <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
-                    <p class="text-lg font-medium text-gray-800">John Doe</p>
+                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name'])?></p>
                     <p class="text-sm text-gray-500">Agent ID: #007</p>
                 </div>
             </div>
@@ -188,11 +188,21 @@
                 </div>
             </div>
 
+            <!-- Pickup Location Information -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Pickup Location</h3>
+                <div class="space-y-2">
+                    <p><strong class="text-gray-700">Pickup Agent Name:</strong> John Doe</p>
+                    <p><strong class="text-gray-700">Pickup Agent Phone:</strong> +1 (555) 123-4567</p>
+                    <p><strong class="text-gray-700">Pickup Agent City:</strong> New York</p>
+                    <p><strong class="text-gray-700">Pickup Agent Region:</strong> North America</p>
+                </div>
+            </div>
+
             <div class="mb-8">
                 <h3 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Package Details</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8">
                     <p><strong class="text-gray-700">Weight:</strong> 2.5 kg</p>
-                    <p><strong class="text-gray-700">Total Value:</strong> $50.00</p>
                     <div class="md:col-span-2">
                         <p><strong class="text-gray-700">Overall Description:</strong> A mix of electronics and
                             books. Fragile items included.</p>

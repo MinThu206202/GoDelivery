@@ -118,6 +118,28 @@ class Database
         return ($success) ? $row : [];
     }
 
+    public function checkroute($table, $fromCityId, $toCityId)
+    {
+        $sql = "SELECT * FROM $table WHERE from_city_id = :from_city_id AND to_city_id = :to_city_id AND status = 'Active'";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':from_city_id', $fromCityId);
+        $stmt->bindValue(':to_city_id', $toCityId);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC); // or fetchAll() if expecting multiple routes
+    }
+
+
+    public function checkadmin($table, $column, $value)
+    {
+        // $sql = 'SELECT * FROM ' . $table . ' WHERE `' . $column . '` = :value';
+        $sql = 'SELECT * FROM ' . $table . ' WHERE `' . str_replace('`', '', $column) . '` = :value AND role_id = 2';
+        $stm = $this->pdo->prepare($sql);
+        $stm->bindValue(':value', $value);
+        $success = $stm->execute();
+        $row = $stm->fetch(PDO::FETCH_ASSOC);
+        return ($success) ? $row : [];
+    }
+
     // public function getByRole($table, $id)
     // {
     //     $sql = 'SELECT * FROM ' . $table . ' WHERE `role_id` =:id';
