@@ -19,7 +19,7 @@ class Agent extends Controller
 
     public function home()
     {
-        $delivery = $this->db->columnFilterAll('delivery_info','sender_id',$this->agent['id']);
+        $delivery = $this->db->columnFilterAll('view_deliveries_detailed','sender_agent_id',$this->agent['id']);
         $data = [
             'delivery' => $delivery,
         ];
@@ -28,7 +28,7 @@ class Agent extends Controller
 
     public function mydelivery()
     {
-        $delivery = $this->db->columnFilterAll('delivery_info', 'sender_id', $this->agent['id']);
+        $delivery = $this->db->columnFilterAll('view_deliveries_detailed', 'sender_agent_id', $this->agent['id']);
         $data = [
             'delivery' => $delivery,
         ];
@@ -67,17 +67,23 @@ class Agent extends Controller
 
     public function request()
     {
-        $this->view('agent/request');
+        $accept = $this->db->columnFilterAll('view_deliveries_detailed','receiver_agent_id',$this->agent['id']);
+        $data = [
+            "request_delivery" => $accept
+        ];
+        $this->view('agent/request',$data);
     }
 
-    public function voucher_detail()
-    {
-        $this->view('agent/voucher_detail');
-    }
+
 
     public function update_status()
     {
         $this->view('agent/update_status');
+    }
+
+    public function result()
+    {
+        $this->view('agent/result');
     }
 
 }

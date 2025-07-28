@@ -6,15 +6,20 @@
     <header class="flex items-center justify-between p-6 bg-white shadow-md rounded-bl-lg">
         <h1 class="text-3xl font-semibold text-gray-800">Dashboard</h1>
         <div class="flex items-center space-x-4">
-            <div class="relative">
-                <input type="text" placeholder="Search..."
+            <form action="<?= URLROOT ?>/agentcontroller/search" method="GET" class="relative">
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Search..."
                     class="px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </div>
+                <button type="submit">
+                    <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </form>
             <div class="flex items-center space-x-2">
                 <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
@@ -108,7 +113,7 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             <?php foreach ($data['delivery'] as $delivery):
                                 $statusClass = '';
-                                switch ($delivery['delivery_status_name']) {
+                                switch ($delivery['delivery_status']) {
                                     case 'Delivered':
                                         $statusClass = 'bg-green-100 text-green-800';
                                         break;
@@ -132,12 +137,12 @@
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><span><?= htmlspecialchars($delivery['tracking_code']) ?></span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['customer_sender_name']) ?></span></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['to_region_name']) ?></span></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span>MMK<?= htmlspecialchars(number_format($delivery['total_amount'] ?? 0.00, 2)) ?></span></td> <!-- New Amount Column Data -->
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['sender_customer_name']) ?></span></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['receiver_agent_city']) ?></span></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span>MMK<?= htmlspecialchars(number_format($delivery['amount'] ?? 0.00, 2)) ?></span></td> <!-- New Amount Column Data -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
-                                            <?= htmlspecialchars($delivery['delivery_status_name']) ?>
+                                            <?= htmlspecialchars($delivery['delivery_status']) ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

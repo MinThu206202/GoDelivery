@@ -1,4 +1,9 @@
 <?php
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $agent = $_SESSION['user'];
 $currentRoute = $_SERVER['REQUEST_URI'];
 ?>
