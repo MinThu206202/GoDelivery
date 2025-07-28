@@ -11,6 +11,29 @@ class Agentcontroller extends Controller{
         $this->db = new Database();
     }
 
+  public function getShortCode($city)
+  {
+    $codes = [
+      'Yangon' => 'YGN',
+      'Mandalay' => 'MDY',
+      'Monywa' => 'MYW',
+      'Thanlyin' => 'TNL',
+      'Hmawbi' => 'HMB',
+      'Thaketa' => 'TKT',
+      'Insein' => 'INS',
+      'Pyin Oo Lwin' => 'POL',
+      'Myingyan' => 'MYG',
+      'Amarapura' => 'AMP',
+      'Meiktila' => 'MKL',
+      'Sagaing' => 'SGG',
+      'Shwebo' => 'SHW',
+      'Kale' => 'KLE',
+      'Yinmabin' => 'YNB'
+    ];
+
+    return $codes[$city] ?? $city;
+  }
+
     public function voucher(){
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $name = json_decode($_POST['agent_data'],true);
@@ -88,8 +111,10 @@ class Agentcontroller extends Controller{
 
         $receicercreate = $this->db->create('users', $receicer->toArray());
 
+        //calculate price 
         $totalprice = $weight * $routecheck['price'];
 
+        //get id from database
         $sender_agent_id = $name['id'];
         $receiver_agent_id = $checkagent['id']; 
         $from_city_id = $name['city_id'];       
@@ -97,6 +122,21 @@ class Agentcontroller extends Controller{
         $receiver_customer_id = $this->db->columnFilter('users','email',$receiver_email);
         $payment_status_id = $this->db->columnFilter('payment_statuses','name',$payment);
 
+        //calculate tracking_number
+        $city_name = $this->db->columnFilter('cities', 'id', $from_city_id);
+        $shortname = $this->getShortCode($city_name['name']);
+        $to_city_name = $this->db->columnFilter('cities','id',$checkagent['city_id']);
+        $shortname2 = $this->getShortCode($to_city_name['name']);
+        $randomnumber = str_pad(rand(0,999999),6,"0",STR_PAD_LEFT);
+        $tracking_number = $shortname.$randomnumber.$shortname2;
+
+        date_default_timezone_set('Asia/Yangon');
+        $route_duration = $routecheck['time']; 
+
+        
+        $duration_seconds = strtotime($route_duration) - strtotime('TODAY');
+
+        $estimated_arrival = time() + $duration_seconds;
 
         $deliver=new Delivery();
         $deliver->setSenderagentid($sender_agent_id);
@@ -107,16 +147,23 @@ class Agentcontroller extends Controller{
         $deliver->setTocityid($cities);
         $deliver->setWeight($weight);
         $deliver->setAmount($totalprice);
-        $deliver->setDeliverystatusid(2);
+        $deliver->setDeliverystatusid(1);
         $deliver->setPaymentstatusid($payment_status_id['id']);
         $deliver->setcreatedat(date('Y-m-d H:i:s'));
         $deliver->setUpdated_at(null);
         $deliver->setProducttype($product_type);
+        $deliver->setTrackingnumber($tracking_number);
+        $deliver->setDurationtime(date("Y-m-d H:i:s", $estimated_arrival));
 
         $deliverycreate = $this->db->create('deliveries',$deliver->toArray());
         if($deliverycreate){
-          echo "min";
-          die;
+
+          $delivery_data = $this->db->columnFilter("view_deliveries_detailed","tracking_code",$tracking_number);
+          $data = [
+            "create_data" => $delivery_data
+          ];
+          $this->view('agent/voucher_detail',$data);
+
         }
 
 
@@ -128,9 +175,49 @@ class Agentcontroller extends Controller{
     }
     }
 
+
+    public function search(){
+      if($_SERVER['REQUEST_METHOD'] == 'GET'){
+        $code = $_GET['q'];
+        $tracking_code = $this->db->columnFilter('view_deliveries_detailed','tracking_code',$code);
+        $data = [
+          'tracking_code' => $tracking_code
+        ];
+        $this->view('agent/result',$data);
+
+      }
+    }
+
+    public function delivery_detail($code){
+    $tracking_code = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
+    $data = [
+      'tracking_code' => $tracking_code
+    ];
+    $this->view('agent/result', $data);
+  }
+
+
+  public function requestaccept()
+  {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $code = $_POST['tracking_code'];
+      $delivery = $this->db->columnFilter('deliveries', 'tracking_code', $code);
+
+      if ($delivery) {
+        $accept = $this->db->update('deliveries', $delivery['id'], ['delivery_status_id' => 2]);
+
+        if ($accept) {
+          // Redirect and include success indicator in URL
+          redirect('agent/request?accepted=1');
+        }
+      }
+      // If something went wrong
+      redirect('agent/request?accepted=0');
+    }
+  }
+
+
 }
-
-
 
 
 ?>

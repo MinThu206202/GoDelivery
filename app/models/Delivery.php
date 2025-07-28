@@ -13,9 +13,9 @@ class Delivery{
     private $payment_status_id;
     private $created_at;
     private $updated_at;
-
     private $product_type;
-
+    private $tracking_number;
+    private $duration;
 
 
     public function setSenderagentid($sender_agent_id)
@@ -145,10 +145,22 @@ class Delivery{
         return $this->product_type;
     }
 
+    public function setTrackingnumber($tracking_number){
+        $this->tracking_number = $tracking_number;
+    }
 
+    public function getTrackingnumber(){
+        return $this->tracking_number;
+    }
+    public function setDurationtime($duration)
+    {
+        $this->duration = $duration;
+    }
 
-
-
+    public function getDurationtime()
+    {
+        return $this->duration;
+    }
     public function toArray()
     {
         return [
@@ -164,7 +176,9 @@ class Delivery{
             "payment_status_id" => $this->getPaymentstatusid(),
             "created_at" => $this->getcreatedat(),
             "updated_at" => $this->getUpdated_at(),
-            "product_type" => $this->getProducttype()
+            "product_type" => $this->getProducttype(),
+            "tracking_code" => $this->getTrackingnumber(),
+            "duration" => $this->getDurationtime()
         ];
     }
 

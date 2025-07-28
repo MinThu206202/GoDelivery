@@ -1,5 +1,14 @@
 <?php require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
 
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Inter Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+    }
+</style>
 
 <!-- Main Content Area -->
 <div class="flex-1 flex flex-col overflow-hidden">
@@ -68,10 +77,13 @@
                                 Delivery Date</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status</th>
+                                From City</th> <!-- New Column Header -->
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Earnings</th>
+                                Destination City</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
                                 Actions</th>
@@ -80,7 +92,7 @@
                     <tbody class="bg-white divide-y divide-gray-200" id="deliveryTableBody">
                         <?php foreach ($data['delivery'] as $delivery):
                             $statusClass = '';
-                            switch ($delivery['delivery_status_name']) {
+                            switch ($delivery['delivery_status']) {
                                 case 'Delivered':
                                     $statusClass = 'bg-green-100 text-green-800';
                                     break;
@@ -101,19 +113,20 @@
                                     break;
                             }
                         ?>
-                            <tr data-status="<?= htmlspecialchars($delivery['delivery_status_name']) ?>">
+                            <tr data-status="<?= htmlspecialchars($delivery['delivery_status']) ?>">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><span><?= htmlspecialchars($delivery['tracking_code']) ?></span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['customer_sender_name']) ?></span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['sender_customer_name']) ?></span></td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['created_at']) ?></span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['sender_agent_city'] ?? 'N/A') ?></span></td> <!-- New Column Data -->
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['receiver_agent_city'] ?? 'N/A') ?></span></td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
-                                        <?= htmlspecialchars($delivery['delivery_status_name']) ?>
+                                        <?= htmlspecialchars($delivery['delivery_status']) ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span>MMK<?= htmlspecialchars(number_format($delivery['total_amount'] ?? 0.00, 2)) ?></span></td> <!-- New Amount Column Data -->
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a href="<?= URLROOT; ?>/agent/deliverydetails/<?= htmlspecialchars($delivery['tracking_code']) ?>"
+                                    <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($delivery['tracking_code']) ?>"
                                         class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
                                         View
                                     </a>

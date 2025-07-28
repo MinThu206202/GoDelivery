@@ -1,5 +1,8 @@
 <?php require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
 
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Inter Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
     body {
         font-family: 'Inter', sans-serif;
@@ -33,11 +36,10 @@
             <div class="flex items-center space-x-2">
                 <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar" class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
-                    <p class="text-lg font-medium text-gray-800">John Doe</p>
+                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
                     <p class="text-sm text-gray-500">Agent ID: #007</p>
                 </div>
             </div>
-            <a href="#" class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">Back to Dashboard</a>
         </div>
     </header>
 
@@ -51,84 +53,41 @@
                     <thead class="bg-gray-50 sticky top-0">
                         <tr>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">Order ID</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sender Agent</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pickup Location</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery Location</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Earnings</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sender Customer</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Creation Date</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">Action</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD1001</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">123 Main St, City A</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">456 Oak Ave, City B</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Sarah Connor</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$18.00</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="handleAccept('#ORD1001')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">Accept</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD1002</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">789 Pine Ln, City C</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">101 Elm Rd, City D</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Kyle Reese</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$25.50</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="handleAccept('#ORD1002')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">Accept</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD1003</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">222 Birch Blvd, City E</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">333 Cedar Dr, City F</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">John Connor</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$14.75</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="handleAccept('#ORD1003')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">Accept</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD1004</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">555 River St, City G</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">666 Lake Dr, City H</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Linda Hamilton</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$22.00</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="handleAccept('#ORD1004')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">Accept</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD1005</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">777 Ocean Ave, City I</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">888 Mountain Rd, City J</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Arnold S.</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$30.00</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="handleAccept('#ORD1005')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">Accept</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD1006</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">999 Valley Cir, City K</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">111 Summit Way, City L</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Grace Hopper</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$19.50</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="handleAccept('#ORD1006')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">Accept</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD1007</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">444 Forest Ave, City M</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">555 Meadow Ln, City N</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Alan Turing</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$16.00</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="handleAccept('#ORD1007')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">Accept</button>
-                            </td>
-                        </tr>
+                        <?php foreach ($data['request_delivery'] as $res): ?>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= htmlspecialchars($res['tracking_code'] ?? '') ?></td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($res['receiver_agent_name'] ?? 'N/A') ?></td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($res['sender_agent_city'] ?? 'N/A') ?></td>
+
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($res['sender_customer_name'] ?? 'N/A') ?></td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?= htmlspecialchars($res['created_at'] ?? '0.00') ?></td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end space-x-2">
+                                    <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($res['tracking_code'] ?? '') ?>"
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                                        View
+                                    </a>
+                                    <form action="<?= URLROOT; ?>/agentcontroller/requestaccept" method="POST" style="display: inline;">
+                                        <input type="hidden" name="tracking_code" value="<?= $res['tracking_code'] ?>">
+                                        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
+                                            Accept
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -149,6 +108,21 @@
 </div>
 
 <script>
+
+        <?php if (isset($_GET['accepted'])): ?>
+    <?php if ($_GET['accepted'] == '1'): ?>
+        showToast('Delivery accepted successfully.', 'success');
+    <?php elseif ($_GET['accepted'] == '0'): ?>
+        showToast('Failed to accept delivery. Please try again.', 'error');
+    <?php endif; ?>
+    <?php endif; ?>
+    
+    // Remove the query string after toast shows (for a clean URL)
+    if (window.history.replaceState) {
+        const url = new URL(window.location);
+        url.searchParams.delete('accepted');
+        window.history.replaceState({}, document.title, url.pathname);
+    }
     // Function to show toast notifications
     function showToast(message, type) {
         const toastMessage = document.getElementById('toast-message');
@@ -192,7 +166,7 @@
         if (outcome < 0.6) { // 60% chance of success
             showToast(`Delivery ${orderId} accepted successfully.`, 'success');
             // In a real application, you would update the UI to reflect the accepted delivery
-            // e.g., remove the row, change button to "Accepted", etc.
+            // e.g., remove the row, change button to "Accepted" , etc.
         } else if (outcome < 0.8) { // 20% chance of something went wrong
             showToast(`Something went wrong with ${orderId}. Please try again.`, 'error');
         } else { // 20% chance of already assigned
