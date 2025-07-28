@@ -75,8 +75,8 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?= htmlspecialchars($res['created_at'] ?? '0.00') ?></td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end space-x-2">
-                                    <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($res['tracking_code'] ?? '') ?>"
-                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                                    <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($res['tracking_code']) ?>"
+                                     class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
                                         View
                                     </a>
                                     <form action="<?= URLROOT; ?>/agentcontroller/requestaccept" method="POST" style="display: inline;">
@@ -108,15 +108,14 @@
 </div>
 
 <script>
+    <?php if (isset($_GET['accepted'])): ?>
+        <?php if ($_GET['accepted'] == '1'): ?>
+            showToast('Delivery accepted successfully.', 'success');
+        <?php elseif ($_GET['accepted'] == '0'): ?>
+            showToast('Failed to accept delivery. Please try again.', 'error');
+        <?php endif; ?>
+    <?php endif; ?>
 
-        <?php if (isset($_GET['accepted'])): ?>
-    <?php if ($_GET['accepted'] == '1'): ?>
-        showToast('Delivery accepted successfully.', 'success');
-    <?php elseif ($_GET['accepted'] == '0'): ?>
-        showToast('Failed to accept delivery. Please try again.', 'error');
-    <?php endif; ?>
-    <?php endif; ?>
-    
     // Remove the query string after toast shows (for a clean URL)
     if (window.history.replaceState) {
         const url = new URL(window.location);

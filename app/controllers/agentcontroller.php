@@ -217,7 +217,42 @@ class Agentcontroller extends Controller{
   }
 
 
-}
+  public function get_data($code){
+    $tracking_code = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
+    $data = [
+      'tracking_code' => $tracking_code
+    ];
+    $this->view('agent/update_status', $data);
+  }
+
+      public function show_updated_status(){
+          if($_SERVER['REQUEST_METHOD'] == 'POST'){
+              $code = $_POST['tracking_code'];
+              $status = $_POST['new_status'];
+              $notes = $_POST['notes'];
+  
+              $id_result = $this->db->columnFilter('deliveries','tracking_code',$code);
+              $delivery_id = $id_result['id'] ?? null; // Get the ID, handle if not found
+  
+              $changestatus = false;
+              if ($delivery_id) {
+                  $changestatus = $this->db->update('deliveries',$delivery_id,['delivery_status_id' => $status]);
+              }
+  
+              if($changestatus){
+                  $message = urlencode('Status updated successfully!');
+                  $message_type = 'success';
+              } else {
+                  $message = urlencode('Failed to update status. Please try again.');
+                  $message_type = 'error';
+              }
+  
+              header("Location: " . URLROOT . "/agentcontroller/get_data/" . urlencode($code) . "?message_type=" . $message_type . "&message=" . $message);
+              exit(); 
+          }
+      }
+  }
+
 
 
 ?>

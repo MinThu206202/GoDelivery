@@ -26,6 +26,16 @@ class Agent extends Controller
         $this->view('agent/home',$data);
     }
 
+    public function incoming()
+    {   
+        $status = ['Deliveried','In Transit','Cancelled','Return'];
+        $delivery = $this->db->getByDeliveryIdAndStatuses('view_deliveries_detailed',  $this->agent['id'],$status);
+        $data = [
+            'delivery' => $delivery,
+        ];
+        $this->view('agent/mydelivery', $data);
+    }
+
     public function mydelivery()
     {
         $delivery = $this->db->columnFilterAll('view_deliveries_detailed', 'sender_agent_id', $this->agent['id']);
@@ -67,7 +77,8 @@ class Agent extends Controller
 
     public function request()
     {
-        $accept = $this->db->columnFilterAll('view_deliveries_detailed','receiver_agent_id',$this->agent['id']);
+        $status = ['Pending'];
+        $accept = $this->db->getByDeliveryIdAndStatuses('view_deliveries_detailed',$this->agent['id'],$status);
         $data = [
             "request_delivery" => $accept
         ];

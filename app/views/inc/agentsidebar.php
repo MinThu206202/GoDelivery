@@ -61,6 +61,18 @@ $currentRoute = $_SERVER['REQUEST_URI'];
             </a>
 
             <!-- My Deliveries Link -->
+            <a href="<?= URLROOT; ?>/agent/incoming"
+                class="flex items-center px-4 py-3 rounded-lg transition duration-200 
+   <?= strpos($currentRoute, '/agent/incoming') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v16h16V4H4zm8 4v6m0 0l-3-3m3 3l3-3" />
+                </svg>
+                Incoming Deliveries
+            </a>
+
+
             <a href="<?= URLROOT; ?>/agent/mydelivery"
                 class="flex items-center px-4 py-3 rounded-lg transition duration-200 
                <?= strpos($currentRoute, '/agent/mydelivery') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">

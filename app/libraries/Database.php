@@ -107,6 +107,30 @@ class Database
         return $success ? $rows : [];
     }
 
+    public function getByDeliveryIdAndStatuses($table, $agentId, $statusList = [])
+    {
+        if (empty($statusList)) {
+            // No status filter: fetch all by agent
+            $sql = "SELECT * FROM {$table} WHERE receiver_agent_id = ?";
+            $stm = $this->pdo->prepare($sql);
+            $success = $stm->execute([$agentId]);
+        } else {
+            // Prepare placeholders for the statuses
+            $placeholders = implode(',', array_fill(0, count($statusList), '?'));
+
+            // SQL to fetch rows where status_name IN (...)
+            $sql = "SELECT * FROM {$table} WHERE receiver_agent_id = ? AND delivery_status IN ($placeholders)";
+            $stm = $this->pdo->prepare($sql);
+
+            // Merge parameters: agentId first, then status list
+            $params = array_merge([$agentId], $statusList);
+            $success = $stm->execute($params);
+        }
+
+        $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
+        return $success ? $rows : [];
+    }
+
     public function getById($table, $id)
     {
         $sql = 'SELECT * FROM ' . $table . ' WHERE `id` =:id';
