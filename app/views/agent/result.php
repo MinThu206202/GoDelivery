@@ -245,10 +245,7 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name'];
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="p-4 bg-gray-800 text-white text-center text-sm no-print">
-        <p>&copy; 2024 Delivery Management System. All rights reserved.</p>
-    </footer>
+
 
     </body>
 

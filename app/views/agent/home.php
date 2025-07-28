@@ -146,7 +146,7 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="<?= URLROOT; ?>/agent/deliverydetails/<?= htmlspecialchars($delivery['tracking_code']) ?>"
+                                        <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($delivery['tracking_code']) ?>"
                                             class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
                                             View
                                         </a>

@@ -125,10 +125,15 @@
                                         <?= htmlspecialchars($delivery['delivery_status']) ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($delivery['tracking_code']) ?>"
-                                        class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <a href="<?= URLROOT ?>/agentcontroller/delivery_detail/<?= $delivery['tracking_code'] ?>"
+                                        class="text-white bg-[#1F265B] px-4 py-2 rounded hover:bg-[#2A346C] mr-2">
                                         View
+                                    </a>
+                                    <!-- Edit Button Added Here -->
+                                    <a href="<?= URLROOT ?>/agentcontroller/get_data/<?= $delivery['tracking_code'] ?>"
+                                        class="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-600">
+                                        Edit
                                     </a>
                                 </td>
                             </tr>
