@@ -179,7 +179,8 @@ class Database
 
 
 
-    public function columnFilter($table, $column, $value)
+    public function 
+    columnFilter($table, $column, $value)
     {
         // $sql = 'SELECT * FROM ' . $table . ' WHERE `' . $column . '` = :value';
         $sql = 'SELECT * FROM ' . $table . ' WHERE `' . str_replace('`', '', $column) . '` = :value';

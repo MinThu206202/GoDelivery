@@ -76,13 +76,20 @@
 
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end space-x-2">
                                     <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($res['tracking_code']) ?>"
-                                     class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
+                                        class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
                                         View
                                     </a>
                                     <form action="<?= URLROOT; ?>/agentcontroller/requestaccept" method="POST" style="display: inline;">
                                         <input type="hidden" name="tracking_code" value="<?= $res['tracking_code'] ?>">
                                         <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
                                             Accept
+                                        </button>
+                                    </form>
+                                    <!-- Reject Button Form -->
+                                    <form action="<?= URLROOT; ?>/agentcontroller/requestreject" method="POST" style="display: inline;">
+                                        <input type="hidden" name="tracking_code" value="<?= $res['tracking_code'] ?>">
+                                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
+                                            Reject
                                         </button>
                                     </form>
                                 </td>
@@ -116,10 +123,19 @@
         <?php endif; ?>
     <?php endif; ?>
 
+    <?php if (isset($_GET['rejected'])): ?>
+        <?php if ($_GET['rejected'] == '1'): ?>
+            showToast('Delivery rejected successfully.', 'success');
+        <?php elseif ($_GET['rejected'] == '0'): ?>
+            showToast('Failed to reject delivery. Please try again.', 'error');
+        <?php endif; ?>
+    <?php endif; ?>
+
     // Remove the query string after toast shows (for a clean URL)
     if (window.history.replaceState) {
         const url = new URL(window.location);
         url.searchParams.delete('accepted');
+        url.searchParams.delete('rejected'); // Also delete 'rejected'
         window.history.replaceState({}, document.title, url.pathname);
     }
     // Function to show toast notifications
@@ -154,7 +170,7 @@
         document.getElementById('toast-message').classList.add('hidden');
     }
 
-    // Simulate accepting a delivery
+    // Simulate accepting a delivery (kept for reference, not directly used by new forms)
     function handleAccept(orderId) {
         // Simulate an asynchronous operation (e.g., API call)
         console.log(`Attempting to accept delivery: ${orderId}`);

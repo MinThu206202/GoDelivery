@@ -1,5 +1,5 @@
 <?php require_once APPROOT . '/views/inc/agentsidebar.php';
-$voucher = $data['tracking_code'];
+$voucher = $data['create_data'];
 ?>
 
 <script src="https://cdn.tailwindcss.com"></script>
