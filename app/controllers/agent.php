@@ -28,12 +28,14 @@ class Agent extends Controller
 
     public function incoming()
     {   
-        $status = ['Deliveried','In Transit','Cancelled','Return'];
+        $status = ['Delivered','In Transit','Cancelled','Returned'];
         $delivery = $this->db->getByDeliveryIdAndStatuses('view_deliveries_detailed',  $this->agent['id'],$status);
+        // $delivery = $this->db->columnFilterAll('view_deliveries_detailed', 'receiver_agent_id', $this->agent['id']);
+
         $data = [
             'delivery' => $delivery,
         ];
-        $this->view('agent/mydelivery', $data);
+        $this->view('agent/incoming', $data);
     }
 
     public function mydelivery()
@@ -72,7 +74,11 @@ class Agent extends Controller
 
     public function notification()
     {
-        $this->view('agent/notification');
+        $noti = $this->db->columnFilterAll('view_agent_messages','to_agent_id', $this->agent['id']);
+        $data = [
+            'noti' => $noti
+        ];
+        $this->view('agent/notification',$data);
     }
 
     public function request()

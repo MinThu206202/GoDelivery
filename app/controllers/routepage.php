@@ -57,11 +57,11 @@ class routepage extends Controller{
                 return;
             }
 
-            $Base_free =1000;
-            $Distance_free = 20;
-            $Duration_free = 15;
+            $Base_fee =1000;
+            $Distance_fee = 20;
+            $Duration_fee = 15;
 
-            $price = $Base_free + ($distance * $Distance_free) + ($time * $Duration_free);
+            $price = $Base_fee + ($distance * $Distance_fee) + ($time * $Duration_fee);
 
             $route = new RouteModel();
             $route->setFromcity($from['id']);

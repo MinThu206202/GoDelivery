@@ -64,9 +64,10 @@ public function login()
     $this->db->setLogin($user['id']);
 
     session_start();
+    $agent = $this->db->columnFilter('user_full_info','id',$user['id']);
     $_SESSION['user'] = $user;
    
-    $route = (int)$user['role_id'] === ADMIN_ROLE ? 'admin/home' : 'agent/home';
+    $route = $user['role_id'] === ADMIN_ROLE ? 'admin/home' : 'agent/home';
     redirect($route);
 }
 
