@@ -101,9 +101,9 @@ $agent = $data['tracking_code'];
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#1F265B] focus:border-[#1F265B] sm:text-sm">
                         <option value="1">Pending</option>
                         <option value="2">In Transit</option>
-                        <option value="3">Delivered</option>
+                        <!-- <option value="3">Delivered</option> -->
                         <option value="4">Cancelled</option>
-                        <option value="5">Returned</option>
+                        <!-- <option value="5">Returned</option> -->
                     </select>
                 </div>
                 <div>

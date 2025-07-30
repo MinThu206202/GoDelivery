@@ -13,29 +13,6 @@ class Agentcontroller extends Controller{
         $this->db = new Database();
     }
 
-  public function getShortCode($city)
-  {
-    $codes = [
-      'Yangon' => 'YGN',
-      'Mandalay' => 'MDY',
-      'Monywa' => 'MYW',
-      'Thanlyin' => 'TNL',
-      'Hmawbi' => 'HMB',
-      'Thaketa' => 'TKT',
-      'Insein' => 'INS',
-      'Pyin Oo Lwin' => 'POL',
-      'Myingyan' => 'MYG',
-      'Amarapura' => 'AMP',
-      'Meiktila' => 'MKL',
-      'Sagaing' => 'SGG',
-      'Shwebo' => 'SHW',
-      'Kale' => 'KLE',
-      'Yinmabin' => 'YNB'
-    ];
-
-    return $codes[$city] ?? $city;
-  }
-
   // public function voucher(){
   //   if($_SERVER['REQUEST_METHOD'] == 'POST'){
   //     $name = json_decode($_POST['agent_data'],true);
@@ -262,33 +239,23 @@ class Agentcontroller extends Controller{
 
   public function requestaccept()
   {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $code = $_POST['tracking_code'];
       $delivery = $this->db->columnFilter('deliveries', 'tracking_code', $code);
-      $title = "Delivery Accepted!";
-      $message = "You have successfully accepted Delivery ID: " . $code . ". Proceed to pickup location.";
 
-      if ($delivery) {
-        $accept = $this->db->update('deliveries', $delivery['id'], ['delivery_status_id' => 2]);
-
-        if ($accept) {
-          $user = new Notification();
-          $user->setFromagentid($delivery['receiver_agent_id']);
-          $user->setToagentid($delivery['sender_agent_id']);
-          $user->setTypeid(1);
-          $user->setTitle($title);
-          $user->setMessage($message);
-          date_default_timezone_set('Asia/Yangon');
-          $user->setCreatedAt(date('Y-m-d H:i:s'));
-
-          $createnoti = $this->db->create('agent_notifications',$user->toArray());
-          
-
-          redirect('agent/request?accepted=1');
-        }
+      if ($delivery && $this->db->update('deliveries', $delivery['id'], ['delivery_status_id' => 2])) {
+        $this->db->create('agent_notifications', [
+          'from_agent_id' => $delivery['receiver_agent_id'],
+          'to_agent_id'   => $delivery['sender_agent_id'],
+          'type_id'       => 1,
+          'title'         => 'Delivery Accepted!',
+          'message'       => "You accepted delivery: $code. Proceed to pickup.",
+          'created_at'    => date('Y-m-d H:i:s', time())
+        ]);
+        return redirect('agent/request?accepted=1');
       }
-      // If something went wrong
-      redirect('agent/request?accepted=0');
+
+      return redirect('agent/request?accepted=0');
     }
   }
 
@@ -311,63 +278,94 @@ class Agentcontroller extends Controller{
     $this->view('agent/update_status_incoming', $data);
   }
 
-      public function show_updated_status(){
-          if($_SERVER['REQUEST_METHOD'] == 'POST'){
-              $code = $_POST['tracking_code'];
-              $status = $_POST['new_status'];
-              $notes = $_POST['notes'];
-  
-              $id_result = $this->db->columnFilter('deliveries','tracking_code',$code);
-              $delivery_id = $id_result['id'] ?? null; // Get the ID, handle if not found
-  
-              $changestatus = false;
-              if ($delivery_id) {
-                  $changestatus = $this->db->update('deliveries',$delivery_id,['delivery_status_id' => $status]);
-              }
-  
-              if($changestatus){
-                  $message = urlencode('Status updated successfully!');
-                  $message_type = 'success';
-              } else {
-                  $message = urlencode('Failed to update status. Please try again.');
-                  $message_type = 'error';
-              }
-  
-              header("Location: " . URLROOT . "/agentcontroller/get_data/" . urlencode($code) . "?message_type=" . $message_type . "&message=" . $message);
-              exit(); 
-          }
-      }
+  public function show_updated_status()
+  {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
+
+    $code   = $_POST['tracking_code'];
+    $status = $_POST['new_status'];
+    $notes  = $_POST['notes'];
+
+    $delivery = $this->db->columnFilter('deliveries', 'tracking_code', $code);
+    $delivery_id = $delivery['id'] ?? null;
+
+    if (!$delivery_id) {
+      $this->redirectWithMessage($code, 'Failed to update status. Delivery not found.', 'error');
+      return;
+    }
+
+    $statusChanged = $this->db->update('deliveries', $delivery_id, [
+      'delivery_status_id' => $status
+    ]);
+
+    if ($statusChanged && $status === "4") {
+      $this->sendCancelNotification($delivery);
+    }
+
+    $msgType = $statusChanged ? 'success' : 'error';
+    $msgText = $statusChanged ? 'Status updated successfully!' : 'Failed to update status. Please try again.';
+    $this->redirectWithMessage($code, $msgText, $msgType);
+  }
+
+  private function sendCancelNotification($delivery)
+  {
+    $notif = new Notification();
+    $notif->setFromagentid($delivery['sender_agent_id']);
+    $notif->setToagentid($delivery['receiver_agent_id']);
+    $notif->setTypeid(3);
+    $notif->setTitle("System Alert: Delivery Cancelled");
+    $notif->setMessage("Voucher {$delivery['tracking_code']} has been cancelled by the customer.");
+    $notif->setCreatedAt(date('Y-m-d H:i:s', strtotime('now')));
+
+    $this->db->create('agent_notifications', $notif->toArray());
+  }
+
+  private function redirectWithMessage($code, $message, $type)
+  {
+    header("Location: " . URLROOT . "/agentcontroller/get_data/" . urlencode($code) . "?message_type={$type}&message=" . urlencode($message));
+    exit();
+  }
 
   public function show_updated_status_income()
   {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      $code = $_POST['tracking_code'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $code   = $_POST['tracking_code'];
       $status = $_POST['new_status'];
-      $notes = $_POST['notes'];
+      $notes  = $_POST['notes'];
 
+      $delivery = $this->db->columnFilter('deliveries', 'tracking_code', $code);
+      $id = $delivery['id'] ?? null;
 
-      $id_result = $this->db->columnFilter('deliveries', 'tracking_code', $code);
-      $delivery_id = $id_result['id'] ?? null; 
-      // var_dump($delivery_id);
-      // die();
+      if ($id && $this->db->update('deliveries', $id, ['delivery_status_id' => $status])) {
 
-      $changestatus = false;
-      if ($delivery_id) {
-        $changestatus = $this->db->update('deliveries', $delivery_id, ['delivery_status_id' => $status]);
-      }
+        $statusNotifications = [
+          '3' => ['title' => 'Delivery Completed', 'message' => "Delivery $code marked as 'Delivered'. Earnings processed.", 'type' => 2],
+          '5' => ['title' => 'Return Initiated', 'message' => "Return started for voucher $code. Please check it.", 'type' => 3]
+        ];
 
-      if ($changestatus) {
-        $message = urlencode('Status updated successfully!');
-        $message_type = 'success';
+        if (isset($statusNotifications[$status])) {
+          date_default_timezone_set('Asia/Yangon');
+          $data = $statusNotifications[$status];
+          $this->db->create('agent_notifications', [
+            'from_agent_id' => $delivery['receiver_agent_id'],
+            'to_agent_id'   => $delivery['sender_agent_id'],
+            'type_id'       => $data['type'],
+            'title'         => $data['title'],
+            'message'       => $data['message'],
+            'created_at'    => date('Y-m-d H:i:s')
+          ]);
+        }
+
+        $msg = ['type' => 'success', 'text' => 'Status updated successfully!'];
       } else {
-        $message = urlencode('Failed to update status. Please try again.');
-        $message_type = 'error';
+        $msg = ['type' => 'error', 'text' => 'Failed to update status.'];
       }
-      
-      header("Location: " . URLROOT . "/agentcontroller/edit_incomedelivery/" . urlencode($code) . "?message_type=" . $message_type . "&message=" . $message);
+
+      header("Location: " . URLROOT . "/agentcontroller/edit_incomedelivery/" . urlencode($code) . "?message_type={$msg['type']}&message=" . urlencode($msg['text']));
       exit();
     }
   }
+  
 
   public function send_otp()
   {
@@ -391,7 +389,21 @@ class Agentcontroller extends Controller{
   }
 
 
+  public function logout()
+  {
+    session_start();
+
+    $id = $_SESSION['user']['id'] ?? null;
+    if ($id) {
+      $this->db->unsetLogin($id);
+    }
+
+    session_destroy();
+
+    $this->view('pages/login');
+    exit();
   }
+}
 
 
 

@@ -18,7 +18,7 @@ class Admin extends Controller
     {
         $allowedStatuses = ['Active', 'Inactive']; // Exclude 'Suspended'
         $allUserData = $this->db->getByRoleAndStatus('user_full_info', 'AGENT', $allowedStatuses);
-        $alldeliveryData = $this->db->readAll('delivery_info');
+        $alldeliveryData = $this->db->readAll('view_deliveries_detailed');
         $data = [
             'allUserData' => $allUserData,
             'allDeliveryData' => $alldeliveryData
@@ -30,7 +30,7 @@ class Admin extends Controller
     public function deliveryhistory()
     {
 
-        $user = $this->db->readAll('delivery_info');
+        $user = $this->db->readAll('view_deliveries_detailed');
         $data = [
             'alldeliverydata' => $user
         ];

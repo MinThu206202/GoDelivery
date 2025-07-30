@@ -200,6 +200,15 @@ class Database
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAgentsByTownship($township_name)
+    {
+        $sql = "SELECT * FROM user_full_info WHERE township_name = :township_name AND role_name = 'agent'";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':township_name', $township_name);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getByDeliveryId($table, $id)
     {
         $sql = 'SELECT * FROM ' . $table . ' WHERE `sender_id` =:sender_id';
@@ -255,6 +264,17 @@ class Database
         }
     }
 
+
+    public function getCalculatedPrice($distance)
+    {
+        $sql = "SELECT Calculateprice(:distance) AS price";
+        $stmt = $this->pdo->prepare($sql); // prepare statement
+        $stmt->bindValue(':distance', $distance); // bind parameter
+        $stmt->execute(); // <-- Execute the statement!
+        $row = $stmt->fetch(PDO::FETCH_ASSOC); // fetch result
+        return $row ? $row['price'] : null; // check if row exists before returning
+    }
+
 }
 
 
@@ -263,74 +283,3 @@ class Database
 
 
 
-// // public function categoryView()
-// // {
-// //     $sql = 'SELECT * FROM vw_categories_type';
-// //     $sql = 'SELECT categories.id, categories.name, categories.description, types.name AS type_name FROM categories LEFT JOIN types ON categories.type_id = types.id';
-// //     $stm = $this->pdo->prepare($sql);
-// //     $success = $stm->execute();
-// //     $row = $stm->fetchAll(PDO::FETCH_ASSOC);
-// //     return ($success) ? $row : [];
-// // }
-
-// public function getById($table, $id)
-// {
-//     $sql = 'SELECT * FROM ' . $table . ' WHERE `id` =:id';
-//     // print_r($sql);
-//     $stm = $this->pdo->prepare($sql);
-//     $stm->bindValue(':id', $id);
-//     $success = $stm->execute();
-//     $row = $stm->fetch(PDO::FETCH_ASSOC);
-//     return ($success) ? $row : [];
-// }
-
-// public function getByCategoryId($table, $column)
-// {
-//     $stm = $this->pdo->prepare('SELECT * FROM ' . $table . ' WHERE name =:column');
-//     $stm->bindValue(':column', $column);
-//     $success = $stm->execute();
-//     $row = $stm->fetch(PDO::FETCH_ASSOC);
-//    //  print_r($row);
-//     return ($success) ? $row : [];
-// }
-
-// // For Dashboard
-// public function incomeTransition()
-// {
-//    try{
-
-//        $sql        = "SELECT *,SUM(amount) AS amount FROM incomes WHERE
-//        (date = { fn CURDATE() }) ";
-//        $stm = $this->pdo->prepare($sql);
-//        $success = $stm->execute();
-
-//        $row     = $stm->fetch(PDO::FETCH_ASSOC);
-//        return ($success) ? $row : [];
-
-//     }
-//     catch( Exception $e)
-//     {
-//         echo($e);
-//     }
-
-// }
-
-// public function expenseTransition()
-// {
-//    try{
-
-//        $sql        = "SELECT * ,SUM(amount*qty) AS amount FROM expenses WHERE
-//        (date = { fn CURDATE() }) ";
-//        $stm = $this->pdo->prepare($sql);
-//        $success = $stm->execute();
-
-//        $row     = $stm->fetch(PDO::FETCH_ASSOC);
-//        return ($success) ? $row : [];
-
-//     }
-//     catch( Exception $e)
-//     {
-//         echo($e);
-//     }
-
-// }
