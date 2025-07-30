@@ -103,7 +103,7 @@ $name = isset($_SESSION['user']) ? $_SESSION['user'] : ['name' => 'Admin']; // f
     <main class="main-content">
         <header class="dashboard-header">
             <div class="header-left">
-                <h2 class="page-title">Create New Route</h2>
+                <h2 class="page-title">Create New Places</h2>
             </div>
             <div class="header-right">
                 <div class="admin-profile">
@@ -117,57 +117,23 @@ $name = isset($_SESSION['user']) ? $_SESSION['user'] : ['name' => 'Admin']; // f
             <div class="panel-header-with-button">
                 <h3>Add Route</h3>
             </div>
-            <form id="routeForm" action="<?= URLROOT; ?>/routepage/createroute" method="POST" onsubmit="return validateForm(event)">
+            <form id="routeForm" action="<?= URLROOT; ?>/routepage/" method="POST" onsubmit="return validateForm(event)">
                 <!-- From Region -->
                 <div class="form-group">
-                    <label for="fromRegion">From Region</label>
-                    <select id="fromRegion" name="fromRegion" onchange="loadCities(this.value, 'fromCity')" required>
-                        <option value="">-- Select From Region --</option>
-                        <?php foreach ($data['regions'] as $region): ?>
-                            <option value="<?= htmlspecialchars($region['id']) ?>"><?= htmlspecialchars($region['name']) ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <label for="fromRegion">Region</label>
+                    <input type="text" name="region" placeholder="Enter Region">
                 </div>
 
                 <!-- From City -->
                 <div class="form-group">
-                    <label for="fromCity">From City</label>
-                    <select id="fromCity" name="fromCity" required>
-                        <option value="">-- Select From City --</option>
-                    </select>
+                    <label for="fromCity">City</label>
+                    <input type="text" name="city" placeholder="Enter City">
                 </div>
 
-                <!-- To Region -->
                 <div class="form-group">
-                    <label for="toRegion">To Region</label>
-                    <select id="toRegion" name="toRegion" onchange="loadCities(this.value, 'toCity')" required>
-                        <option value="">-- Select To Region --</option>
-                        <?php foreach ($data['regions'] as $region): ?>
-                            <option value="<?= htmlspecialchars($region['id']) ?>"><?= htmlspecialchars($region['name']) ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <label for="fromCity">Township</label>
+                    <input type="text" name="township" placeholder="Enter Township">
                 </div>
-
-                <!-- To City -->
-                <div class="form-group">
-                    <label for="toCity">To City</label>
-                    <select id="toCity" name="toCity" required>
-                        <option value="">-- Select To City --</option>
-                    </select>
-                </div>
-
-                <!-- Distance -->
-                <div class="form-group">
-                    <label for="distance">Distance (km)</label>
-                    <input type="number" id="distance" name="distance" placeholder="Enter Distance" required />
-                </div>
-
-                <!-- Duration Time -->
-                <div class="form-group">
-                    <label for="time">Duration Time</label>
-                    <input type="time" id="time" name="time" required />
-                </div>
-
                 <input type="hidden" name="user_id" value="<?= htmlspecialchars($name['id']) ?>">
 
                 <div class="form-actions">

@@ -279,7 +279,7 @@
                 <tbody id="deliveryTableBody">
                     <?php foreach ($data['alldeliverydata'] as $agent): ?>
                         <?php
-                        $statusName = $agent['delivery_status_name'];
+                        $statusName = $agent['delivery_status'];
                         $statusClass = 'bg-gray';
 
                         // Normalize status to lowercase for data-status attribute & filtering
@@ -301,11 +301,11 @@
                         ?>
                         <tr class="delivery-row" data-status="<?= $statusLower ?>">
                             <td><?= htmlspecialchars($agent['tracking_code']) ?></td>
-                            <td><?= htmlspecialchars($agent['customer_sender_name']) ?></td>
-                            <td><?= htmlspecialchars($agent['total_amount']) ?></td>
+                            <td><?= htmlspecialchars($agent['sender_customer_name']) ?></td>
+                            <td><?= htmlspecialchars($agent['sender_agent_name']) ?></td>
                             <td><span class="<?= $statusClass ?>"><?= htmlspecialchars($statusName) ?></span></td>
                             <td><?= htmlspecialchars($agent['created_at']) ?></td>
-                            <td><?= htmlspecialchars($agent['payment_status_name']) ?></td>
+                            <td><?= htmlspecialchars($agent['payment_status']) ?></td>
                             <td>
                                 <a href="<?php echo URLROOT; ?>/admincontroller/delivery_detail?tracking_code=<?= urlencode($agent['tracking_code']) ?>" class="view-button">
                                     View

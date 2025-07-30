@@ -155,7 +155,7 @@ class admincontroller extends Controller{
 
     public function logout()
     {
-        session_start();
+
 
         $id = $_SESSION['user']['id'] ?? null;
         if ($id) {
