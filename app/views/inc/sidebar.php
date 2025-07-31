@@ -34,10 +34,6 @@ $currentRoute = $_SERVER['REQUEST_URI'];
                     <i class="fas fa-history"></i> Delivery History
                 </a>
 
-                <a href="<?= URLROOT ?>/admin/managedelivery"
-                    class="nav-item <?= strpos($currentRoute, '/admin/managedelivery') !== false ? 'active' : '' ?>">
-                    <i class="fas fa-truck-loading"></i> Manage Delivery
-                </a>
 
                 <a href="<?= URLROOT ?>/admin/agent"
                     class="nav-item <?= strpos($currentRoute, '/admin/agent') !== false ? 'active' : '' ?>">

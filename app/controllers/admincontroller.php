@@ -59,11 +59,11 @@ class admincontroller extends Controller{
     }
 
     public function  agent_profile(){
-        session_start();
+        // session_start();
 
         $agentId = $_GET['id'] ?? null;            
         $isagent = $this->db->columnFilter('user_full_info','id',$agentId);
-        $isdelivery = $this->db->getByDeliveryId('delivery_full_info',$isagent['id']);
+        $isdelivery = $this->db->getByDeliveryId('view_deliveries_detailed',$isagent['id']);
         
         $data = [
             'agent' => $isagent,
@@ -91,7 +91,7 @@ class admincontroller extends Controller{
                 $ismail = $mail->dectivateagent($user['email'], $user['name']);
             }
             $isagent = $this->db->columnFilter('user_full_info', 'id', $agentId);
-            $isdelivery = $this->db->getByDeliveryId('delivery_full_info', $isagent['id']);
+            $isdelivery = $this->db->getByDeliveryId('view_deliveries_detailed', $isagent['id']);
 
             $data = [
                 'agent' => $isagent,
@@ -126,7 +126,7 @@ class admincontroller extends Controller{
         $tracking_code = $_GET['tracking_code'];
         $id = $this->db->columnFilter('deliveries','tracking_code',$tracking_code);
         if ($id) {
-            $data['detaildelivery'] = [$this->db->getById('delivery_info', $id['id'])];
+            $data['detaildelivery'] = [$this->db->getById('view_deliveries_detailed', $id['id'])];
             return $this->view('admin/search', $data);
         }
     }
@@ -136,7 +136,7 @@ class admincontroller extends Controller{
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['tracking_code'])) {
             $id = $this->db->columnFilter('deliveries', 'tracking_code', $_POST['tracking_code'])['id'] ?? null;
             if ($id) {
-                $data['detaildelivery'] = [$this->db->getById('delivery_info', $id)];
+                $data['detaildelivery'] = [$this->db->getById('view_deliveries_detailed', $id)];
                 return $this->view('admin/search', $data);
             }
         }

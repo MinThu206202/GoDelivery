@@ -95,7 +95,7 @@
 
 <?php foreach ($data['detaildelivery'] as $user): ?>
     <?php
-    $status = strtolower($user['delivery_status_name']);
+    $status = strtolower($user['delivery_status']);
     $statusClass = match ($status) {
         'delivered' => 'status-delivered',
         'pending' => 'status-pending',
@@ -121,26 +121,26 @@
                 </div>
                 <div class="grid-cell paid-amount-cell">
                     <span class="label"><i class="fas fa-money-bill-wave"></i> Paid / PerPaid Amount</span>
-                    <span class="value" id="paidAmount"><i class="fas fa-money-bill"></i><?= htmlspecialchars($user['total_amount']); ?> MMK</span>
+                    <span class="value" id="paidAmount"><i class="fas fa-money-bill"></i><?= htmlspecialchars($user['amount']); ?> MMK</span>
                 </div>
 
                 <!-- Row 2: From Section and To Section -->
                 <div class="grid-cell from-to-section from-section">
                     <span class="section-label"><i class="fas fa-location-dot"></i> From:</span>
-                    <span class="value" id="fromName"><i class="fas fa-user-circle"></i><?= htmlspecialchars($user['customer_sender_name']); ?></span>
-                    <span class="value" id="fromPhone"><i class="fas fa-phone"></i><?= htmlspecialchars($user['customer_sender_phone']); ?></span>
-                    <span class="value" id="fromAddress"><i class="fas fa-map-pin"></i><?= htmlspecialchars($user['sender_address']); ?></span>
+                    <span class="value" id="fromName"><i class="fas fa-user-circle"></i><?= htmlspecialchars($user['sender_customer_name']); ?></span>
+                    <span class="value" id="fromPhone"><i class="fas fa-phone"></i><?= htmlspecialchars($user['sender_customer_phone']); ?></span>
+                    <span class="value" id="fromAddress"><i class="fas fa-map-pin"></i><?= htmlspecialchars($user['sender_customer_address']); ?></span>
                     <span class="value label-small">From City</span>
-                    <span class="value" id="fromCity"><i class="fas fa-city"></i><?= htmlspecialchars($user['from_region_name']); ?></span>
+                    <span class="value" id="fromCity"><i class="fas fa-city"></i><?= htmlspecialchars($user['sender_customer_city']); ?></span>
                 </div>
                 <div class="grid-cell from-to-section to-section">
                     <span class="section-label"><i class="fas fa-map-location-dot"></i> To:</span>
-                    <span class="value" id="toName"><i class="fas fa-user-circle"></i><?= htmlspecialchars($user['customer_receiver_name']); ?></span>
-                    <span class="value" id="toPhone"><i class="fas fa-phone"></i><?= htmlspecialchars($user['customer_receiver_phone']); ?></span>
-                    <span class="value" id="toAddress"><i class="fas fa-map-pin"></i><?= htmlspecialchars($user['receiver_address']); ?>
+                    <span class="value" id="toName"><i class="fas fa-user-circle"></i><?= htmlspecialchars($user['receiver_customer_name']); ?></span>
+                    <span class="value" id="toPhone"><i class="fas fa-phone"></i><?= htmlspecialchars($user['receiver_customer_phone']); ?></span>
+                    <span class="value" id="toAddress"><i class="fas fa-map-pin"></i><?= htmlspecialchars($user['receiver_customer_address']); ?>
                     </span>
                     <span class="value label-small">To City</span>
-                    <span class="value" id="toCity"><i class="fas fa-city"></i><?= htmlspecialchars($user['to_region_name']); ?></span>
+                    <span class="value" id="toCity"><i class="fas fa-city"></i><?= htmlspecialchars($user['receiver_customer_city']); ?></span>
                 </div>
 
                 <!-- Row 3: Truck icon and associated Address/Phone numbers -->
@@ -169,7 +169,7 @@
                 </div>
                 <div class="grid-cell bottom-details-cell">
                     <span class="label"><i class="fas fa-wallet"></i> Pay/Perpaid pay</span>
-                    <span class="value" id="payPerpaidPay"><i class="fas fa-money-check-alt"></i><?= htmlspecialchars($user['payment_status_name']); ?></span>
+                    <span class="value" id="payPerpaidPay"><i class="fas fa-money-check-alt"></i><?= htmlspecialchars($user['payment_status']); ?></span>
                 </div>
 
                 <!-- Row 5: Content Description -->
@@ -177,7 +177,7 @@
                     <span class="label"><i class="fas fa-box-open"></i> Content Description</span>
                 </div>
                 <div class="grid-cell content-description-cell">
-                    <span class="value" id="contentDescription"><i class="fas fa-box-open"></i>Clothes</span>
+                    <span class="value" id="contentDescription"><i class="fas fa-box-open"></i><?= htmlspecialchars($user['product_type']); ?></span>
                 </div>
 
                 <!-- Row 6: Status - Icon added here -->
@@ -186,7 +186,7 @@
                 </div>
                 <div class="grid-cell status-cell">
                     <span class="value status-badge <?= $statusClass ?>">
-                        <i class="fas fa-circle"></i> <?= htmlspecialchars($user['delivery_status_name']) ?>
+                        <i class="fas fa-circle"></i> <?= htmlspecialchars($user['delivery_status']) ?>
                     </span>
                 </div>
 

@@ -113,7 +113,7 @@ require_once APPROOT . '/views/inc/sidebar.php';
                     <?php if (!empty($data['availabel_place'])): ?>
                         <?php foreach ($data['availabel_place'] as $place): ?>
                             <?php
-                            $status = strtolower($place['name'] ?? '');
+                            $status = strtolower($place['status_location_name'] ?? '');
                             $statusClass = $status === 'active' ? 'status-active' : 'status-inactive';
                             ?>
                             <tr>
@@ -123,7 +123,7 @@ require_once APPROOT . '/views/inc/sidebar.php';
                                 <td class="<?= empty($place['agent_name']) ? 'agent-missing' : '' ?>">
                                     <?= !empty($place['agent_name']) ? htmlspecialchars($place['agent_name']) : 'No Agent Yet' ?>
                                 </td>
-                                <td><span class="<?= $statusClass ?>"><?= htmlspecialchars($place['name'] ?? 'No') ?></span></td>
+                                <td><span class="<?= $statusClass ?>"><?= htmlspecialchars($place['status_location_name'] ?? 'No') ?></span></td>
                                 <td>
                                     <a href="<?= URLROOT ?>/available_place/place_detail?id=<?= htmlspecialchars($place['id'] ?? '') ?>" class="view-button">View</a>
                                 </td>

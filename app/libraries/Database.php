@@ -60,33 +60,91 @@ class Database
 
     public function update($table, $id, $data)
     {
-        // First, we don't want id from category table
         if (isset($data['id'])) {
             unset($data['id']);
         }
 
         try {
             $columns = array_keys($data);
-            function map($item)
-            {
+
+            // ✅ Anonymous function avoids redeclaration
+            $columns = array_map(function ($item) {
                 return $item . '=:' . $item;
-            }
-            $columns = array_map('map', $columns);
+            }, $columns);
+
             $bindingSql = implode(',', $columns);
-            // echo $bindingSql;
-            // exit;
-            $sql = 'UPDATE ' .  $table . ' SET ' . $bindingSql . ' WHERE `id` =:id';
+            $sql = 'UPDATE ' .  $table . ' SET ' . $bindingSql . ' WHERE `id` = :id';
             $stm = $this->pdo->prepare($sql);
 
-            // Now, we assign id to bind
             $data['id'] = $id;
 
             foreach ($data as $key => $value) {
                 $stm->bindValue(':' . $key, $value);
             }
-            $status = $stm->execute();
-            // print_r($status);
-            return $status;
+
+            return $stm->execute();
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+
+
+    public function changefromcitystatus($table, $id, $data)
+    {
+        if (isset($data['id'])) {
+            unset($data['id']);
+        }
+
+        try {
+            $columns = array_keys($data);
+
+            // ✅ Anonymous function avoids redeclaration
+            $columns = array_map(function ($item) {
+                return $item . '=:' . $item;
+            }, $columns);
+
+            $bindingSql = implode(',', $columns);
+            $sql = 'UPDATE ' .  $table . ' SET ' . $bindingSql . ' WHERE `from_city_id` = :id';
+            $stm = $this->pdo->prepare($sql);
+
+            $data['id'] = $id;
+
+            foreach ($data as $key => $value) {
+                $stm->bindValue(':' . $key, $value);
+            }
+
+            return $stm->execute();
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+
+
+    public function changetocitystatus($table, $id, $data)
+    {
+        if (isset($data['id'])) {
+            unset($data['id']);
+        }
+
+        try {
+            $columns = array_keys($data);
+
+            // ✅ Anonymous function avoids redeclaration
+            $columns = array_map(function ($item) {
+                return $item . '=:' . $item;
+            }, $columns);
+
+            $bindingSql = implode(',', $columns);
+            $sql = 'UPDATE ' .  $table . ' SET ' . $bindingSql . ' WHERE `to_city_id` = :id';
+            $stm = $this->pdo->prepare($sql);
+
+            $data['id'] = $id;
+
+            foreach ($data as $key => $value) {
+                $stm->bindValue(':' . $key, $value);
+            }
+
+            return $stm->execute();
         } catch (PDOException $e) {
             echo $e;
         }
@@ -202,7 +260,7 @@ class Database
 
     public function getAgentsByTownship($township_name)
     {
-        $sql = "SELECT * FROM user_full_info WHERE township_name = :township_name AND role_name = 'agent'";
+        $sql = "SELECT * FROM user_full_info WHERE township_name = :township_name AND role_name = 'agent' AND status_name = 'Suspended' ";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':township_name', $township_name);
         $stmt->execute();
@@ -211,9 +269,9 @@ class Database
 
     public function getByDeliveryId($table, $id)
     {
-        $sql = 'SELECT * FROM ' . $table . ' WHERE `sender_id` =:sender_id';
+        $sql = 'SELECT * FROM ' . $table . ' WHERE `sender_agent_id` =:sender_agent_id';
         $stm = $this->pdo->prepare($sql);
-        $stm->bindValue(':sender_id', $id);
+        $stm->bindValue(':sender_agent_id', $id);
         $success = $stm->execute();
         $row = $stm->fetchAll(PDO::FETCH_ASSOC);
        //  print_r($row);
@@ -268,11 +326,11 @@ class Database
     public function getCalculatedPrice($distance)
     {
         $sql = "SELECT Calculateprice(:distance) AS price";
-        $stmt = $this->pdo->prepare($sql); // prepare statement
-        $stmt->bindValue(':distance', $distance); // bind parameter
-        $stmt->execute(); // <-- Execute the statement!
-        $row = $stmt->fetch(PDO::FETCH_ASSOC); // fetch result
-        return $row ? $row['price'] : null; // check if row exists before returning
+        $stmt = $this->pdo->prepare($sql); 
+        $stmt->bindValue(':distance', $distance); 
+        $stmt->execute(); 
+        $row = $stmt->fetch(PDO::FETCH_ASSOC); 
+        return $row ? $row['price'] : null; 
     }
 
 }
