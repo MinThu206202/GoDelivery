@@ -131,7 +131,7 @@
                     <span class="value" id="fromPhone"><i class="fas fa-phone"></i><?= htmlspecialchars($user['sender_customer_phone']); ?></span>
                     <span class="value" id="fromAddress"><i class="fas fa-map-pin"></i><?= htmlspecialchars($user['sender_customer_address']); ?></span>
                     <span class="value label-small">From City</span>
-                    <span class="value" id="fromCity"><i class="fas fa-city"></i><?= htmlspecialchars($user['sender_customer_city']); ?></span>
+                    <span class="value" id="fromCity"><i class="fas fa-city"></i><?= htmlspecialchars($user['from_city_name']); ?></span>
                 </div>
                 <div class="grid-cell from-to-section to-section">
                     <span class="section-label"><i class="fas fa-map-location-dot"></i> To:</span>
@@ -140,7 +140,7 @@
                     <span class="value" id="toAddress"><i class="fas fa-map-pin"></i><?= htmlspecialchars($user['receiver_customer_address']); ?>
                     </span>
                     <span class="value label-small">To City</span>
-                    <span class="value" id="toCity"><i class="fas fa-city"></i><?= htmlspecialchars($user['receiver_customer_city']); ?></span>
+                    <span class="value" id="toCity"><i class="fas fa-city"></i><?= htmlspecialchars($user['to_city_name']); ?></span>
                 </div>
 
                 <!-- Row 3: Truck icon and associated Address/Phone numbers -->

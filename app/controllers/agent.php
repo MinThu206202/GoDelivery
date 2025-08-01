@@ -63,6 +63,20 @@ class Agent extends Controller
             }
         }
     }
+
+    public function getTownshipsByCity()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $cityId = $_GET['city_id'] ?? null;
+            if ($cityId) {
+                $townships = $this->db->columnFilterAll('townships', 'city_id', $cityId);
+                echo json_encode($townships);
+            }
+        }
+    }
+
+
+
     public function voucher()
     {
         $getregion = $this->db->readAll('regions');

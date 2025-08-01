@@ -3,7 +3,9 @@
 class RouteModel{
 
     private $fromcity;
+    private $fromTownship;
     private $tocity;
+    private $toTownship;
     private $distnce;
     private $price;
     private $status;
@@ -19,6 +21,16 @@ public function getFromcity(){
     return $this->fromcity;
 }
 
+    public function setFromtownship($fromTownship)
+    {
+        $this->fromTownship = $fromTownship;
+    }
+
+    public function getFromtownship()
+    {
+        return $this->fromTownship;
+    }
+
     public function setTocity($tocity)
     {
         $this->tocity = $tocity;
@@ -27,6 +39,16 @@ public function getFromcity(){
     public function getTocity()
     {
         return $this->tocity;
+    }
+
+    public function setTotownship($toTownship)
+    {
+        $this->toTownship = $toTownship;
+    }
+
+    public function getTotownship()
+    {
+        return $this->toTownship;
     }
     public function setDistance($distance)
     {
@@ -89,7 +111,9 @@ public function getFromcity(){
     {
         return [
             "from_city_id" => $this->getFromcity(),
+            "from_township_id" => $this->getFromtownship(),
             "to_city_id" => $this->getTocity(),
+            "to_township_id" => $this->getTotownship(),
             "distance" => $this->getDistance(),
             "price" => $this->getPrice(),
             "status" => $this->getStatus(),

@@ -37,6 +37,7 @@ public function getSenderData($post)
         'email' => $post['sender_email'],
         'phone' => $post['sender_phone'],
         'address' => $post['sender_address'],
+        'township_id'=> $post['senderAgentTownship'],
         'city_id' => $post['senderAgentCity'],
         'region_id' => $post['senderAgentRegion']
     ];
@@ -50,7 +51,8 @@ public function getReceiverData($post, $agent)
         'phone' => $post['receiver_phone'],
         'address' => $post['receiver_address'],
         'city_id' => $agent['city_id'],
-        'region_id' => $agent['region_id']
+        'region_id' => $agent['region_id'],
+        'township_id' => $agent['township_id']
     ];
 }
 
@@ -63,7 +65,7 @@ public function createUser($data)
     $user->setAddress($data['address']);
     $user->setCity($data['city_id']);
     $user->setRegion($data['region_id']);
-    $user->setTownship(null);
+    $user->setTownship($data['township_id']);
     $user->setWard(null);
     $user->setPassword(null);
     $user->setOtp_code(null);
@@ -103,8 +105,12 @@ public function buildDeliveryData($post, $agent, $receiverAgent, $senderId, $rec
         'receiver_agent_id' => $receiverAgent['id'],
         'sender_customer_id' => $senderId,
         'receiver_customer_id' => $receiverId,
+        'from_township_id' => $agent['township_id'],
+        'to_township_id' => $receiverAgent['township_id'],
         'from_city_id' => $agent['city_id'],
         'to_city_id' => $post['senderAgentCity'],
+        'from_region_id' => $agent['region_id'],
+        'to_region_id' => $post['senderAgentRegion'],
         'weight' => $post['weight'],
         'amount' => $amount,
         'delivery_status_id' => 1,

@@ -6,6 +6,9 @@ class Availablecontroller extends Controller {
     public function __construct(){
         $this->db = new Database();
         $this->model('notification');
+        $this->model('CityModel');
+        $this->model('TownshipModel');
+        $this->model('Available_locationModel');
     }
 
     public function deployresult(){
@@ -28,71 +31,90 @@ class Availablecontroller extends Controller {
     public function updateLocationStatus()
     {
         session_start();
-        $name = $_SESSION['user'];
-        $userId = $name['id'];
+        $userId = $_SESSION['user']['id'];
         $id = $_POST['location_id'];
-        $status = $_POST['current_status'];
+        $currentStatus = $_POST['current_status'];
 
-        
-        if($status == 'active'){
-            $activelocation = $this->db->update('available_location',$id,['status_location_id' => 2]);
-            $msgType = 'success';
-            $newstatus = 'inactive';
-            $msgText = 'Location status changed to ' . ucfirst($newstatus);
+        $newStatusId = ($currentStatus === 'active') ? 2 : 1;
+        $newStatusText = ($newStatusId === 2) ? 'inactive' : 'active';
+        $msgText = "Location status changed to " . ucfirst($newStatusText);
 
-            $city = $this->db->columnFilter('view_available_locations' , 'id',$id);
-            $changeroute = $this->db->changefromcitystatus('route',$city['city_id'],['status' => 'inactive']);
-            $changeroute = $this->db->changetocitystatus('route', $city['city_id'], ['status' => 'inactive']);
+        // Update location status
+        $this->db->update('available_location', $id, ['status_location_id' => $newStatusId]);
 
-            $agents = $this->db->columnFilterAll('user_full_info', 'role_name', 'Agent') ?: [];
+        // Fetch township
+        $location = $this->db->columnFilter('view_available_locations', 'id', $id);
 
-            foreach ($agents as $agent) {
-                $notification = new Notification();
-                $notification->setFromagentid($userId);
-                $notification->setToagentid($agent['id']);
-                $notification->setTypeid(4);
-                $notification->setTitle("Township Activated");
-                $notification->setMessage("Activation complete: ". $city['city_name'] ." is now live in the system.");
-                $notification->setCreatedAt(date('Y-m-d H:i:s'));
-                $create = $this->db->create('agent_notifications', $notification->toArray());
-                
-            }
+        // Change route status based on township
+        $this->db->changefromcitystatus('route', $location['township_id'], ['status' => $newStatusText]);
+        $this->db->changetocitystatus('route', $location['township_id'], ['status' => $newStatusText]);
 
-            header("Location: " . URLROOT . "/available_place/place_detail?id=" . urlencode($id) .
-                "&message_type=" . urlencode($msgType) .
-                "&message=" . urlencode($msgText));
-            exit();
-                   
-        }elseif($status === 'inactive' || $status === "pending"){
-            $activelocation = $this->db->update('available_location', $id, ['status_location_id' => 1]);
-            $msgType = 'success';
-            $newstatus = 'active';
-            $msgText = 'Location status changed to ' . ucfirst($newstatus);
+        // Notify all agents
+        $agents = $this->db->columnFilterAll('user_full_info', 'role_name', 'Agent') ?: [];
+        $title = ($newStatusId === 2) ? "Township Deactivated" : "Township Activated";
+        $message = ($newStatusId === 2)
+            ? "The township of {$location['city_name']} has been deactivated and is no longer available for new deliveries."
+            : "Activation complete: {$location['city_name']} is now live in the system.";
 
-            $city = $this->db->columnFilter('view_available_locations', 'id', $id);
-            $changeroute = $this->db->changefromcitystatus('route', $city['city_id'], ['status' => 'active']);
-            $changeroute = $this->db->changetocitystatus('route', $city['city_id'], ['status' => 'active']);
-
-            $agents = $this->db->columnFilterAll('user_full_info', 'role_name', 'Agent') ?: [];
-
-            foreach ($agents as $agent) {
-                $notification = new Notification();
-                $notification->setFromagentid($userId);
-                $notification->setToagentid($agent['id']);
-                $notification->setTypeid(4);
-                $notification->setTitle("Township deactivated.");
-                $notification->setMessage("The township of " . $city['city_name'] . " has been deactivated and is no longer available for new deliveries.");
-                $notification->setCreatedAt(date('Y-m-d H:i:s'));
-                $create = $this->db->create('agent_notifications', $notification->toArray());
-            }
-
-            header("Location: " . URLROOT . "/available_place/place_detail?id=" . urlencode($id) .
-                "&message_type=" . urlencode($msgType) .
-                "&message=" . urlencode($msgText));
-            exit();
+        foreach ($agents as $agent) {
+            $notification = new Notification();
+            $notification->setFromagentid($userId);
+            $notification->setToagentid($agent['id']);
+            $notification->setTypeid(4);
+            $notification->setTitle($title);
+            $notification->setMessage($message);
+            $notification->setCreatedAt(date('Y-m-d H:i:s'));
+            $this->db->create('agent_notifications', $notification->toArray());
         }
 
+        // Redirect
+        header("Location: " . URLROOT . "/available_place/place_detail?id=" . urlencode($id) .
+            "&message_type=success&message=" . urlencode($msgText));
+        exit();
+    }
 
+    public function addplace()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $regionId = $_POST['region'];
+            $cityName = $_POST['city'];
+            $townshipName = $_POST['township'] . ' Township';
+
+            // Find or create city
+            $city = $this->db->columnFilter('cities', 'name', $cityName);
+            if (!$city) {
+                $cityModel = new CityModel();
+                $cityModel->setRegionId($regionId);
+                $cityModel->setName($cityName);
+                $this->db->create('cities', $cityModel->toArray());
+                $city = $this->db->columnFilter('cities', 'name', $cityName);
+            }
+
+            // Find or create township
+            $township = $this->db->columnFilter('townships', 'name', $townshipName);
+            if (!$township) {
+                $townshipModel = new TownshipModel();
+                $townshipModel->setCityId($city['id']);
+                $townshipModel->setName($townshipName);
+                $this->db->create('townships', $townshipModel->toArray());
+                $township = $this->db->columnFilter('townships', 'name', $townshipName);
+            }
+
+            // Create available_location
+            $location = new Available_locationModel();
+            $location->setRegionId($regionId);
+            $location->setCityId($city['id']);
+            $location->setTownshipId($township['id']);
+            $location->setAgentId(null);
+            date_default_timezone_set('Asia/Yangon');
+            $location->setCreatedAt(date('Y-m-d H:i:s')); // ✅ fix date format
+            $location->setUpdatedAt(null);
+            $location->setStatusLoacationId(3);
+
+            $this->db->create('available_location', $location->toArray());
+
+            redirect('available_place/addplace?success=1');
+        }
     }
 
 }

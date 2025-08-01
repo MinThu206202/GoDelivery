@@ -185,7 +185,7 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name'];
                             <p><strong class="font-medium text-gray-700">Name:</strong> <?= htmlspecialchars($voucher['sender_customer_name']) ?></p>
                             <p><strong class="font-medium text-gray-700">Phone:</strong> <?= htmlspecialchars($voucher['sender_customer_phone']) ?></p>
                             <p><strong class="font-medium text-gray-700">Email:</strong> <?= htmlspecialchars($voucher['sender_customer_email']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Address:</strong> <?= htmlspecialchars($voucher['sender_customer_address']) ?>, <?= htmlspecialchars($voucher['sender_customer_city']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Address:</strong> <?= htmlspecialchars($voucher['sender_customer_address']) ?>, <?= htmlspecialchars($voucher['from_township_name']) ?></p>
                         </div>
                     </div>
 
@@ -195,7 +195,7 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name'];
                             <p><strong class="font-medium text-gray-700">Name:</strong> <?= htmlspecialchars($voucher['receiver_customer_name']) ?></p>
                             <p><strong class="font-medium text-gray-700">Phone:</strong> <?= htmlspecialchars($voucher['receiver_customer_phone']) ?></p>
                             <p><strong class="font-medium text-gray-700">Email:</strong> <?= htmlspecialchars($voucher['receiver_customer_email']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Address:</strong> <?= htmlspecialchars($voucher['receiver_customer_address']) ?>, <?= htmlspecialchars($voucher['receiver_customer_city']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Address:</strong> <?= htmlspecialchars($voucher['receiver_customer_address']) ?>, <?= htmlspecialchars($voucher['to_township_name']) ?></p>
                         </div>
                     </div>
 
@@ -205,7 +205,7 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name'];
                         <div class="space-y-3 text-lg">
                             <p><strong class="font-medium text-gray-700">Pickup Agent Name:</strong> <?= htmlspecialchars($voucher['receiver_agent_name']) ?></p>
                             <p><strong class="font-medium text-gray-700">Pickup Agent Phone:</strong> <?= htmlspecialchars($voucher['receiver_agent_phone']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Pickup Agent Address:</strong> <?= htmlspecialchars($voucher['receiver_agent_address']) ?>, <?= htmlspecialchars($voucher['receiver_agent_city']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Pickup Agent Address:</strong> <?= htmlspecialchars($voucher['receiver_agent_address']) ?>, <?= htmlspecialchars($voucher['from_township_name']) ?></p>
                         </div>
                     </div>
 

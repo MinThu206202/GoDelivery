@@ -7,6 +7,10 @@ class Delivery{
     private $receicer_cusomer_id;
     private $form_city_id;
     private $to_city_id;
+    private $from_township_id;
+    private $to_township_id;
+    private $from_region_id;
+    private $to_region_id;
     private $weight;
     private $amount;
     private $delivery_status_id;
@@ -75,6 +79,44 @@ class Delivery{
         return $this->to_city_id;
     }
 
+    public function setFromtownshipid($from_township_id)
+    {
+        $this->from_township_id = $from_township_id;
+    }
+
+    public function getFromtownshipid()
+    {
+        return $this->from_township_id;
+    }
+
+    public function setTotownshipid($to_township_id)
+    {
+        $this->to_township_id = $to_township_id;
+    }
+
+    public function getTotownshipid()
+    {
+        return $this->to_township_id;
+    }
+
+    public function setToregionid($to_region_id)
+    {
+        $this->to_region_id = $to_region_id;
+    }
+
+    public function getToregionid()
+    {
+        return $this->to_region_id;
+    }
+    public function setFromregionid($from_region_id)
+    {
+        $this->from_region_id = $from_region_id;
+    }
+
+    public function getFromregionid()
+    {
+        return $this->from_region_id;
+    }
 
     public function setWeight($weight)
     {

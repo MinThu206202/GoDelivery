@@ -190,13 +190,6 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                         <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Agent Locations</h2>
                         <div class="space-y-4">
                             <div>
-                                <label for="senderAgentCity" class="block text-sm text-gray-500">Receiver Agent City:</label>
-                                <select id="senderAgentCity" name="senderAgentCity"
-                                    class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                                    <option value="" disabled selected>Select City</option>
-                                </select>
-                            </div>
-                            <div>
                                 <label for="senderAgentRegion" class="block text-sm text-gray-500">Receiver Agent Region:</label>
                                 <select id="senderAgentRegion" name="senderAgentRegion"
                                     class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
@@ -208,6 +201,20 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+                            <div>
+                                <label for="senderAgentTownship" class="block text-sm text-gray-500">Receiver Agent Township:</label>
+                                <select id="senderAgentTownship" name="senderAgentTownship"
+                                    class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                                    <option value="" disabled selected>Select Township</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="senderAgentCity" class="block text-sm text-gray-500">Receiver Agent City:</label>
+                                <select id="senderAgentCity" name="senderAgentCity"
+                                    class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                                    <option value="" disabled selected>Select City</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div>
@@ -216,7 +223,7 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                         <select id="paymentType" name="payment"
                             class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                             <option value="Prepaid">Unpaid</option>
-                            <option  value="Pay on Delivery">Paid</option>
+                            <option value="Pay on Delivery">Paid</option>
                         </select>
                     </div>
                 </div>
@@ -246,8 +253,10 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
     document.getElementById('senderAgentRegion').addEventListener('change', function() {
         const regionId = this.value;
         const citySelect = document.getElementById('senderAgentCity');
+        const townshipSelect = document.getElementById('senderAgentTownship');
 
         citySelect.innerHTML = '<option value="">Select City</option>';
+        townshipSelect.innerHTML = '<option value="">Select Township</option>';
 
         if (!regionId) return;
 
@@ -261,9 +270,28 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                     citySelect.appendChild(option);
                 });
             })
-            .catch(err => {
-                console.error('Error loading cities:', err);
-            });
+            .catch(err => console.error('Error loading cities:', err));
+    });
+
+    document.getElementById('senderAgentCity').addEventListener('change', function() {
+        const cityId = this.value;
+        const townshipSelect = document.getElementById('senderAgentTownship');
+
+        townshipSelect.innerHTML = '<option value="">Select Township</option>';
+
+        if (!cityId) return;
+
+        fetch(`<?= URLROOT; ?>/agent/getTownshipsByCity?city_id=${cityId}`)
+            .then(response => response.json())
+            .then(townships => {
+                townships.forEach(township => {
+                    const option = document.createElement('option');
+                    option.value = township.id;
+                    option.textContent = township.name;
+                    townshipSelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error('Error loading townships:', err));
     });
 </script>
 

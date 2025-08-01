@@ -159,7 +159,7 @@ $name = isset($_SESSION['user']) ? $_SESSION['user'] : ['name' => 'Admin']; // f
                 <p><strong>Selected Agent:</strong> <span id="summaryAgent">-</span></p>
             </div>
 
-            <button onclick="history.back()"
+            <button onclick="window.location.href='<?= URLROOT ?>/available_place/available'"
                 class="px-8 py-4 bg-[#1F265B] text-white rounded-xl hover:bg-blue-800 transition duration-300 font-bold shadow-lg transform hover:scale-105">
                 ← Back
             </button>
