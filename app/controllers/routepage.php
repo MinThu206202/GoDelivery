@@ -20,6 +20,15 @@ class routepage extends Controller{
         }
     }
 
+    public function getTownships()
+    {
+        $cityId = $_GET['city_id'] ?? null;
+        if ($cityId) {
+            $townships = $this->db->columnFilterAll('townships', 'city_id', $cityId);
+            echo json_encode($townships);
+        }
+    }
+
     public function addroute()
     {
 
@@ -38,52 +47,56 @@ class routepage extends Controller{
     public function createroute()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $regions = $this->db->readAll('regions');
-            return $this->view('admin/addroute', ['regions' => $regions]);
+            return $this->view('admin/addroute', [
+                'regions' => $this->db->readAll('regions')
+            ]);
         }
 
-        $input = array_map('trim', $_POST);
-        ['fromCity' => $fromCity, 'toCity' => $toCity, 'distance' => $distance, 'time' => $time, 'user_id' => $userId] = $input + [null, null, null, null, null];
+        $data = array_map('trim', $_POST);
+        $required = ['from_city_id', 'from_township_id', 'to_city_id', 'to_township_id', 'distance', 'time', 'user_id'];
 
-        if (!$fromCity || !$toCity || !$distance || !$time) {
-            die("Missing required fields.");
+        foreach ($required as $field) {
+            if (empty($data[$field])) {
+                die("Missing required field: $field");
+            }
         }
 
-        $from = $this->db->columnFilter('cities', 'name', $fromCity);
-        $to = $this->db->columnFilter('cities', 'name', $toCity);
+        $fromCity = $this->db->columnFilter('cities', 'id', $data['from_city_id']);
+        $toCity   = $this->db->columnFilter('cities', 'id', $data['to_city_id']);
 
-        if (!$from || !$to) {
-            die("Invalid city name(s).");
+        if (!$fromCity || !$toCity) {
+            die("Invalid city ID(s).");
         }
 
-        $price = $this->db->getCalculatedPrice($distance);
-
+        $price = $this->db->getCalculatedPrice($data['distance']);
 
         $route = new RouteModel();
-        $route->setFromcity($from['id']);
-        $route->setTocity($to['id']);
-        $route->setDistance($distance);
+        $route->setFromcity($data['from_city_id']);
+        $route->setFromtownship($data['from_township_id']);
+        $route->setTocity($data['to_city_id']);
+        $route->setTotownship($data['to_township_id']);
+        $route->setDistance($data['distance']);
+        $route->setTime($data['time']);
         $route->setPrice($price);
-        $route->setTime($time);
         $route->setStatus('active');
         $route->setCreatedat(date('Y-m-d H:i:s'));
         $route->setUpdatedat(null);
 
         if (!$this->db->create('route', $route->toArray())) {
-            die("Error saving route");
+            die("Failed to create route.");
         }
 
         $agents = $this->db->columnFilterAll('user_full_info', 'role_name', 'Agent') ?: [];
 
         foreach ($agents as $agent) {
-            $notification = new Notification();
-            $notification->setFromagentid($userId);
-            $notification->setToagentid($agent['id']);
-            $notification->setTypeid(4);
-            $notification->setTitle("Route Activated");
-            $notification->setMessage("Route from $fromCity to $toCity has been activated. You can now start deliveries on this route.");
-            $notification->setCreatedAt(date('Y-m-d H:i:s'));
-            $this->db->create('agent_notifications', $notification->toArray());
+            $this->db->create('agent_notifications', [
+                'from_agent_id' => $data['user_id'],
+                'to_agent_id'   => $agent['id'],
+                'type_id'       => 4,
+                'title'         => 'Route Activated',
+                'message'       => "Route from {$fromCity['name']} to {$toCity['name']} is now active.",
+                'created_at'    => date('Y-m-d H:i:s')
+            ]);
         }
 
         header('Location: ' . URLROOT . '/routepage/createroute?success=1');

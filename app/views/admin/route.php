@@ -311,12 +311,12 @@ $name = $_SESSION['user'];
             <h2 class="page-title">Route</h2>
             <div class="dashboard-search-with-filters agent-filters">
                 <div class="filter-group">
-                    <label for="filterAccessCode">From City</label>
-                    <input type="text" id="filterAccessCode" placeholder="Enter From City">
+                    <label for="filterAccessCode">From Township</label>
+                    <input type="text" id="filterAccessCode" placeholder="Enter From Township">
                 </div>
                 <div class="filter-group">
-                    <label for="filterCity">To City</label>
-                    <input type="text" id="filterCity" placeholder="Enter To City">
+                    <label for="filterCity">To Township</label>
+                    <input type="text" id="filterCity" placeholder="Enter To Township">
                 </div>
                 <button id="applyFilterButton" class="search-button">
                     <i class="fas fa-search"></i> Search
@@ -367,11 +367,11 @@ $name = $_SESSION['user'];
                             $statusClass = $status === 'active' ? 'status-active' : 'status-inactive';
                             ?>
                             <tr data-status="<?= $status ?>">
-                                <td><?= htmlspecialchars($route['from_city']) ?></td>
-                                <td><?= htmlspecialchars($route['to_city']) ?></td>
+                                <td><?= htmlspecialchars($route['from_township']) ?></td>
+                                <td><?= htmlspecialchars($route['to_township']) ?></td>
                                 <td><?= htmlspecialchars($route['distance']) ?></td>
                                 <td><?= htmlspecialchars($route['price']) ?></td>
-                                <td><?= htmlspecialchars($route['time'])?></td>
+                                <td><?= htmlspecialchars($route['time'])?>Hours</td>
                                 <td><span class="<?= $statusClass ?>"><?= htmlspecialchars($route['status']) ?></span></td>
                             </tr>
                         <?php endforeach; ?>

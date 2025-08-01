@@ -61,88 +61,58 @@
                 </a>
             </div>
 
-            <div class="overflow-x-auto overflow-y-auto max-h-[calc(100vh-280px)]">
-                <!-- Adjusted max-height for filter buttons -->
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50 sticky top-0">
+            <div class="overflow-auto max-h-[750px] border border-gray-200 rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200 text-sm text-left text-gray-500">
+                    <thead class="bg-gray-50 sticky top-0 z-10">
                         <tr>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
-                                Order ID</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Customer</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Delivery Date</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                From City</th> <!-- New Column Header -->
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Destination City</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
-                                Actions</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery Date</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">From City</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Destination City</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200" id="deliveryTableBody">
-                        <?php foreach ($data['delivery'] as $delivery):
-                            $statusClass = '';
-                            switch ($delivery['delivery_status']) {
-                                case 'Delivered':
-                                    $statusClass = 'bg-green-100 text-green-800';
-                                    break;
-                                case 'Pending':
-                                    $statusClass = 'bg-yellow-100 text-yellow-800';
-                                    break;
-                                case 'In Transit':
-                                    $statusClass = 'bg-blue-100 text-blue-800';
-                                    break;
-                                case 'Cancelled':
-                                    $statusClass = 'bg-red-100 text-red-800';
-                                    break;
-                                case 'Return':
-                                    $statusClass = 'bg-purple-100 text-purple-800';
-                                    break;
-                                default:
-                                    $statusClass = 'bg-gray-100 text-gray-800'; // Default neutral color
-                                    break;
-                            }
-                        ?>
-                            <tr data-status="<?= htmlspecialchars($delivery['delivery_status']) ?>">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><span><?= htmlspecialchars($delivery['tracking_code']) ?></span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['sender_customer_name']) ?></span></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['created_at']) ?></span></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['sender_agent_city'] ?? 'N/A') ?></span></td> <!-- New Column Data -->
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['receiver_agent_city'] ?? 'N/A') ?></span></td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
-                                        <?= htmlspecialchars($delivery['delivery_status']) ?>
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3 whitespace-nowrap">
-                                    <a href="<?= URLROOT ?>/agentcontroller/delivery_detail/<?= $delivery['tracking_code'] ?>"
-                                        class="text-white bg-[#1F265B] px-4 py-2 rounded hover:bg-[#2A346C] mr-2">
-                                        View
-                                    </a>
-                                    <!-- Edit Button Added Here -->
-                                    <a href="<?= URLROOT ?>/agentcontroller/edit_incomedelivery/<?= $delivery['tracking_code'] ?>"
-                                        class="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-600">
-                                        Edit
-                                    </a>
-                                </td>
+                        <?php if (empty($data['delivery'])): ?>
+                            <tr>
+                                <td colspan="7" class="px-6 py-10 text-center text-gray-400">No deliveries found.</td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php else: ?>
+                            <?php foreach ($data['delivery'] as $delivery):
+                                $statusClass = match ($delivery['delivery_status']) {
+                                    'Delivered' => 'bg-green-100 text-green-800',
+                                    'Pending' => 'bg-yellow-100 text-yellow-800',
+                                    'In Transit' => 'bg-blue-100 text-blue-800',
+                                    'Cancelled' => 'bg-red-100 text-red-800',
+                                    'Return' => 'bg-purple-100 text-purple-800',
+                                    default => 'bg-gray-100 text-gray-800'
+                                };
+                            ?>
+                                <tr data-status="<?= htmlspecialchars($delivery['delivery_status']) ?>">
+                                    <td class="px-6 py-4 font-medium text-gray-900"><?= htmlspecialchars($delivery['tracking_code']) ?></td>
+                                    <td class="px-6 py-4"><?= htmlspecialchars($delivery['sender_customer_name']) ?></td>
+                                    <td class="px-6 py-4"><?= htmlspecialchars($delivery['created_at']) ?></td>
+                                    <td class="px-6 py-4"><?= htmlspecialchars($delivery['sender_agent_city'] ?? 'N/A') ?></td>
+                                    <td class="px-6 py-4"><?= htmlspecialchars($delivery['receiver_agent_city'] ?? 'N/A') ?></td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex px-2 py-1 rounded-full text-xs font-semibold <?= $statusClass ?>">
+                                            <?= htmlspecialchars($delivery['delivery_status']) ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                                        <a href="<?= URLROOT ?>/agentcontroller/delivery_detail/<?= $delivery['tracking_code'] ?>" class="text-white bg-[#1F265B] px-3 py-2 rounded hover:bg-[#2A346C]">View</a>
+                                        <a href="<?= URLROOT ?>/agentcontroller/edit_incomedelivery/<?= $delivery['tracking_code'] ?>" class="text-white bg-blue-500 px-3 py-2 rounded hover:bg-blue-600">Edit</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
-            </div>
         </div>
-    </main>
+</div>
+</main>
 </div>
 
 <script>

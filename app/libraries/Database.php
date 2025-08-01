@@ -200,12 +200,12 @@ class Database
         return ($success) ? $row : [];
     }
 
-    public function checkroute($table, $fromCityId, $toCityId)
+    public function checkroute($table, $fromTownshipId, $toTownshipId)
     {
-        $sql = "SELECT * FROM $table WHERE from_city_id = :from_city_id AND to_city_id = :to_city_id AND status = 'Active'";
+        $sql = "SELECT * FROM $table WHERE from_township_id = :from_township_id AND to_township_id = :to_township_id AND status = 'Active'";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':from_city_id', $fromCityId);
-        $stmt->bindValue(':to_city_id', $toCityId);
+        $stmt->bindValue(':from_township_id', $fromTownshipId);
+        $stmt->bindValue(':to_township_id', $toTownshipId);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC); // or fetchAll() if expecting multiple routes
     }

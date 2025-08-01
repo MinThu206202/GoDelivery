@@ -182,21 +182,27 @@ class Agentcontroller extends Controller{
 
     $agent = json_decode($_POST['agent_data'], true);
 
+
     $user = new Voucher_helper();
 
     $senderData = $user->getSenderData($_POST);
+    // var_dump($senderData);
+    // die();
     $receiverData = $user->getReceiverData($_POST, $agent);
 
-    $route = $this->db->checkroute('route', $agent['city_id'], $senderData['city_id']);
-    $receiverAgent = $this->db->checkadmin('users', 'city_id', $senderData['city_id']);
+
+    $route = $this->db->checkroute('route', $agent['township_id'], $senderData['township_id']);
+    $receiverAgent = $this->db->checkadmin('users', 'township_id', $senderData['city_id']);
 
     if (!$route) {
       setMessage('error', 'Route is not active');
-      return redirect('agent/voucher');
+    //  return redirect('agent/voucher');
     }
 
     $senderId = $user->createUser($senderData);
     $receiverId = $user->createUser($receiverData);
+
+
 
     $trackingNumber = $user->generateTrackingNumber($agent['city_id'], $receiverAgent['city_id']);
     $arrivalTime = $user->calculateArrivalTime($route['time']);

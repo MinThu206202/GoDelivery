@@ -138,7 +138,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><span><?= htmlspecialchars($delivery['tracking_code']) ?></span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['sender_customer_name']) ?></span></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['receiver_agent_city']) ?></span></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['to_township_name']) ?></span></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span>MMK<?= htmlspecialchars(number_format($delivery['amount'] ?? 0.00, 2)) ?></span></td> <!-- New Amount Column Data -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">

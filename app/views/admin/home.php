@@ -57,8 +57,8 @@
                         <tr>
 
                             <td><?= htmlspecialchars($user['tracking_code']); ?></td>
-                            <td><?= htmlspecialchars($user['sender_agent_city']); ?></td>
-                            <td><?= htmlspecialchars($user['receiver_agent_city']); ?></td>
+                            <td><?= htmlspecialchars($user['from_city_name']); ?></td>
+                            <td><?= htmlspecialchars($user['to_city_name']); ?></td>
                             <td><?= htmlspecialchars($user['created_at']); ?></td>
                             <td><?= htmlspecialchars($user['amount']); ?></td>
                             <td><?= htmlspecialchars($user['delivery_status']); ?></td>
