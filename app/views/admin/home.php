@@ -1,7 +1,6 @@
-<?php
-
-?>
 <?php require_once APPROOT . '/views/inc/sidebar.php'; ?>
+
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/home.css">
 
 <main class="main-content">
     <header class="dashboard-header">

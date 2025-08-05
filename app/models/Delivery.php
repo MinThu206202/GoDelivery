@@ -20,8 +20,8 @@ class Delivery{
     private $product_type;
     private $tracking_number;
     private $duration;
-
-
+    private $piece_count;
+    private $delivery_type_id;
     public function setSenderagentid($sender_agent_id)
     {
         $this->sender_agent_id = $sender_agent_id;
@@ -203,6 +203,26 @@ class Delivery{
     {
         return $this->duration;
     }
+
+    public function setPiececount($piece_count)
+    {
+        $this->piece_count = $piece_count;
+    }
+
+    public function getPiececount()
+    {
+        return $this->piece_count;
+    }
+
+    public function setDeliveryTypeId($delivery_type_id)
+    {
+        $this->delivery_type_id = $delivery_type_id;
+    }
+
+    public function getDeliveryTypeId()
+    {
+        return $this->delivery_type_id;
+    }
     public function toArray()
     {
         return [
@@ -220,7 +240,9 @@ class Delivery{
             "updated_at" => $this->getUpdated_at(),
             "product_type" => $this->getProducttype(),
             "tracking_code" => $this->getTrackingnumber(),
-            "duration" => $this->getDurationtime()
+            "duration" => $this->getDurationtime(),
+            "delivery_type_id" => $this->getDeliveryTypeId(),
+            "piece_count" => $this->getPiececount()
         ];
     }
 

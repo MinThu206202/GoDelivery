@@ -189,6 +189,8 @@ class Database
         return $success ? $rows : [];
     }
 
+
+
     public function getById($table, $id)
     {
         $sql = 'SELECT * FROM ' . $table . ' WHERE `id` =:id';
@@ -213,8 +215,7 @@ class Database
 
     public function checkadmin($table, $column, $value)
     {
-        // $sql = 'SELECT * FROM ' . $table . ' WHERE `' . $column . '` = :value';
-        $sql = 'SELECT * FROM ' . $table . ' WHERE `' . str_replace('`', '', $column) . '` = :value AND role_id = 2';
+        $sql = 'SELECT * FROM ' . $table . ' WHERE `' . str_replace('`', '', $column) . '` = :value AND role_id = 2 AND status_id = 1';
         $stm = $this->pdo->prepare($sql);
         $stm->bindValue(':value', $value);
         $success = $stm->execute();
@@ -255,6 +256,26 @@ class Database
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':value', $value);
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function filterDoubleColumn($table, $val1, $val2)
+    {
+        $sql = "SELECT * FROM $table WHERE from_township_id = :val1 AND to_township_id = :val2";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':val1', $val1);
+        $stmt->bindParam(':val2', $val2);
+        $stmt->execute();
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
+
+    public function getNotificationsByAgentId($agent_id)
+    {
+        $sql = "SELECT * FROM view_agent_messages WHERE to_agent_id = :agent_id ORDER BY created_at DESC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':agent_id', $agent_id, PDO::PARAM_INT);
+        $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -332,6 +353,54 @@ class Database
         $row = $stmt->fetch(PDO::FETCH_ASSOC); 
         return $row ? $row['price'] : null; 
     }
+
+
+    ///-----------------------------STORE PROCEDURE---------------------------///
+
+    public function insertRoute($fromCityId, $fromTownshipId, $toCityId, $toTownshipId, $distance, $price, $status, $time)
+    {
+        $sql = "CALL Insertroute(:fromCityId, :fromTownshipId, :toCityId, :toTownshipId, :distance, :price, :status, :time)";
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindParam(':fromCityId', $fromCityId, PDO::PARAM_INT);
+        $stmt->bindParam(':fromTownshipId', $fromTownshipId, PDO::PARAM_INT);
+        $stmt->bindParam(':toCityId', $toCityId, PDO::PARAM_INT);
+        $stmt->bindParam(':toTownshipId', $toTownshipId, PDO::PARAM_INT);
+        $stmt->bindParam(':distance', $distance, PDO::PARAM_INT);
+        $stmt->bindParam(':price', $price, PDO::PARAM_INT);
+        $stmt->bindParam(':status', $status); // string
+        $stmt->bindParam(':time', $time, PDO::PARAM_INT); // integer time value
+
+        return $stmt->execute(); // returns true on success
+    }
+
+    public function insertuser($name, $phone, $email, $region_id, $city_id, $township_id, $ward_id, $address, $password, $otp_code, $otp_expiry, $security_code, $role_id, $status_id, $created_at, $is_login)
+    {
+        $sql = "CALL Insertuser(:name, :phone, :email, :region_id, :city_id, :township_id, :ward_id, :address, :password, :otp_code, :otp_expiry, :security_code, :role_id, :status_id, :created_at, :is_login)";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':phone', $phone);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':region_id', $region_id, PDO::PARAM_INT);
+        $stmt->bindParam(':city_id', $city_id, PDO::PARAM_INT);
+        $stmt->bindParam(':township_id', $township_id, PDO::PARAM_INT);
+        $stmt->bindParam(':ward_id', $ward_id, PDO::PARAM_INT);
+        $stmt->bindParam(':address', $address);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':otp_code', $otp_code);
+        $stmt->bindParam(':otp_expiry', $otp_expiry);
+        $stmt->bindParam(':security_code', $security_code);
+        $stmt->bindParam(':role_id', $role_id, PDO::PARAM_INT);
+        $stmt->bindParam(':status_id', $status_id, PDO::PARAM_INT);
+        $stmt->bindParam(':created_at', $created_at);
+        $stmt->bindParam(':is_login', $is_login, PDO::PARAM_BOOL);
+
+        return $stmt->execute();
+    }
+
+
 
 }
 

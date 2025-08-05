@@ -28,6 +28,8 @@ if ($statusLower === 'active') {
         });
     </script>
 <?php endif; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/agent_profile.css">
+
 <style>
     /* Unified button styling */
     .agent-action-buttons button {
@@ -180,8 +182,8 @@ if ($statusLower === 'active') {
 <main class="main-content">
     <header class="dashboard-header">
         <div class="header-left">
-            <h2 class="value" > <a href=""> Agent</a>/</h2>
-                        <h2 class="page-title">Agent View</h2>
+            <h2 class="value"> <a href=""> Agent</a>/</h2>
+            <h2 class="page-title">Agent View</h2>
         </div>
         <div class="header-right">
             <div class="admin-profile">

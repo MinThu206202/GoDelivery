@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start(); // ✅ Must be before any HTML output
 require_once APPROOT . '/views/inc/sidebar.php';
 
@@ -21,6 +25,7 @@ if (!isset($data['regions'])) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/bootstrap/css/bootstrap.min.css">
     <title>Create Route</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -269,22 +274,25 @@ if (!isset($data['regions'])) {
                     </div>
                 </div>
 
+
                 <!-- Route Details (can remain single column or be part of the grid) -->
                 <h4 class="section-title mt-8">Route Details</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
                     <div class="form-group">
                         <label for="distance">Distance (km)</label>
-                        <input type="number" id="distance" name="distance" placeholder="Enter distance in km" step="0.1" min="0">
+                        <input type="number" id="distance" name="distance" placeholder="Enter distance in km">
                     </div>
 
                     <div class="form-group">
                         <label for="time">Estimated Time (hours)</label>
-                        <input type="number" id="time" name="time" placeholder="Enter estimated time in hours" step="0.1" min="0">
+                        <input type="number" id="time" name="time" placeholder="Enter estimated time in hours">
                     </div>
                 </div>
 
 
                 <input type="hidden" name="user_id" value="<?= htmlspecialchars($name['id']) ?>">
+                <?php require APPROOT . '/views/components/auth_message.php'; ?>
+
 
                 <div class="form-actions">
                     <button type="button" class="modal-button-secondary" onclick="history.back()">Cancel</button>

@@ -103,7 +103,8 @@ $agent = $data['tracking_code'];
                         <option value="2">In Transit</option>
                         <!-- <option value="3">Delivered</option> -->
                         <option value="4">Cancelled</option>
-                        <!-- <option value="5">Returned</option> -->
+
+                        <option value="6">Awaiting Acceptance</option>
                     </select>
                 </div>
                 <div>

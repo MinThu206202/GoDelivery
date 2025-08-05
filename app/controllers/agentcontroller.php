@@ -10,6 +10,9 @@ class Agentcontroller extends Controller{
         $this->model('UserModel');
         $this->model('Delivery');
         $this->model('notification');
+        $this->model('NormalUser');
+        $this->model('PremiumUser');
+        $this->model('Delivery_status_Model');
         $this->db = new Database();
     }
 
@@ -190,28 +193,60 @@ class Agentcontroller extends Controller{
     // die();
     $receiverData = $user->getReceiverData($_POST, $agent);
 
-
     $route = $this->db->checkroute('route', $agent['township_id'], $senderData['township_id']);
     $receiverAgent = $this->db->checkadmin('users', 'township_id', $senderData['city_id']);
 
     if (!$route) {
       setMessage('error', 'Route is not active');
-    //  return redirect('agent/voucher');
+      return redirect('agent/voucher');
     }
 
-    $senderId = $user->createUser($senderData);
-    $receiverId = $user->createUser($receiverData);
-
-
+    if(!$receiverAgent){
+      echo "agent is not active";
+      die();
+    }
 
     $trackingNumber = $user->generateTrackingNumber($agent['city_id'], $receiverAgent['city_id']);
     $arrivalTime = $user->calculateArrivalTime($route['time']);
 
-    $totalPrice = $_POST['weight'] * $route['price'];
+    // $chelckusertype = $this->db->columnFilter('users','email',$_POST['sender_email']);
+    // if($chelckusertype['user_type_id'] === Premium_user){
+    //   $routeat = new PremiumUser();
+
+    // }else{
+    //   $routeat = new NormalUser();
+    // }
+
+    // $actualbonus = $routeat->getbonus();
+
+
+    $totalPrice = (float)$_POST['weight'] * (float) $route['price'];
+
+    // $totalPrice = $Amountprice - ($Amountprice * $actualbonus);
+
     $paymentStatus = $this->db->columnFilter('payment_statuses', 'name', $_POST['payment']);
+
+    $senderId = $user->createUser($senderData);
+    $receiverId = $user->createUser($receiverData);
 
     $deliveryData = $user->buildDeliveryData($_POST, $agent, $receiverAgent, $senderId, $receiverId, $trackingNumber, $arrivalTime, $totalPrice, $paymentStatus['id']);
     $this->db->create('deliveries', $deliveryData);
+
+    $trackingcode = $this->db->columnFilter('deliveries','tracking_code',$trackingNumber);
+
+    $deliveryhistory = new Delivery_status_Model();
+    $deliveryhistory->delivery_id = $trackingcode['id'];
+    $deliveryhistory->status_id = 1;
+    $deliveryhistory->changed_by = null;
+    $deliveryhistory->note = null;
+    $deliveryhistory->changed_at = null;
+
+    $createdeliveryhistory = $this->db->create('delivery_status_history',$deliveryhistory->toArray());
+    if(!$createdeliveryhistory){
+      setMessage ('error' , 'Delivery Status history is not insert');
+      return redirect('agent/voucher');
+    }
+    
 
     $user->createNotification($agent['id'], $receiverAgent['id'], $trackingNumber);
 
@@ -236,8 +271,10 @@ class Agentcontroller extends Controller{
 
     public function delivery_detail($code){
     $tracking_code = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
+    $update_status = $this->db->columnFilterAll('view_delivery_status_history', 'tracking_code', $code);
     $data = [
-      'tracking_code' => $tracking_code
+      'tracking_code' => $tracking_code,
+      'update_status' => $update_status
     ];
     $this->view('agent/result', $data);
   }
@@ -287,18 +324,35 @@ class Agentcontroller extends Controller{
   public function show_updated_status()
   {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
-
+    session_start();
     $code   = $_POST['tracking_code'];
     $status = $_POST['new_status'];
     $notes  = $_POST['notes'];
+    $agent = $_SESSION['user'];
+
 
     $delivery = $this->db->columnFilter('deliveries', 'tracking_code', $code);
     $delivery_id = $delivery['id'] ?? null;
+
+    $get_delivery_status_id = $this->db->columnFilter('view_delivery_status_history','delivery_id',$delivery_id);
+
 
     if (!$delivery_id) {
       $this->redirectWithMessage($code, 'Failed to update status. Delivery not found.', 'error');
       return;
     }
+
+    date_default_timezone_set('Asia/Yangon');
+
+    $status_history = new Delivery_status_Model();
+    $status_history->delivery_id = $delivery_id;
+    $status_history->status_id = $status;
+    $status_history->changed_by = $agent['id'];
+    $status_history->note = $notes;
+    $status_history->changed_at = date('Y-m-d H:i:s');
+
+    $status_history_chaged = $this->db->create('delivery_status_history',$status_history->toArray());
+
 
     $statusChanged = $this->db->update('deliveries', $delivery_id, [
       'delivery_status_id' => $status

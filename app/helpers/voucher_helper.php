@@ -58,23 +58,27 @@ public function getReceiverData($post, $agent)
 
 public function createUser($data)
 {
+    $chelckusertype = $this->db->columnFilter('users','email',$_POST['sender_email']);
+
     $user = new UserModel();
-    $user->setName($data['name']);
-    $user->setEmail($data['email']);
-    $user->setPhone($data['phone']);
-    $user->setAddress($data['address']);
-    $user->setCity($data['city_id']);
-    $user->setRegion($data['region_id']);
-    $user->setTownship($data['township_id']);
-    $user->setWard(null);
-    $user->setPassword(null);
-    $user->setOtp_code(null);
-    $user->setOtp_expiry(null);
-    $user->setSecurity_code(null);
-    $user->setStatus_id(null);
-    $user->setRole_id(3);
-    $user->setisLogin(0);
-    $user->setCreated_at(date('Y-m-d H:i:s'));
+    $user->name = $data['name'];
+    $user->email = $data['email'];
+    $user->phone = $data['phone'];
+    $user->address = $data['address'];
+    $user->city_id = $data['city_id'];
+    $user->region_id = $data['region_id'];
+    $user->township_id = $data['township_id'];
+    $user->ward_id = null;
+    $user->password = null;
+    $user->otp_code = null;
+    $user->otp_expiry =  null;
+    $user->security_code = null;
+    $user->status_id = null;
+    $user->role_id = 3;
+    $user->is_login = 0;
+    $user->created_at = date('Y-m-d H:i:s');
+    $user->user_type_id = null;
+    $user->access_code = null;
 
     $this->db->create('users', $user->toArray());
     return $this->db->columnFilter('users', 'email', $data['email'])['id'];
@@ -92,11 +96,11 @@ public function generateTrackingNumber($fromCityId, $toCityId)
     return $shortFrom . $random . $shortTo;
 }
 
-public function calculateArrivalTime($routeDuration)
-{
-    $duration = strtotime($routeDuration) - strtotime('TODAY');
-    return date("Y-m-d H:i:s", time() + $duration);
-}
+    public function calculateArrivalTime($routeDurationInHours)
+    {
+        $durationInSeconds = (float)$routeDurationInHours * 3600; // 1 hour = 3600 seconds
+        return date("Y-m-d H:i:s", time() + $durationInSeconds);
+    }
 
 public function buildDeliveryData($post, $agent, $receiverAgent, $senderId, $receiverId, $trackingNumber, $arrivalTime, $amount, $paymentStatusId)
 {
@@ -119,7 +123,9 @@ public function buildDeliveryData($post, $agent, $receiverAgent, $senderId, $rec
         'updated_at' => null,
         'product_type' => $post['product_type'],
         'tracking_code' => $trackingNumber,
-        'duration' => $arrivalTime
+        'duration' => $arrivalTime,
+        'delivery_type_id' => $post['delivery_type'],
+        'piece_count' => $post['piece']
     ];
 }
 

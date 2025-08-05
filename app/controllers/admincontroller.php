@@ -104,16 +104,27 @@ class admincontroller extends Controller{
 
     public function sendmail()
     {
+        require_once APPROOT . '/helpers/Voucher_helper.php';
         $id = $_GET['id'] ?? null;
         if (!$id) {
             redirect('admin/access_code');
         }
+       
 
         $user = $this->db->columnFilter('users', 'id', $id);
 
+        $user1 = $this->db->columnFilter('user_full_info', 'id', $id);
+
+        $access_user = new Voucher_helper();
+
+        $shortcode = $access_user->getShortCode($user1['city_name']);
+        $random = str_pad(rand(0,9999),4,'0',STR_PAD_LEFT);
+        $access_code = $shortcode.$random;
+
         if ($user && !empty($user['email']) && !empty($user['name']) && !empty($user['security_code'])) {
             (new Mail())->acceptagent($user['email'], $user['name'], $user['security_code']);
-            $this->db->update('users', $id, ['status_id' => 1]);
+
+            $this->db->update('users', $id, ['status_id' => 1,'access_code' => $access_code]);
             // Redirect with success flag
             redirect('admin/access_code?success=1'); // or ?success=0 if failed
             } else {

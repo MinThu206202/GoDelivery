@@ -208,6 +208,16 @@ $voucher = $data['create_data'];
                 </div>
             </div>
 
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Package Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8">
+                    <p><strong class="text-gray-700">Weight:</strong><?= htmlspecialchars($voucher['weight']) ?></p>
+                    <p><strong class="text-gray-700">Amount:</strong> <?= htmlspecialchars($voucher['amount']) ?></p>
+                    <p><strong class="text-gray-700">Duration Time:</strong> <?= htmlspecialchars($voucher['duration']) ?></p>
+                    <p><strong class="text-gray-700">Product Type:</strong> <?= htmlspecialchars($voucher['product_type']) ?></p>
+                </div>
+            </div>
+
             <div class="flex justify-end space-x-4 mt-6 no-print">
                 <button onclick="window.print()"
                     class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200">

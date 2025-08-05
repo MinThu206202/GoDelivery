@@ -1,129 +1,41 @@
-<?php 
+<?php
 
-class RouteModel{
+require_once __DIR__ . '/BaseModel.php';
 
-    private $fromcity;
-    private $fromTownship;
-    private $tocity;
-    private $toTownship;
-    private $distnce;
-    private $price;
-    private $status;
-    private $time;
-    private $created_at;
-    private $updated_at;
+    // your code
+ class RouteModel extends BaseModel{
 
-public function setFromcity($fromcity){
-    $this->fromcity = $fromcity;
-}
+    protected $from_city_id;
+    protected $from_township_id;
+    protected $to_city_id;
+    protected $to_township_id;
+    protected $distance;
+    protected float $price;
+    protected $status;
+    protected $time;
+    protected $created_at;
+    protected $updated_at;
 
-public function getFromcity(){
-    return $this->fromcity;
-}
-
-    public function setFromtownship($fromTownship)
-    {
-        $this->fromTownship = $fromTownship;
-    }
-
-    public function getFromtownship()
-    {
-        return $this->fromTownship;
-    }
-
-    public function setTocity($tocity)
-    {
-        $this->tocity = $tocity;
-    }
-
-    public function getTocity()
-    {
-        return $this->tocity;
-    }
-
-    public function setTotownship($toTownship)
-    {
-        $this->toTownship = $toTownship;
-    }
-
-    public function getTotownship()
-    {
-        return $this->toTownship;
-    }
-    public function setDistance($distance)
-    {
-        $this->distnce = $distance;
-    }
-
-    public function getDistance()
-    {
-        return $this->distnce;
-    }
-    public function setPrice($price)
+    public function setPrice(float $price): void
     {
         $this->price = $price;
     }
 
-    public function getPrice()
+    // Getter method for price (optional)
+    public function getPrice(): float
     {
         return $this->price;
     }
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
 
-    public function getStatus()
-    {
-        return $this->status;
-    }
-    public function setCreatedat($created_at)
-    {
-        $this->created_at = $created_at;
-    }
+ }
 
-    public function getCreatedat()
+ class ActiveRoute extends RouteModel{
+    private $bonus=0.15;
+    public function calculatebonus()
     {
-        return $this->created_at;
+        $bonus = $this->price * $this->bonus;
+        return $this->price -= $bonus;
     }
-
-    public function setUpdatedat($updated_at)
-    {
-        $this->updated_at = $updated_at;
-    }
-
-    public function getUpdatedat()
-    {
-        return $this->updated_at;
-    }
-
-    public function setTime($time)
-    {
-        $this->time = $time;
-    }
-
-    public function getTime()
-    {
-        return $this->time;
-    }
-
-    public function toArray()
-    {
-        return [
-            "from_city_id" => $this->getFromcity(),
-            "from_township_id" => $this->getFromtownship(),
-            "to_city_id" => $this->getTocity(),
-            "to_township_id" => $this->getTotownship(),
-            "distance" => $this->getDistance(),
-            "price" => $this->getPrice(),
-            "status" => $this->getStatus(),
-            "created_at" => $this->getCreatedat(),
-            "updated_at" => $this->getUpdatedat(),
-            "time" => $this->getTime()
-        ];
-    }
-
-}
-
+ }
 
 ?>
