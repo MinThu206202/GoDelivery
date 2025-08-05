@@ -88,10 +88,11 @@ class Agent extends Controller
 
     public function notification()
     {
-        $noti = $this->db->columnFilterAll('view_agent_messages','to_agent_id', $this->agent['id']);
+        $noti = $this->db->getNotificationsByAgentId($this->agent['id']);
         $data = [
             'noti' => $noti
         ];
+
         $this->view('agent/notification',$data);
     }
 

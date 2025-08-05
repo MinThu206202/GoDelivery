@@ -13,17 +13,22 @@ class Availablecontroller extends Controller {
 
     public function deployresult(){
         $id = $_POST['agent_id'];
+        $email = $_POST['email'];
         $location_id = $_POST['location_id'];
 
         $data = [
             'status_id' => 1
         ];
+        
         $activeagent = $this->db->update('users', $id, $data);
         $activeplace = $this->db->update('available_location',$location_id , ['agent_id' => $id , 'status_location_id' => 1]);
         $activeagent = $this->db->update('users',$id,$data);
-        var_dump($activeagent);
-        var_dump($activeplace);
-        die();
+        if($activeagent){
+            $user =  new Mail();
+            // $new = $user->acceptagent($email,);
+            header("Location: " . URLROOT . "/available_place/place_detail?id=" . urlencode($location_id));
+            exit();  
+        }
 
     }
 
@@ -52,6 +57,7 @@ class Availablecontroller extends Controller {
         // Notify all agents
         $agents = $this->db->columnFilterAll('user_full_info', 'role_name', 'Agent') ?: [];
         $title = ($newStatusId === 2) ? "Township Deactivated" : "Township Activated";
+        $typeid = ($newStatusId === 2) ? 3 : 2;
         $message = ($newStatusId === 2)
             ? "The township of {$location['city_name']} has been deactivated and is no longer available for new deliveries."
             : "Activation complete: {$location['city_name']} is now live in the system.";
@@ -60,7 +66,7 @@ class Availablecontroller extends Controller {
             $notification = new Notification();
             $notification->setFromagentid($userId);
             $notification->setToagentid($agent['id']);
-            $notification->setTypeid(4);
+            $notification->setTypeid($typeid);
             $notification->setTitle($title);
             $notification->setMessage($message);
             $notification->setCreatedAt(date('Y-m-d H:i:s'));
@@ -79,6 +85,14 @@ class Availablecontroller extends Controller {
             $regionId = $_POST['region'];
             $cityName = $_POST['city'];
             $townshipName = $_POST['township'] . ' Township';
+            echo $townshipName;
+           
+
+            $townshipcheck = $this->db->columnFilter('townships','name',$townshipName);
+            if($townshipcheck){
+                setMessage ('error','Address is already exit');
+                redirect ('available_place/addplace');
+            }
 
             // Find or create city
             $city = $this->db->columnFilter('cities', 'name', $cityName);

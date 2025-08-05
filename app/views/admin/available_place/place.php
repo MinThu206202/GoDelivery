@@ -1,7 +1,7 @@
 <?php
 require_once APPROOT . '/views/inc/sidebar.php';
 ?>
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/place.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/route.css">
 <style>
     /* Custom styles for the view button */
     .view-button {

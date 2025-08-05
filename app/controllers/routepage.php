@@ -1,6 +1,8 @@
-<?php 
-
-class routepage extends Controller{
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+class RoutePage extends Controller{
     private $db ;
     public function __construct(){
         $this->model('RouteModel');
@@ -28,6 +30,11 @@ class routepage extends Controller{
             echo json_encode($townships);
         }
     }
+
+    // public function addroute()
+    // {
+    //     echo "Test addroute function";
+    // }
 
     public function addroute()
     {
@@ -67,20 +74,69 @@ class routepage extends Controller{
         if (!$fromCity || !$toCity) {
             die("Invalid city ID(s).");
         }
+ 
 
-        $price = $this->db->getCalculatedPrice($data['distance']);
+        $checkroute = $this->db->filterDoubleColumn('route',$_POST['from_township_id'],$_POST['to_township_id']);
+
+        if($checkroute){
+            setMessage('error','Route is already exit');
+            redirect('routepage/createroute');
+        }else{
+
+        
+
+
+
+
+
+        // $params = [
+        //     $data['from_city_id'],
+        //     $data['from_township_id'],
+        //     $data['to_city_id'],
+        //     $data['to_township_id'],
+        //     $data['distance'],
+        //     $price,
+        //     'active',
+        //     $data['time']
+        // ];
+
+        // try{
+        //     $insertroute = $this->db->insertRoute(...$params);
+        //     echo "route is successful";
+        // }catch (Exception $e){
+        //     echo "ERROR".$e->getMessage();
+        // }
+
+
+        // $route = new RouteModel();
+        // $route->setFromcity($data['from_city_id']);
+        // $route->setFromtownship($data['from_township_id']);
+        // $route->setTocity($data['to_city_id']);
+        // $route->setTotownship($data['to_township_id']);
+        // $route->setDistance($data['distance']);
+        // $route->setTime($data['time']);
+        // $route->setPrice($price);
+        // $route->setStatus('active');
+        // $route->setCreatedat(date('Y-m-d H:i:s'));
+        // $route->setUpdatedat(null);
+
+        $finalprice = $this->db->getCalculatedPrice($data['distance']);
+
 
         $route = new RouteModel();
-        $route->setFromcity($data['from_city_id']);
-        $route->setFromtownship($data['from_township_id']);
-        $route->setTocity($data['to_city_id']);
-        $route->setTotownship($data['to_township_id']);
-        $route->setDistance($data['distance']);
-        $route->setTime($data['time']);
-        $route->setPrice($price);
-        $route->setStatus('active');
-        $route->setCreatedat(date('Y-m-d H:i:s'));
-        $route->setUpdatedat(null);
+     
+
+        $route->from_city_id = $data['from_city_id'];
+        $route->from_township_id = $data['from_township_id'];
+        $route->to_city_id = $data['to_city_id'];
+        $route->to_township_id = $data['to_township_id'];
+        $route->distance = $data['distance']; // fixed property name
+        $route->price = $finalprice;
+        $route->status = 'active';
+        $route->time = $data['time'];
+
+
+        
 
         if (!$this->db->create('route', $route->toArray())) {
             die("Failed to create route.");
@@ -92,16 +148,18 @@ class routepage extends Controller{
             $this->db->create('agent_notifications', [
                 'from_agent_id' => $data['user_id'],
                 'to_agent_id'   => $agent['id'],
-                'type_id'       => 4,
+                'type_id'       => 2,
                 'title'         => 'Route Activated',
                 'message'       => "Route from {$fromCity['name']} to {$toCity['name']} is now active.",
                 'created_at'    => date('Y-m-d H:i:s')
             ]);
         }
 
+
         header('Location: ' . URLROOT . '/routepage/createroute?success=1');
         exit;
     }
+}
 
     
 }

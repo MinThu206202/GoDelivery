@@ -222,22 +222,44 @@ public function login()
             $userId = $this->db->columnFilter('users', 'email', $email)['id'];
             $securityCode = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
 
-            $user = new UserModel;
-            $user->setName($_POST['name']);
-            $user->setEmail($email);
-            $user->setPhone($phone);
-            $user->setPassword(base64_encode($password));
-            $user->setRegion($_POST['region_id']);
-            $user->setCity($_POST['city_id']);
-            $user->setTownship($_POST['township_id']);
-            $user->setWard($_POST['ward_id']);
-            $user->setAddress($_POST['address']);
-            $user->setRole_id(2);
-            $user->setStatus_id(3);
-            $user->setCreated_at(date('Y-m-d H:i:s'));
-            $user->setSecurity_code($securityCode);
+            $param = [
+                $_POST['name'],
+                $phone,
+                $email,
+                $_POST['region_id'],
+                $_POST['city_id'],
+                $_POST['township_id'],
+                $_POST['ward_id'],
+                $_POST['address'],
+                base64_encode($password),
+                null,
+                null,
+                $securityCode,
+                2,
+                3,
+                date('Y-m-d H:i:s'),
+                0
+            ];
 
-            if ($this->db->create('users', $user->toArray())) {
+            $usercreate = $this->db->insertuser(...$param);
+
+
+            // $user = new UserModel;
+            // $user->setName($_POST['name']);
+            // $user->setEmail($email);
+            // $user->setPhone($phone);
+            // $user->setPassword(base64_encode($password));
+            // $user->setRegion($_POST['region_id']);
+            // $user->setCity($_POST['city_id']);
+            // $user->setTownship($_POST['township_id']);
+            // $user->setWard($_POST['ward_id']);
+            // $user->setAddress($_POST['address']);
+            // $user->setRole_id(2);
+            // $user->setStatus_id(3);
+            // $user->setCreated_at(date('Y-m-d H:i:s'));
+            // $user->setSecurity_code($securityCode);
+
+            if ($usercreate) {
                     (new Mail)->welcomeamil($email, $_POST['name']);
                     redirect('pages/login');
             }else{

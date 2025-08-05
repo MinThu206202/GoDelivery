@@ -8,10 +8,7 @@ $currentRoute = $_SERVER['REQUEST_URI'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoDelivery - Admin Dashboard</title>
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/home.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/agent.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/profile.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/agent_profile.css">
+   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 

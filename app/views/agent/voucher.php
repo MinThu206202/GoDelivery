@@ -7,6 +7,8 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- Inter Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/bootstrap/css/bootstrap.min.css">
+
 <style>
     body {
         font-family: 'Inter', sans-serif;
@@ -113,6 +115,8 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
 
             <!-- Sender Information -->
             <form method="POST" action="<?= URLROOT; ?>/agentcontroller/voucher">
+                <?php require APPROOT . '/views/components/auth_message.php'; ?>
+
                 <input type="hidden" name="agent_data" value='<?= json_encode($_SESSION['user']); ?>'>
                 <div class="mb-8">
                     <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Sender Information (Customer)
@@ -177,10 +181,35 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                             <input type="number" name="weight" id="packageWeight" step="0.1" placeholder="Enter package weight"
                                 class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                         </div>
+                        <div>
+                            <label for="numberofpiece" class="block text-sm text-gray-500">Number of Piece</label>
+                            <input type="number" name="piece" id="numberofpiece" step="0.1" placeholder="Enter Number of Piece"
+                                class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                        </div>
+                        <div>
+                            <label for="deliveryType" class="block text-sm text-gray-500">Delivery Type:</label>
+                            <select id="deliveryType" name="delivery_type"
+                                class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                                <option value="" disabled selected>Select Delivery Type</option>
+                                <option value="1">Normal</option>
+                                <option value="2">Express</option>
+                                <option value="3">In-City</option>
+                                <option value="4">Important</option>
+                            </select>
+                        </div>
+                        <div id="importantNoteContainer" class="hidden md:col-span-2">
+                            <p class="text-sm text-red-600 mt-1 p-2 bg-red-50 rounded-md border border-red-200">
+                                **Important:** Selecting "Important/Import" means your delivery is faster and will increase an **extra cost** more than normal cost.
+                            </p>
+                        </div>
+                        <div>
+                            <label for="coupon" class="block text-sm text-gray-500">Coupon:</label>
+                            <input type="text" name="coupon" id="coupon" placeholder="Enter coupon code (optional)"
+                                class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                        </div>
                     </div>
-                    <label for="specialInstructions" class="block text-sm text-gray-500 mt-4">Special
-                        Product Type:</label>
-                    <textarea id="specialInstructions" name="product_type" rows="2" placeholder="Any special delivery instructions"
+                    <label for="productType" class="block text-sm text-gray-500 mt-4">Product Type:</label>
+                    <textarea id="productType" name="product_type" rows="2" placeholder="Any special delivery instructions"
                         class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]"></textarea>
                 </div>
 
@@ -202,17 +231,17 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                                 </select>
                             </div>
                             <div>
-                                <label for="senderAgentTownship" class="block text-sm text-gray-500">Receiver Agent Township:</label>
-                                <select id="senderAgentTownship" name="senderAgentTownship"
-                                    class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                                    <option value="" disabled selected>Select Township</option>
-                                </select>
-                            </div>
-                            <div>
                                 <label for="senderAgentCity" class="block text-sm text-gray-500">Receiver Agent City:</label>
                                 <select id="senderAgentCity" name="senderAgentCity"
                                     class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                                     <option value="" disabled selected>Select City</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="senderAgentTownship" class="block text-sm text-gray-500">Receiver Agent Township:</label>
+                                <select id="senderAgentTownship" name="senderAgentTownship"
+                                    class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                                    <option value="" disabled selected>Select Township</option>
                                 </select>
                             </div>
                         </div>
@@ -223,7 +252,7 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                         <select id="paymentType" name="payment"
                             class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                             <option value="Prepaid">Unpaid</option>
-                            <option value="Pay on Delivery">Paid</option>
+                            <option value="Paid">Paid</option>
                         </select>
                     </div>
                 </div>
@@ -292,6 +321,18 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                 });
             })
             .catch(err => console.error('Error loading townships:', err));
+    });
+
+    // JavaScript for delivery_type and important note logic
+    document.getElementById('deliveryType').addEventListener('change', function() {
+        const deliveryType = this.value;
+        const importantNoteContainer = document.getElementById('importantNoteContainer');
+
+        if (deliveryType === '4') {
+            importantNoteContainer.classList.remove('hidden');
+        } else {
+            importantNoteContainer.classList.add('hidden');
+        }
     });
 </script>
 

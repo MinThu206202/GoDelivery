@@ -93,23 +93,32 @@
                         <?php foreach ($data['delivery'] as $delivery):
                             $statusClass = '';
                             switch ($delivery['delivery_status']) {
-                                case 'Delivered':
-                                    $statusClass = 'bg-green-100 text-green-800';
-                                    break;
                                 case 'Pending':
+                                    $statusClass = 'bg-gray-100 text-gray-800';
+                                    break;
+                                case 'Awaiting Acceptance':
                                     $statusClass = 'bg-yellow-100 text-yellow-800';
+                                    break;
+                                case 'Rejected':
+                                    $statusClass = 'bg-red-100 text-red-800';
                                     break;
                                 case 'In Transit':
                                     $statusClass = 'bg-blue-100 text-blue-800';
                                     break;
-                                case 'Cancelled':
-                                    $statusClass = 'bg-red-100 text-red-800';
+                                case 'Delivered':
+                                    $statusClass = 'bg-green-100 text-green-800';
                                     break;
                                 case 'Return':
                                     $statusClass = 'bg-purple-100 text-purple-800';
                                     break;
+                                case 'Cancelled':
+                                    $statusClass = 'bg-rose-100 text-rose-800';
+                                    break;
+                                case 'Failed Delivery':
+                                    $statusClass = 'bg-orange-100 text-orange-800';
+                                    break;
                                 default:
-                                    $statusClass = 'bg-gray-100 text-gray-800'; // Default neutral color
+                                    $statusClass = 'bg-gray-100 text-gray-800';
                                     break;
                             }
                         ?>

@@ -371,7 +371,7 @@ $name = $_SESSION['user'];
                                 <td><?= htmlspecialchars($route['to_township']) ?></td>
                                 <td><?= htmlspecialchars($route['distance']) ?></td>
                                 <td><?= htmlspecialchars($route['price']) ?></td>
-                                <td><?= htmlspecialchars($route['time'])?>Hours</td>
+                                <td><?= htmlspecialchars($route['time']) ?>Hours</td>
                                 <td><span class="<?= $statusClass ?>"><?= htmlspecialchars($route['status']) ?></span></td>
                             </tr>
                         <?php endforeach; ?>

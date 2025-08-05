@@ -25,7 +25,7 @@
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
                     <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: #007</p>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
                 </div>
             </div>
         </div>
