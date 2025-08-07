@@ -136,6 +136,20 @@ $currentRoute = $_SERVER['REQUEST_URI'];
                 Request Delivery
             </a>
 
+
+            <a href="<?= URLROOT; ?>/agent/available_route"
+                class="flex items-center px-4 py-3 rounded-lg transition duration-200 
+    <?= strpos($currentRoute, '/agent/available_route') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 11c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 22s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z" />
+                </svg>
+                Available Route
+            </a>
+
             <!-- Logout Link -->
             <a href="<?= URLROOT; ?>/agentcontroller/logout" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-[#2A346C] hover:text-white transition-colors duration-200">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

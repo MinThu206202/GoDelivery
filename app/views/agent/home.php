@@ -1,4 +1,17 @@
-<?php require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
+<?php require_once APPROOT . '/views/inc/agentsidebar.php';
+$delivery = $data['delivery'];
+$total  = count($delivery);
+$delivery = $data['delivery']; // array of deliveries
+
+$pendingCount = count(array_filter($delivery, function ($item) {
+    return isset($item['delivery_status']) && $item['delivery_status'] === 'Pending';
+}));
+
+$totalAmount = array_sum(array_column($data['delivery'], 'amount'));
+
+
+?>
+
 
 <!-- Main Content Area -->
 <div class="flex-1 flex flex-col overflow-hidden">
@@ -37,8 +50,8 @@
             <!-- Metric Card 1 -->
             <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-500">Deliveries Today</p>
-                    <p class="text-3xl font-bold text-gray-900">12</p>
+                    <p class="text-sm text-gray-500">Total Deliveries</p>
+                    <p class="text-3xl font-bold text-gray-900"><span><?= htmlspecialchars($total) ?></span></p>
                 </div>
                 <div class="p-3 bg-blue-100 rounded-full">
                     <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -54,7 +67,7 @@
             <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-500">Pending Deliveries</p>
-                    <p class="text-3xl font-bold text-gray-900">5</p>
+                    <p class="text-3xl font-bold text-gray-900"><span><?= htmlspecialchars($pendingCount) ?></span></p>
                 </div>
                 <div class="p-3 bg-yellow-100 rounded-full">
                     <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -69,7 +82,7 @@
             <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-500">Total Earnings (Week)</p>
-                    <p class="text-3xl font-bold text-gray-900">$450.75</p>
+                    <p class="text-3xl font-bold text-gray-900"><span><?= number_format((float)$totalAmount, 0, '.', ',') ?> MMK</span></p>
                 </div>
                 <div class="p-3 bg-green-100 rounded-full">
                     <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"

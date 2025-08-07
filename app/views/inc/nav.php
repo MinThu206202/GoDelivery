@@ -19,8 +19,6 @@
         <nav class="main-nav">
             <a href="<?php echo URLROOT; ?>/pages/calculator" class="nav-item active">Price Calculator</a>
             <a href="<?php echo URLROOT; ?>/pages/ournetwork" class="nav-item">Our Network</a>
-            <a href="contact_gm" class="nav-item">Contact Us</a>
-            <a href="#" class="nav-item">About</a>
             <a href="#" class="nav-item tracking">
                 <i class="fas fa-search"></i> Tracking
             </a>

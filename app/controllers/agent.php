@@ -98,15 +98,25 @@ class Agent extends Controller
 
     public function request()
     {
-        $status = ['Pending'];
+        $status = ['Awaiting Acceptance'];
         $accept = $this->db->getByDeliveryIdAndStatuses('view_deliveries_detailed',$this->agent['id'],$status);
         $data = [
             "request_delivery" => $accept
         ];
+        // var_dump($data);
+        // die();
         $this->view('agent/request',$data);
     }
 
-
+    public function available_route()
+    {
+        $township = $this->db->columnFilter('townships','id',$this->agent['township_id']);
+        $available_route = $this->db->columnFilterAll('route_full_info','from_township',$township['name']);
+        $data = [
+            'available_routes' => $available_route
+        ];
+        $this->view('agent/available_route',$data);
+    }
 
     public function update_status()
     {
