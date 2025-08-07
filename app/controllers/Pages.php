@@ -50,5 +50,18 @@ class Pages extends Controller
         $this->view('pages/changepassword');
     }
 
+    public function user_tracking()
+    {
+        $code = $_POST['code'];
+        $tracking_code = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
+        $update_status = $this->db->columnFilterAll('view_delivery_status_history', 'tracking_code', $code);
+        $data = [
+            'tracking_code' => $tracking_code,
+            'update_status' => $update_status
+        ];
+
+        $this->view('pages/user_tracking',$data);
+    }
+
    
 }

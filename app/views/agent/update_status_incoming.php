@@ -109,7 +109,7 @@ $agent = $data['tracking_code'];
                 <div>
                     <label for="statusNotes" class="block text-sm font-medium text-gray-700 mb-1">Notes
                         (Optional):</label>
-                    <textarea id="statusNotes" rows="3" placeholder="Add any relevant notes about the status update"
+                    <textarea required id="statusNotes" rows="3" placeholder="Add any relevant notes about the status update" 
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#1F265B] focus:border-[#1F265B] sm:text-sm"></textarea>
                 </div>
             </div>

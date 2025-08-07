@@ -13,8 +13,15 @@ class Availablecontroller extends Controller {
 
     public function deployresult(){
         $id = $_POST['agent_id'];
-        $email = $_POST['email'];
         $location_id = $_POST['location_id'];
+        $email = $_POST['agent_email'];
+        $location_id = $_POST['location_id'];
+
+
+        $assignedid = $this->db->columnFilter('available_location','id',$location_id);
+        if($assignedid['agent_id']){
+            $change_assign_agent_status = $this->db->update('users',$assignedid['agent_id'],['status_id' => 3]);
+        }
 
         $data = [
             'status_id' => 1
@@ -24,10 +31,15 @@ class Availablecontroller extends Controller {
         $activeplace = $this->db->update('available_location',$location_id , ['agent_id' => $id , 'status_location_id' => 1]);
         $activeagent = $this->db->update('users',$id,$data);
         if($activeagent){
+
+            $sendmailuser = $this->db->columnFilter('user_full_info','id',$id);
+           
             $user =  new Mail();
-            // $new = $user->acceptagent($email,);
-            header("Location: " . URLROOT . "/available_place/place_detail?id=" . urlencode($location_id));
-            exit();  
+            $new = $user->acceptagentbytownshhip($sendmailuser['email'],$sendmailuser['name'],$sendmailuser['township_name'],$sendmailuser['security_code']);
+            $successMessage = urlencode('Agent is successfully assigned');
+            header("Location: " . URLROOT . "/available_place/place_detail?id=" . urlencode($location_id) .
+                "&message_type=success&message={$successMessage}");
+            exit();
         }
 
     }
@@ -35,6 +47,7 @@ class Availablecontroller extends Controller {
 
     public function updateLocationStatus()
     {
+        
         session_start();
         $userId = $_SESSION['user']['id'];
         $id = $_POST['location_id'];
@@ -45,14 +58,41 @@ class Availablecontroller extends Controller {
         $msgText = "Location status changed to " . ucfirst($newStatusText);
 
         // Update location status
-        $this->db->update('available_location', $id, ['status_location_id' => $newStatusId]);
 
         // Fetch township
         $location = $this->db->columnFilter('view_available_locations', 'id', $id);
 
+        $change_assign_agnet = $this->db->columnFilter('user_full_info','id',$location['agent_id']);
+        // var_dump($change_assign_agnet);
+        // die();
+
+        if($newStatusId === 2){
+            
+        $user = new Mail();
+        $user->agentchangestatusbytownship($change_assign_agnet['email'],$change_assign_agnet['name'],$change_assign_agnet['township_name']);
+        }else{
+            $user = new Mail();
+            $user->agentchangestatusbytownshipactive($change_assign_agnet['email'], $change_assign_agnet['name'], $change_assign_agnet['township_name']);
+        }
+
+
+        if ($location['agent_id']) {
+            $agnetstatus = $this->db->update('users', $location['agent_id'], ['status_id' => $newStatusId]);
+        } else {
+            // Redirect back with error
+            $errorMessage = urlencode('You need to first assign an agent for this location');
+            header("Location: " . URLROOT . "/available_place/place_detail?id=" . urlencode($id) .
+                "&message_type=error&message={$errorMessage}");
+            exit();
+        }
+
+        $this->db->update('available_location', $id, ['status_location_id' => $newStatusId]);
+
         // Change route status based on township
         $this->db->changefromcitystatus('route', $location['township_id'], ['status' => $newStatusText]);
         $this->db->changetocitystatus('route', $location['township_id'], ['status' => $newStatusText]);
+
+
 
         // Notify all agents
         $agents = $this->db->columnFilterAll('user_full_info', 'role_name', 'Agent') ?: [];

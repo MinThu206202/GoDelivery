@@ -5,7 +5,6 @@ use Soap\Url;
 require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
 
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- Inter Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/bootstrap/css/bootstrap.min.css">
 

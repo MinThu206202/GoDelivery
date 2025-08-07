@@ -1,6 +1,6 @@
 <?php require_once APPROOT . '/views/inc/nav.php'; ?>
-<?php require_once APPROOT . '/views/inc/header.php'; 
-session_start();
+<?php require_once APPROOT . '/views/inc/header.php';
+
 ?>
 
 <section class="hero-section">
@@ -21,10 +21,12 @@ session_start();
             <button class="tab-button active">FINDING</button>
             <button class="tab-button">Price Calculator</button>
         </div>
-        <div class="search-box">
-            <input type="text" placeholder="Enter your Bolting Code">
-            <button class="search-button">Search</button>
-        </div>
+        <form action="<?= URLROOT; ?>/pages/user_tracking" method="POST">
+            <div class="search-box">
+                <input type="text" name="code" placeholder="Enter your Bolting Code">
+                <button class="search-button">Search</button>
+            </div>
+        </form>
     </div>
 </section>
 
