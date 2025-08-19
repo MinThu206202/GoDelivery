@@ -4,17 +4,20 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-class Agentcontroller extends Controller{
-    private $db;
-    public function __construct(){
-        $this->model('UserModel');
-        $this->model('Delivery');
-        $this->model('notification');
-        $this->model('NormalUser');
-        $this->model('PremiumUser');
-        $this->model('Delivery_status_Model');
-        $this->db = new Database();
-    }
+class Agentcontroller extends Controller
+{
+  private $db;
+
+  public function __construct()
+  {
+    $this->model('UserModel');
+    $this->model('Delivery');
+    $this->model('notification');
+    $this->model('NormalUser');
+    $this->model('PremiumUser');
+    $this->model('Delivery_status_Model');
+    $this->db = new Database();
+  }
 
   // public function voucher(){
   //   if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -201,7 +204,7 @@ class Agentcontroller extends Controller{
       return redirect('agent/voucher');
     }
 
-    if(!$receiverAgent){
+    if (!$receiverAgent) {
       setMessage('error', 'Agent is not active');
       return redirect('agent/voucher');
     }
@@ -219,7 +222,7 @@ class Agentcontroller extends Controller{
     $deliveryData = $user->buildDeliveryData($_POST, $agent, $receiverAgent, $senderId, $receiverId, $trackingNumber, $arrivalTime, $totalPrice, $paymentStatus['id']);
     $this->db->create('deliveries', $deliveryData);
 
-    $trackingcode = $this->db->columnFilter('deliveries','tracking_code',$trackingNumber);
+    $trackingcode = $this->db->columnFilter('deliveries', 'tracking_code', $trackingNumber);
 
     $deliveryhistory = new Delivery_status_Model();
     $deliveryhistory->delivery_id = $trackingcode['id'];
@@ -228,12 +231,12 @@ class Agentcontroller extends Controller{
     $deliveryhistory->note = null;
     $deliveryhistory->changed_at = null;
 
-    $createdeliveryhistory = $this->db->create('delivery_status_history',$deliveryhistory->toArray());
-    if(!$createdeliveryhistory){
-      setMessage ('error' , 'Delivery Status history is not insert');
+    $createdeliveryhistory = $this->db->create('delivery_status_history', $deliveryhistory->toArray());
+    if (!$createdeliveryhistory) {
+      setMessage('error', 'Delivery Status history is not insert');
       return redirect('agent/voucher');
     }
-    
+
 
     $user->createNotification($agent['id'], $receiverAgent['id'], $trackingNumber);
 
@@ -244,19 +247,20 @@ class Agentcontroller extends Controller{
 
 
 
-  public function search(){
-      if($_SERVER['REQUEST_METHOD'] == 'GET'){
-        $code = $_GET['q'];
-        $tracking_code = $this->db->columnFilter('view_deliveries_detailed','tracking_code',$code);
-        $data = [
-          'tracking_code' => $tracking_code
-        ];
-        $this->view('agent/result',$data);
-
-      }
+  public function search()
+  {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+      $code = $_GET['q'];
+      $tracking_code = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
+      $data = [
+        'tracking_code' => $tracking_code
+      ];
+      $this->view('agent/result', $data);
     }
+  }
 
-    public function delivery_detail($code){
+  public function delivery_detail($code)
+  {
     $tracking_code = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
     $update_status = $this->db->columnFilterAll('view_delivery_status_history', 'tracking_code', $code);
     $data = [
@@ -290,7 +294,8 @@ class Agentcontroller extends Controller{
   }
 
 
-  public function get_data($code){
+  public function get_data($code)
+  {
     $tracking_code = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
     $data = [
       'tracking_code' => $tracking_code
@@ -298,7 +303,7 @@ class Agentcontroller extends Controller{
     $this->view('agent/update_status', $data);
   }
 
-  
+
   public function edit_incomedelivery($code)
   {
     $tracking_code = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
@@ -323,7 +328,7 @@ class Agentcontroller extends Controller{
 
 
 
-    $get_delivery_status_id = $this->db->columnFilter('view_delivery_status_history','delivery_id',$delivery_id);
+    $get_delivery_status_id = $this->db->columnFilter('view_delivery_status_history', 'delivery_id', $delivery_id);
 
 
     if (!$delivery_id) {
@@ -340,7 +345,7 @@ class Agentcontroller extends Controller{
     $status_history->note = $notes;
     $status_history->changed_at = date('Y-m-d H:i:s');
 
-    $status_history_chaged = $this->db->create('delivery_status_history',$status_history->toArray());
+    $status_history_chaged = $this->db->create('delivery_status_history', $status_history->toArray());
 
 
     $statusChanged = $this->db->update('deliveries', $delivery_id, [
@@ -390,13 +395,13 @@ class Agentcontroller extends Controller{
       $user_info = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
       // var_dump($user_info['sender_customer_email']);
       // die();
-      if($status == 3){
+      if ($status == 3) {
         $user = new Mail();
-        $user->deliverysuccess($user_info['sender_customer_email'],$user_info['sender_customer_name'],$code,$user_info['to_township_name']);
+        $user->deliverysuccess($user_info['sender_customer_email'], $user_info['sender_customer_name'], $code, $user_info['to_township_name']);
         $user->deliverysuccessforreceiver($user_info['receiver_customer_email'], $user_info['receiver_customer_name'], $code, $user_info['to_township_name']);
-      }elseif($status == 5 ){
+      } elseif ($status == 5) {
         $user = new Mail();
-        $user->deliveryreturn($user_info['sender_customer_email'], $user_info['sender_customer_name'], $code, $user_info['to_township_name'],$user_info['from_township_name']);
+        $user->deliveryreturn($user_info['sender_customer_email'], $user_info['sender_customer_name'], $code, $user_info['to_township_name'], $user_info['from_township_name']);
       }
 
       date_default_timezone_set('Asia/Yangon');
@@ -441,28 +446,231 @@ class Agentcontroller extends Controller{
       exit();
     }
   }
-  
+
 
   public function send_otp()
   {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      $email = $_POST['email'];
+      $email = $_POST['email'] ?? null;
+
+      if (!$email) {
+        header("Location: " . URLROOT . "/agent/profile?message=Invalid+email&message_type=error");
+        exit;
+      }
+
       $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
 
+      // Find user ID by email
       $id = $this->db->columnFilter('users', 'email', $email);
-      $iscreated = $this->db->update('users', $id['id'], ['otp_code' => $otp]);
 
-      if ($iscreated) {
+      if (!$id || empty($id['id'])) {
+        header("Location: " . URLROOT . "/agent/profile?message=User+not+found&message_type=error");
+        exit;
+      }
+
+      // Save OTP to DB
+      $isUpdated = $this->db->update('users', $id['id'], ['otp_code' => $otp]);
+
+      if ($isUpdated) {
+        // Send mail
         $user = new Mail();
         $user->sendOTP($email, $otp);
 
-        header("Location: " . URLROOT . "/agent/profile?otp=1");
+        // Redirect back to profile with query params
+        header("Location: " . URLROOT . "/agent/profile?otp_sent=1&message=OTP+sent+successfully&message_type=success&identifier=" . urlencode($email));
         exit;
       } else {
-        // Handle error, maybe show alert
+        header("Location: " . URLROOT . "/agent/profile?message=Failed+to+generate+OTP&message_type=error");
+        exit;
       }
     }
   }
+
+
+  public function verify_otp_submit()
+  {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $email = $_POST['email'] ?? null;
+      $otp   = isset($_POST['otp']) ? implode('', $_POST['otp']) : null;
+
+      if (!$email || !$otp) {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
+        exit;
+      }
+
+      $user = $this->db->columnFilter('users', 'email', $email);
+
+      if (!$user || empty($user['id'])) {
+        echo json_encode(['status' => 'error', 'message' => 'User not found']);
+        exit;
+      }
+
+      if ($otp === $user['otp_code']) {
+        echo json_encode(['status' => 'success', 'message' => 'OTP verified successfully']);
+        exit;
+      } else {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid OTP']);
+        exit;
+      }
+    }
+  }
+
+  public function resend_otp_request()
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+      $email = $_GET['identifier'] ?? null;
+
+      if (!$email) {
+        echo json_encode(['status' => 'error', 'message' => 'Email not provided']);
+        exit;
+      }
+
+      // Generate new 6-digit OTP
+      $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+
+      // Find user ID by email
+      $user = $this->db->columnFilter('users', 'email', $email);
+
+      if (!$user || empty($user['id'])) {
+        echo json_encode(['status' => 'error', 'message' => 'User not found']);
+        exit;
+      }
+
+      // Save OTP to DB
+      $isUpdated = $this->db->update('users', $user['id'], ['otp_code' => $otp]);
+
+      if ($isUpdated) {
+        // Send OTP email
+        $mailer = new Mail();
+        $mailer->sendOTP($email, $otp);
+
+
+        echo json_encode(['status' => 'success', 'message' => 'OTP resent successfully']);
+        exit;
+      } else {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to generate OTP']);
+        exit;
+      }
+    }
+  }
+
+  public function reset_password_submit()
+  {
+    header('Content-Type: application/json');
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+      exit;
+    }
+
+    $newPassword = $_POST['newPassword'] ?? null;
+    $confirmNewPassword = $_POST['confirmNewPassword'] ?? null;
+    $email = $_POST['email'] ?? null;
+
+    if (!$newPassword || !$confirmNewPassword || !$email) {
+      echo json_encode(['status' => 'error', 'message' => 'Missing required fields']);
+      exit;
+    }
+
+    if ($newPassword !== $confirmNewPassword) {
+      echo json_encode(['status' => 'error', 'message' => 'Passwords do not match']);
+      exit;
+    }
+
+    $user = $this->db->columnFilter('users', 'email', $email);
+    if (!$user) {
+      echo json_encode(['status' => 'error', 'message' => 'User not found']);
+      exit;
+    }
+
+    // Hash password
+    $hashedPassword = base64_encode($newPassword, PASSWORD_BCRYPT);
+    $this->db->update('users', $user['id'], ['password' => $hashedPassword]);
+
+    // Flash message
+    $_SESSION['flash_message'] = [
+      'type' => 'success',
+      'message' => 'Password changed successfully!'
+    ];
+
+    echo json_encode([
+      'status' => 'success',
+      'message' => 'Password updated successfully',
+      'redirect' => URLROOT .  '/agent/profile'
+    ]);
+    exit;
+  }
+
+
+  // private function jsonResponse($status, $message)
+  // {
+  //   echo json_encode([
+  //     'status' => $status,
+  //     'message' => $message
+  //   ]);
+  //   return; // no exit needed, keeps it clean
+  // }
+
+  public function changepassword()
+  {
+    header('Content-Type: application/json');
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+      exit;
+    }
+
+    $currentPassword = $_POST['currentPassword'] ?? '';
+    $newPassword = $_POST['newPassword'] ?? '';
+    $confirmPassword = $_POST['confirmNewPassword'] ?? '';
+    $email = $_POST['email'] ?? '';
+
+    // Required field validation
+    if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword) || empty($email)) {
+      echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
+      exit;
+    }
+
+    $current = base64_encode($currentPassword);
+    $new = base64_encode($newPassword);
+    $confirm = base64_encode($confirmPassword);
+
+    if ($new !== $confirm) {
+      echo json_encode(['status' => 'error', 'message' => 'New passwords do not match']);
+      exit;
+    }
+
+    $user = $this->db->columnFilter('users', 'email', $email);
+
+    if (!$user || $current !== $user['password']) {
+      echo json_encode(['status' => 'error', 'message' => 'Current password is incorrect']);
+      exit;
+    }
+
+    $this->db->update('users', $user['id'], ['password' => $new]);
+    echo json_encode([
+      'status' => 'success',
+      'message' => 'Password updated successfully',
+      'redirect' => URLROOT . '/agent/profile'
+    ]);
+  }
+
+  public function updateprofile()
+  {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // Example: process uploaded image & other fields here
+      $email = $_POST['email'];
+      $name = $_POST['fullName'];
+      $address = $_POST['address'];
+      $image = $_POST['image'];
+      echo $email;
+      echo $name;
+      echo $address;
+      echo $image;
+      die();
+    }
+  }
+
 
 
   public function logout()
@@ -480,7 +688,3 @@ class Agentcontroller extends Controller{
     exit();
   }
 }
-
-
-
-?>

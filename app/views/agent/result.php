@@ -119,7 +119,7 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name', 'id' => 'AGENT001']; // A
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
                     <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: #007</p>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
                 </div>
             </div>
 
@@ -131,12 +131,14 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name', 'id' => 'AGENT001']; // A
         <div class="max-w-4xl w-full bg-white p-8 rounded-xl shadow-2xl border border-gray-200 mx-auto">
             <?php if ($voucher): ?>
                 <div class="printable-area">
-                    <h2 class="text-3xl font-extrabold text-[#1F265B] mb-8 text-center">Order <?= htmlspecialchars($voucher['tracking_code']) ?> Details</h2>
+                    <h2 class="text-3xl font-extrabold text-[#1F265B] mb-8 text-center">Order
+                        <?= htmlspecialchars($voucher['tracking_code']) ?> Details</h2>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-10 mb-10">
                         <div class="flex flex-col space-y-1">
                             <p class="text-sm text-gray-500 font-medium">Order ID:</p>
-                            <p class="text-xl font-bold text-gray-900"><?= htmlspecialchars($voucher['tracking_code']) ?></p>
+                            <p class="text-xl font-bold text-gray-900"><?= htmlspecialchars($voucher['tracking_code']) ?>
+                            </p>
                         </div>
                         <div class="flex flex-col space-y-1">
                             <p class="text-sm text-gray-500 font-medium">Current Status:</p>
@@ -173,14 +175,16 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name', 'id' => 'AGENT001']; // A
                             }
                             ?>
                             <p class="text-xl font-bold text-gray-900">
-                                <span class="px-4 py-2 inline-flex text-base leading-5 font-semibold rounded-full <?= $statusClass ?> shadow-md">
+                                <span
+                                    class="px-4 py-2 inline-flex text-base leading-5 font-semibold rounded-full <?= $statusClass ?> shadow-md">
                                     <?= htmlspecialchars($voucher['delivery_status']) ?>
                                 </span>
                             </p>
                         </div>
                         <div class="flex flex-col space-y-1">
                             <p class="text-sm text-gray-500 font-medium">Assigned Driver:</p>
-                            <p class="text-xl font-semibold text-gray-900"><?= htmlspecialchars($voucher['sender_agent_name']) ?></p>
+                            <p class="text-xl font-semibold text-gray-900">
+                                <?= htmlspecialchars($voucher['sender_agent_name']) ?></p>
                         </div>
                         <div class="flex flex-col space-y-1">
                             <p class="text-sm text-gray-500 font-medium">Estimated Delivery:</p>
@@ -189,42 +193,64 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name', 'id' => 'AGENT001']; // A
                     </div>
 
                     <div class="mb-10 p-6 bg-gray-50 rounded-lg border border-gray-200 info-card">
-                        <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-gray-200 pb-3 mb-5">Sender Information</h3>
+                        <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-gray-200 pb-3 mb-5">Sender
+                            Information</h3>
                         <div class="space-y-3 text-lg">
-                            <p><strong class="font-medium text-gray-700">Name:</strong> <?= htmlspecialchars($voucher['sender_customer_name']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Phone:</strong> <?= htmlspecialchars($voucher['sender_customer_phone']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Email:</strong> <?= htmlspecialchars($voucher['sender_customer_email']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Address:</strong> <?= htmlspecialchars($voucher['sender_customer_address']) ?>, <?= htmlspecialchars($voucher['from_township_name']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Name:</strong>
+                                <?= htmlspecialchars($voucher['sender_customer_name']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Phone:</strong>
+                                <?= htmlspecialchars($voucher['sender_customer_phone']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Email:</strong>
+                                <?= htmlspecialchars($voucher['sender_customer_email']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Address:</strong>
+                                <?= htmlspecialchars($voucher['sender_customer_address']) ?>,
+                                <?= htmlspecialchars($voucher['from_township_name']) ?></p>
                         </div>
                     </div>
 
                     <div class="mb-10 p-6 bg-gray-50 rounded-lg border border-gray-200 info-card">
-                        <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-gray-200 pb-3 mb-5">Recipient Information</h3>
+                        <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-gray-200 pb-3 mb-5">Recipient
+                            Information</h3>
                         <div class="space-y-3 text-lg">
-                            <p><strong class="font-medium text-gray-700">Name:</strong> <?= htmlspecialchars($voucher['receiver_customer_name']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Phone:</strong> <?= htmlspecialchars($voucher['receiver_customer_phone']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Email:</strong> <?= htmlspecialchars($voucher['receiver_customer_email']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Address:</strong> <?= htmlspecialchars($voucher['receiver_customer_address']) ?>, <?= htmlspecialchars($voucher['to_township_name']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Name:</strong>
+                                <?= htmlspecialchars($voucher['receiver_customer_name']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Phone:</strong>
+                                <?= htmlspecialchars($voucher['receiver_customer_phone']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Email:</strong>
+                                <?= htmlspecialchars($voucher['receiver_customer_email']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Address:</strong>
+                                <?= htmlspecialchars($voucher['receiver_customer_address']) ?>,
+                                <?= htmlspecialchars($voucher['to_township_name']) ?></p>
                         </div>
                     </div>
 
                     <!-- Pickup Location Information -->
                     <div class="mb-10 p-6 bg-gray-50 rounded-lg border border-gray-200 info-card">
-                        <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-gray-200 pb-3 mb-5">Pickup Location</h3>
+                        <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-gray-200 pb-3 mb-5">Pickup
+                            Location</h3>
                         <div class="space-y-3 text-lg">
-                            <p><strong class="font-medium text-gray-700">Pickup Agent Name:</strong> <?= htmlspecialchars($voucher['receiver_agent_name']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Pickup Agent Phone:</strong> <?= htmlspecialchars($voucher['receiver_agent_phone']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Pickup Agent Address:</strong> <?= htmlspecialchars($voucher['receiver_agent_address']) ?>, <?= htmlspecialchars($voucher['from_township_name']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Pickup Agent Name:</strong>
+                                <?= htmlspecialchars($voucher['receiver_agent_name']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Pickup Agent Phone:</strong>
+                                <?= htmlspecialchars($voucher['receiver_agent_phone']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Pickup Agent Address:</strong>
+                                <?= htmlspecialchars($voucher['receiver_agent_address']) ?>,
+                                <?= htmlspecialchars($voucher['from_township_name']) ?></p>
                         </div>
                     </div>
 
                     <div class="mb-10 p-6 bg-gray-50 rounded-lg border border-gray-200 info-card">
-                        <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-gray-200 pb-3 mb-5">Package Details</h3>
+                        <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-gray-200 pb-3 mb-5">Package
+                            Details</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-10 text-lg">
-                            <p><strong class="font-medium text-gray-700">Weight:</strong> <?= htmlspecialchars($voucher['weight']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Amount:</strong> <?= htmlspecialchars($voucher['amount']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Duration Time:</strong> <?= htmlspecialchars($voucher['duration']) ?></p>
-                            <p><strong class="font-medium text-gray-700">Product Type:</strong> <?= htmlspecialchars($voucher['product_type']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Weight:</strong>
+                                <?= htmlspecialchars($voucher['weight']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Amount:</strong>
+                                <?= htmlspecialchars($voucher['amount']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Duration Time:</strong>
+                                <?= htmlspecialchars($voucher['duration']) ?></p>
+                            <p><strong class="font-medium text-gray-700">Product Type:</strong>
+                                <?= htmlspecialchars($voucher['product_type']) ?></p>
                         </div>
                     </div>
 
@@ -292,7 +318,8 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name', 'id' => 'AGENT001']; // A
                     <!-- Status Update History Section -->
 
                     <div class="mb-10 p-6 rounded-lg border info-card">
-                        <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-gray-200 pb-3 mb-5">Status Update History</h3>
+                        <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-gray-200 pb-3 mb-5">Status Update
+                            History</h3>
                         <div class="space-y-4">
                             <?php
                             $hasNonPending = false;
@@ -310,7 +337,8 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name', 'id' => 'AGENT001']; // A
                                         <?php
                                         $style = getStatusStyleAndIcon($history['status']);
                                         ?>
-                                        <div class="p-4 rounded-md border <?= $style['bg'] ?> <?= str_replace('bg-', 'border-', $style['bg']) ?>">
+                                        <div
+                                            class="p-4 rounded-md border <?= $style['bg'] ?> <?= str_replace('bg-', 'border-', $style['bg']) ?>">
                                             <p class="text-lg font-semibold <?= $style['text'] ?>">
                                                 <?= $style['icon'] ?>
                                                 Status: <?= htmlspecialchars($history['status'] ?? 'N/A') ?>
@@ -319,8 +347,10 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name', 'id' => 'AGENT001']; // A
                                                 Reason: <?= htmlspecialchars($history['note'] ?? 'No reason provided.') ?>
                                             </p>
                                             <p class="text-xs text-gray-500 mt-2">
-                                                Updated by: <span class="font-medium"><?= htmlspecialchars($history['changed_by'] ?? 'Unknown Agent') ?></span>
-                                                at <span class="font-medium"><?= htmlspecialchars($history['changed_at'] ?? 'N/A') ?></span>
+                                                Updated by: <span
+                                                    class="font-medium"><?= htmlspecialchars($history['changed_by'] ?? 'Unknown Agent') ?></span>
+                                                at <span
+                                                    class="font-medium"><?= htmlspecialchars($history['changed_at'] ?? 'N/A') ?></span>
                                             </p>
                                         </div>
                                     <?php endif; ?>
@@ -343,7 +373,8 @@ $agent = $_SESSION['user'] ?? ['name' => 'Agent Name', 'id' => 'AGENT001']; // A
                     <h2 class="text-2xl font-semibold text-gray-800 mb-4">No Tracking Information Found</h2>
                     <p class="text-gray-600 mb-4">
                         The tracking code "<?php echo is_array($voucher) && isset($voucher['tracking_code']) ?
-                                                htmlspecialchars($voucher['tracking_code']) : 'N/A'; ?>" did not yield any results.
+                                                htmlspecialchars($voucher['tracking_code']) : 'N/A'; ?>" did not yield
+                        any results.
                         Please ensure you entered it correctly.
                     </p>
                     <a href="<?= URLROOT; ?>/agent/home"

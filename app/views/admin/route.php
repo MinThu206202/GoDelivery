@@ -340,7 +340,8 @@ $name = $_SESSION['user'];
         <div class="panel-header-with-button">
             <h3>Route List</h3>
             <div class="button-group">
-                <button class="add-agent-button" id="backButton" style="display: none;"><i class="fas fa-arrow-left"></i> Back</button>
+                <button class="add-agent-button" id="backButton" style="display: none;"><i
+                        class="fas fa-arrow-left"></i> Back</button>
                 <button class="add-agent-button" onclick="window.location.href='<?= URLROOT ?>/routepage/addroute'">
                     <i class="fas fa-plus"></i> Add Route
                 </button>

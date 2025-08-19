@@ -1,5 +1,6 @@
 <?php require_once APPROOT . '/views/inc/agentsidebar.php';
 $agent = $data['tracking_code'];
+$user =  $_SESSION['user'];
 
 ?>
 
@@ -66,13 +67,10 @@ $agent = $data['tracking_code'];
                 <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
-                    <p class="text-lg font-medium text-gray-800">John Doe</p>
-                    <p class="text-sm text-gray-500">Agent ID: #007</p>
+                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($user['name']) ?></p>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($user['access_code']) ?></p>
                 </div>
             </div>
-            <a href="#"
-                class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">Back
-                to Dashboard</a>
         </div>
     </header>
 
@@ -82,14 +80,14 @@ $agent = $data['tracking_code'];
         <div id="message-box-container"></div>
 
         <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-md">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Update Status for Order <?= htmlspecialchars($agent['tracking_code']) ?></h2>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Update Status for Order
+                <?= htmlspecialchars($agent['tracking_code']) ?></h2>
 
             <div class="space-y-4 mb-8">
                 <div>
                     <p class="text-sm text-gray-500">Current Status:</p>
                     <p id="current-status-display" class="text-lg font-semibold text-gray-900">
-                        <span id="status-badge"
-                            class="px-2 inline-flex text-base leading-5 font-semibold rounded-full">
+                        <span id="status-badge" class="px-2 inline-flex text-base leading-5 font-semibold rounded-full">
                             <?= htmlspecialchars($agent['delivery_status']) ?>
                         </span>
                     </p>
@@ -116,8 +114,7 @@ $agent = $data['tracking_code'];
             </div>
 
             <div class="flex justify-end space-x-4 mt-6">
-                <button type="button"
-                    onclick="window.location.href='<?= URLROOT ?>/agent/mydelivery';"
+                <button type="button" onclick="window.location.href='<?= URLROOT ?>/agent/mydelivery';"
                     class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200">
                     Cancel
                 </button> <button onclick="submitStatusUpdate('<?= htmlspecialchars($agent['tracking_code']) ?>')"
@@ -130,7 +127,8 @@ $agent = $data['tracking_code'];
 </div>
 
 <!-- Hidden POST form -->
-<form id="postStatusForm" method="POST" action="<?= URLROOT ?>/agentcontroller/show_updated_status" style="display: none;">
+<form id="postStatusForm" method="POST" action="<?= URLROOT ?>/agentcontroller/show_updated_status"
+    style="display: none;">
     <input type="hidden" name="tracking_code" value="<?= htmlspecialchars($agent['tracking_code']) ?>">
     <input type="hidden" name="new_status" id="form-new-status">
     <input type="hidden" name="notes" id="form-notes">

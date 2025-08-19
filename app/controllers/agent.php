@@ -19,17 +19,17 @@ class Agent extends Controller
 
     public function home()
     {
-        $delivery = $this->db->columnFilterAll('view_deliveries_detailed','sender_agent_id',$this->agent['id']);
+        $delivery = $this->db->columnFilterAll('view_deliveries_detailed', 'sender_agent_id', $this->agent['id']);
         $data = [
             'delivery' => $delivery,
         ];
-        $this->view('agent/home',$data);
+        $this->view('agent/home', $data);
     }
 
     public function incoming()
-    {   
-        $status = ['Delivered','In Transit','Cancelled','Returned'];
-        $delivery = $this->db->getByDeliveryIdAndStatuses('view_deliveries_detailed',  $this->agent['id'],$status);
+    {
+        $status = ['Delivered', 'In Transit', 'Cancelled', 'Returned'];
+        $delivery = $this->db->getByDeliveryIdAndStatuses('view_deliveries_detailed',  $this->agent['id'], $status);
         // $delivery = $this->db->columnFilterAll('view_deliveries_detailed', 'receiver_agent_id', $this->agent['id']);
 
         $data = [
@@ -44,7 +44,7 @@ class Agent extends Controller
         $data = [
             'delivery' => $delivery,
         ];
-        $this->view('agent/mydelivery',$data);
+        $this->view('agent/mydelivery', $data);
     }
 
     public function profile()
@@ -83,7 +83,7 @@ class Agent extends Controller
         $data = [
             'region' => $getregion
         ];
-        $this->view('agent/voucher',$data);
+        $this->view('agent/voucher', $data);
     }
 
     public function notification()
@@ -93,29 +93,29 @@ class Agent extends Controller
             'noti' => $noti
         ];
 
-        $this->view('agent/notification',$data);
+        $this->view('agent/notification', $data);
     }
 
     public function request()
     {
         $status = ['Awaiting Acceptance'];
-        $accept = $this->db->getByDeliveryIdAndStatuses('view_deliveries_detailed',$this->agent['id'],$status);
+        $accept = $this->db->getByDeliveryIdAndStatuses('view_deliveries_detailed', $this->agent['id'], $status);
         $data = [
             "request_delivery" => $accept
         ];
         // var_dump($data);
         // die();
-        $this->view('agent/request',$data);
+        $this->view('agent/request', $data);
     }
 
     public function available_route()
     {
-        $township = $this->db->columnFilter('townships','id',$this->agent['township_id']);
-        $available_route = $this->db->columnFilterAll('route_full_info','from_township',$township['name']);
+        $township = $this->db->columnFilter('townships', 'id', $this->agent['township_id']);
+        $available_route = $this->db->columnFilterAll('route_full_info', 'from_township', $township['name']);
         $data = [
             'available_routes' => $available_route
         ];
-        $this->view('agent/available_route',$data);
+        $this->view('agent/available_route', $data);
     }
 
     public function update_status()
@@ -127,5 +127,4 @@ class Agent extends Controller
     {
         $this->view('agent/result');
     }
-
 }

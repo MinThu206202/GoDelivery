@@ -50,8 +50,8 @@ $noti = $data['noti'];
                 <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
-                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name'])?></p>
-                    <p class="text-sm text-gray-500">Agent ID: #007</p>
+                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
                 </div>
             </div>
         </div>
@@ -88,7 +88,8 @@ $noti = $data['noti'];
                             $timeAgo = floor($timeDiff / 86400) . ' days ago';
                         }
                     ?>
-                        <div class="<?= $style['bg'] ?> <?= $style['border'] ?> <?= $style['text'] ?> p-4 rounded-lg shadow-sm border-l-4">
+                        <div
+                            class="<?= $style['bg'] ?> <?= $style['border'] ?> <?= $style['text'] ?> p-4 rounded-lg shadow-sm border-l-4">
                             <div class="flex justify-between items-center mb-1">
                                 <h3 class="font-bold text-lg"><?= htmlspecialchars($n['title']) ?></h3>
                                 <span class="text-sm text-gray-600"><?= $timeAgo ?></span>

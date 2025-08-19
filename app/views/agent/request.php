@@ -34,10 +34,11 @@
         <h1 class="text-3xl font-semibold text-gray-800">Available Deliveries</h1>
         <div class="flex items-center space-x-4">
             <div class="flex items-center space-x-2">
-                <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar" class="w-10 h-10 rounded-full border-2 border-blue-500">
+                <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
+                    class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
                     <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: #007</p>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
                 </div>
             </div>
         </div>
@@ -52,43 +53,65 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50 sticky top-0">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">Order ID</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sender Agent</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pickup Location</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sender Customer</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Creation Date</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">Action</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
+                                Order ID</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Sender Agent</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Pickup Location</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Sender Customer</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Creation Date</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
+                                Action</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <?php foreach ($data['request_delivery'] as $res): ?>
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= htmlspecialchars($res['tracking_code'] ?? '') ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <?= htmlspecialchars($res['tracking_code'] ?? '') ?></td>
 
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($res['receiver_agent_name'] ?? 'N/A') ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <?= htmlspecialchars($res['receiver_agent_name'] ?? 'N/A') ?></td>
 
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($res['sender_agent_city'] ?? 'N/A') ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <?= htmlspecialchars($res['sender_agent_city'] ?? 'N/A') ?></td>
 
 
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($res['sender_customer_name'] ?? 'N/A') ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <?= htmlspecialchars($res['sender_customer_name'] ?? 'N/A') ?></td>
 
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?= htmlspecialchars($res['created_at'] ?? '0.00') ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <?= htmlspecialchars($res['created_at'] ?? '0.00') ?></td>
 
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end space-x-2">
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end space-x-2">
                                     <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($res['tracking_code']) ?>"
                                         class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
                                         View
                                     </a>
-                                    <form action="<?= URLROOT; ?>/agentcontroller/requestaccept" method="POST" style="display: inline;">
+                                    <form action="<?= URLROOT; ?>/agentcontroller/requestaccept" method="POST"
+                                        style="display: inline;">
                                         <input type="hidden" name="tracking_code" value="<?= $res['tracking_code'] ?>">
-                                        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
+                                        <button type="submit"
+                                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
                                             Accept
                                         </button>
                                     </form>
                                     <!-- Reject Button Form -->
-                                    <form action="<?= URLROOT; ?>/agentcontroller/requestreject" method="POST" style="display: inline;">
+                                    <form action="<?= URLROOT; ?>/agentcontroller/requestreject" method="POST"
+                                        style="display: inline;">
                                         <input type="hidden" name="tracking_code" value="<?= $res['tracking_code'] ?>">
-                                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
+                                        <button type="submit"
+                                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
                                             Reject
                                         </button>
                                     </form>
@@ -104,10 +127,12 @@
 
 <!-- Toast Container -->
 <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2">
-    <div id="toast-message" class="hidden flex items-center justify-between p-4 rounded-lg shadow-lg text-white font-semibold">
+    <div id="toast-message"
+        class="hidden flex items-center justify-between p-4 rounded-lg shadow-lg text-white font-semibold">
         <span id="toast-text"></span>
         <button onclick="hideToast()" class="ml-4 text-white hover:text-gray-200 focus:outline-none">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>

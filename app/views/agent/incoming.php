@@ -21,7 +21,7 @@
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
                     <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: #007</p>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
                 </div>
             </div>
 
@@ -65,13 +65,19 @@
                 <table class="min-w-full divide-y divide-gray-200 text-sm text-left text-gray-500">
                     <thead class="bg-gray-50 sticky top-0 z-10">
                         <tr>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery Date</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">From City</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Destination City</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID
+                            </th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Customer
+                            </th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery
+                                Date</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">From City
+                            </th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Destination
+                                City</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200" id="deliveryTableBody">
@@ -91,28 +97,33 @@
                                 };
                             ?>
                                 <tr data-status="<?= htmlspecialchars($delivery['delivery_status']) ?>">
-                                    <td class="px-6 py-4 font-medium text-gray-900"><?= htmlspecialchars($delivery['tracking_code']) ?></td>
+                                    <td class="px-6 py-4 font-medium text-gray-900">
+                                        <?= htmlspecialchars($delivery['tracking_code']) ?></td>
                                     <td class="px-6 py-4"><?= htmlspecialchars($delivery['sender_customer_name']) ?></td>
                                     <td class="px-6 py-4"><?= htmlspecialchars($delivery['created_at']) ?></td>
                                     <td class="px-6 py-4"><?= htmlspecialchars($delivery['sender_agent_city'] ?? 'N/A') ?></td>
-                                    <td class="px-6 py-4"><?= htmlspecialchars($delivery['receiver_agent_city'] ?? 'N/A') ?></td>
+                                    <td class="px-6 py-4"><?= htmlspecialchars($delivery['receiver_agent_city'] ?? 'N/A') ?>
+                                    </td>
                                     <td class="px-6 py-4">
-                                        <span class="inline-flex px-2 py-1 rounded-full text-xs font-semibold <?= $statusClass ?>">
+                                        <span
+                                            class="inline-flex px-2 py-1 rounded-full text-xs font-semibold <?= $statusClass ?>">
                                             <?= htmlspecialchars($delivery['delivery_status']) ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap space-x-2">
-                                        <a href="<?= URLROOT ?>/agentcontroller/delivery_detail/<?= $delivery['tracking_code'] ?>" class="text-white bg-[#1F265B] px-3 py-2 rounded hover:bg-[#2A346C]">View</a>
-                                        <a href="<?= URLROOT ?>/agentcontroller/edit_incomedelivery/<?= $delivery['tracking_code'] ?>" class="text-white bg-blue-500 px-3 py-2 rounded hover:bg-blue-600">Edit</a>
+                                        <a href="<?= URLROOT ?>/agentcontroller/delivery_detail/<?= $delivery['tracking_code'] ?>"
+                                            class="text-white bg-[#1F265B] px-3 py-2 rounded hover:bg-[#2A346C]">View</a>
+                                        <a href="<?= URLROOT ?>/agentcontroller/edit_incomedelivery/<?= $delivery['tracking_code'] ?>"
+                                            class="text-white bg-blue-500 px-3 py-2 rounded hover:bg-blue-600">Edit</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
         </div>
-</div>
-</main>
+    </main>
 </div>
 
 <script>

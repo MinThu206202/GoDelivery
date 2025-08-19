@@ -4,6 +4,7 @@ $name = $_SESSION['user'];
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/agent.css">
 
 <style>
+    /* ------------------ Modal & Table Styling ------------------ */
     .detail-modal {
         position: fixed;
         top: 0;
@@ -21,7 +22,7 @@ $name = $_SESSION['user'];
         display: flex;
     }
 
-    .detail-modal .modal-box {
+    .modal-box {
         background: #fff;
         color: #1F265B;
         padding: 25px 30px;
@@ -33,25 +34,16 @@ $name = $_SESSION['user'];
     }
 
     .modal-box h4 {
+        text-align: center;
         margin-bottom: 15px;
         font-size: 20px;
-        color: #1F265B;
-        text-align: center;
-    }
-
-    .modal-box p {
-        margin-bottom: 10px;
-        font-size: 15px;
     }
 
     .modal-box p {
         display: flex;
-        align-items: center;
         justify-content: space-between;
         margin-bottom: 12px;
         font-size: 15px;
-        line-height: 1.4;
-        color: #1F265B;
     }
 
     .modal-box p span:first-child {
@@ -60,29 +52,24 @@ $name = $_SESSION['user'];
         margin-right: 10px;
     }
 
-    .modal-box p span:last-child {
-        text-align: right;
-        font-weight: 500;
-    }
-
     .bg-green {
-        background-color: #28a745;
-        color: white;
+        background: #28a745;
+        color: #fff;
         padding: 3px 8px;
         border-radius: 5px;
         font-size: 13px;
     }
 
     .bg-red {
-        background-color: #dc3545;
-        color: white;
+        background: #dc3545;
+        color: #fff;
         padding: 3px 8px;
         border-radius: 5px;
         font-size: 13px;
     }
 
     .bg-yellow {
-        background-color: #ffc107;
+        background: #ffc107;
         color: #1F265B;
         padding: 3px 8px;
         border-radius: 5px;
@@ -90,33 +77,37 @@ $name = $_SESSION['user'];
     }
 
     .bg-gray {
-        background-color: #6c757d;
-        color: white;
+        background: #6c757d;
+        color: #fff;
         padding: 3px 8px;
         border-radius: 5px;
         font-size: 13px;
     }
 
-    .modal-actions {
+    .modal-buttons {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
+        gap: 10px;
         margin-top: 20px;
     }
 
+    .modal-buttons button,
     .detail-button,
     .cancel-button {
-        background-color: #1F265B;
-        color: white;
-        border: none;
         padding: 8px 16px;
-        border-radius: 6px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
         cursor: pointer;
+        background: #1F265B;
+        color: white;
         transition: 0.2s ease;
     }
 
+    .modal-buttons button:hover,
     .detail-button:hover,
     .cancel-button:hover {
-        background-color: #151b40;
+        background: #161c45;
     }
 
     .close-button {
@@ -124,33 +115,10 @@ $name = $_SESSION['user'];
         right: 10px;
         top: 10px;
         background: transparent;
-        color: #1F265B;
         border: none;
         font-size: 20px;
+        color: #1F265B;
         cursor: pointer;
-    }
-
-    .modal-buttons {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        /* spacing between buttons */
-        margin-top: 20px;
-    }
-
-    .modal-buttons button {
-        padding: 8px 16px;
-        font-size: 14px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        background-color: #1F265B;
-        color: white;
-        transition: background-color 0.2s ease;
-    }
-
-    .modal-buttons button:hover {
-        background-color: #161c45;
     }
 
     @keyframes fadeIn {
@@ -163,6 +131,59 @@ $name = $_SESSION['user'];
             opacity: 1;
             transform: scale(1);
         }
+    }
+
+    /* ------------------ Notification Overlay ------------------ */
+    #notificationOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    #notificationBox {
+        background: #fff;
+        padding: 25px 30px;
+        border-radius: 10px;
+        width: 360px;
+        box-shadow: 0 5px 15px rgba(31, 38, 91, 0.8);
+        text-align: center;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .notification-title {
+        font-size: 20px;
+        color: #1F265B;
+        margin-bottom: 15px;
+    }
+
+    .notification-content p {
+        font-size: 15px;
+        color: #1F265B;
+    }
+
+    .notification-footer {
+        margin-top: 20px;
+    }
+
+    .modal-button-primary {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        background: #1F265B;
+        color: white;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .modal-button-primary:hover {
+        background: #161c45;
     }
 </style>
 
@@ -183,9 +204,7 @@ $name = $_SESSION['user'];
                     <label for="filterCity">City:</label>
                     <input type="text" id="filterCity" placeholder="Enter City">
                 </div>
-                <button id="applyFilterButton" class="search-button">
-                    <i class="fas fa-search"></i> Search
-                </button>
+                <button id="applyFilterButton" class="search-button"><i class="fas fa-search"></i> Search</button>
             </div>
         </div>
         <div class="header-right">
@@ -205,11 +224,11 @@ $name = $_SESSION['user'];
         <div class="panel-header-with-button">
             <h3>Agent List</h3>
             <div class="button-group">
-                <button class="add-agent-button" id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
+                <button class="add-agent-button" id="backButton" style="display:none;"><i class="fas fa-arrow-left"></i>
+                    Back</button>
                 <button class="add-agent-button"><i class="fas fa-plus"></i> Add Agent</button>
             </div>
         </div>
-
         <div class="table-responsive">
             <table id="agentTable">
                 <thead>
@@ -224,23 +243,16 @@ $name = $_SESSION['user'];
                 </thead>
                 <tbody id="agentTableBody">
                     <?php foreach ($data['allUserData'] as $agent): ?>
-                        <?php
-                        $statusClass = 'bg-gray';
-                        if ($agent['status_name'] === 'Active') {
-                            $statusClass = 'bg-green';
-                        } elseif ($agent['status_name'] === 'Inactive') {
-                            $statusClass = 'bg-red';
-                        } elseif ($agent['status_name'] === 'Suspended') {
-                            $statusClass = 'bg-yellow';
-                        }
-                        ?>
+                        <?php $statusClass = $agent['status_name'] === 'Active' ? 'bg-green' : ($agent['status_name'] === 'Inactive' ? 'bg-red' : ($agent['status_name'] === 'Suspended' ? 'bg-yellow' : 'bg-gray')); ?>
                         <tr>
                             <td><?= htmlspecialchars($agent['name']) ?></td>
                             <td><?= htmlspecialchars($agent['email']) ?></td>
                             <td><?= htmlspecialchars($agent['city_name']) ?></td>
                             <td><?= htmlspecialchars($agent['security_code']) ?></td>
                             <td><span class="<?= $statusClass ?>"><?= htmlspecialchars($agent['status_name']) ?></span></td>
-                            <td><button class="open-settings" data-agent='<?= htmlspecialchars(json_encode($agent), ENT_QUOTES, 'UTF-8') ?>'>⚙️</button></td>
+                            <td><button class="open-settings"
+                                    data-agent='<?= htmlspecialchars(json_encode($agent), ENT_QUOTES, 'UTF-8') ?>'>⚙️</button>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -260,19 +272,21 @@ $name = $_SESSION['user'];
         <p><span>Security Code:</span> <span id="detailAccessCode"></span></p>
         <p><span>Status:</span> <span id="detailStatus" class="status-label"></span></p>
         <div class="modal-buttons">
-            <!-- Inside the modal -->
             <button id="detailViewBtn" data-id="">View Full Detail</button>
             <button id="closeModalBottom">Cancel</button>
         </div>
     </div>
 </div>
 
-<!-- Custom alert overlay -->
-<div class="custom-alert-overlay" id="customAlertOverlay">
-    <div class="custom-alert-box">
-        <p id="customAlertMessage"></p>
-        <div class="settings-actions">
-            <button class="cancel-button" id="closeCustomAlert">OK</button>
+<!-- Notification Overlay -->
+<div id="notificationOverlay">
+    <div id="notificationBox">
+        <h2 class="notification-title">Notification</h2>
+        <div class="notification-content">
+            <p id="notificationMessage"></p>
+        </div>
+        <div class="notification-footer">
+            <button onclick="closeNotificationBox()" class="modal-button-primary">OK</button>
         </div>
     </div>
 </div>
@@ -280,124 +294,125 @@ $name = $_SESSION['user'];
 <script>
     const allAgents = <?= json_encode($data['allUserData']) ?>;
     const backButton = document.getElementById('backButton');
-    const detailViewBtn = document.getElementById('detailViewBtn'); // Get the button element
+    const detailViewBtn = document.getElementById('detailViewBtn');
 
-
-    // Render agent table rows
-    function renderTable(agents) {
+    // Render Table
+    function renderTable(agents, emptyMessage = 'No agents found matching your criteria.') {
         const tbody = document.getElementById('agentTableBody');
         tbody.innerHTML = '';
-
-        if (agents.length === 0) {
+        if (!agents.length) {
             const tr = document.createElement('tr');
             const td = document.createElement('td');
             td.colSpan = 6;
             td.style.textAlign = 'center';
             td.style.padding = '20px';
             td.style.fontStyle = 'italic';
-            td.textContent = 'No agents found matching your criteria.';
+            td.textContent = emptyMessage;
             tr.appendChild(td);
             tbody.appendChild(tr);
             return;
         }
-
         agents.forEach(agent => {
-            let statusClass = 'bg-gray';
-            let icon = '⏸️';
-
-            if (agent.status_name === 'Active') {
-                statusClass = 'bg-green';
-                icon = '';
-            } else if (agent.status_name === 'Inactive') {
-                statusClass = 'bg-red';
-                icon = '';
-            } else if (agent.status_name === 'Suspended') {
-                statusClass = 'bg-yellow';
-                icon = '';
-            }
-
+            let statusClass = agent.status_name === 'Active' ? 'bg-green' : (agent.status_name === 'Inactive' ?
+                'bg-red' : (agent.status_name === 'Suspended' ? 'bg-yellow' : 'bg-gray'));
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${agent.name}</td>
-                <td>${agent.email}</td>
-                <td>${agent.city_name}</td>
-                <td>${agent.security_code}</td>
-                <td><span class="${statusClass}">${icon} ${agent.status_name}</span></td>
-                <td><button class="open-settings" data-agent='${JSON.stringify(agent)}'>⚙️</button></td>
-            `;
-
-            row.style.opacity = 0;
+            <td>${agent.name}</td>
+            <td>${agent.email}</td>
+            <td>${agent.city_name}</td>
+            <td>${agent.security_code}</td>
+            <td><span class="${statusClass}">${agent.status_name}</span></td>
+            <td><button class="open-settings" data-agent='${JSON.stringify(agent)}'>⚙️</button></td>
+        `;
             tbody.appendChild(row);
-            setTimeout(() => row.style.opacity = 1, 100);
         });
     }
 
-    // Show back button when user filters or searches
+    // Notification
+    function showNotification(message) {
+        document.getElementById('notificationMessage').textContent = message;
+        document.getElementById('notificationOverlay').style.display = 'flex';
+    }
+
+    function closeNotificationBox() {
+        document.getElementById('notificationOverlay').style.display = 'none';
+    }
+
+    // Show/Hide Back Button
     function showBackButton() {
         backButton.style.display = 'inline-flex';
     }
 
-    // Hide back button when back clicked or on load
     function hideBackButton() {
         backButton.style.display = 'none';
     }
 
-    // Filter buttons (All, Active, Not Active)
+    // Apply Search
+    function applySearch() {
+        const accessCode = document.getElementById('filterAccessCode').value.trim().toLowerCase();
+        const email = document.getElementById('filterEmail').value.trim().toLowerCase();
+        const city = document.getElementById('filterCity').value.trim().toLowerCase();
+
+        if (!accessCode && !email && !city) {
+            showNotification("Please enter at least one search value.");
+            return;
+        }
+
+        const filtered = allAgents.filter(agent => {
+            const codeMatch = accessCode ? (agent.security_code || '').toString().toLowerCase().includes(
+                accessCode) : true;
+            const emailMatch = email ? (agent.email || '').toLowerCase().includes(email) : true;
+            const cityMatch = city ? (agent.city_name || '').toLowerCase().includes(city) : true;
+            return codeMatch && emailMatch && cityMatch;
+        });
+
+        if (filtered.length === 0) {
+            renderTable([], "Your input data is not have.");
+        } else {
+            renderTable(filtered);
+        }
+
+        showBackButton();
+    }
+
+
+    // Event Listeners
+    document.getElementById('applyFilterButton').addEventListener('click', applySearch);
+    ['filterAccessCode', 'filterEmail', 'filterCity'].forEach(id => {
+        document.getElementById(id).addEventListener('keypress', e => {
+            if (e.key === 'Enter') applySearch();
+        });
+    });
+
+    // Back Button
+    backButton.addEventListener('click', () => {
+        document.getElementById('filterAccessCode').value = '';
+        document.getElementById('filterEmail').value = '';
+        document.getElementById('filterCity').value = '';
+        document.querySelectorAll('.filter-button').forEach(b => b.classList.remove('active'));
+        const allBtn = document.querySelector('.filter-button[data-status="all"]');
+        if (allBtn) allBtn.classList.add('active');
+        renderTable(allAgents);
+        hideBackButton();
+    });
+
+    // Filter Buttons
     document.querySelectorAll('.filter-button').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.filter-button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
             const filter = btn.getAttribute('data-status');
             const filtered = allAgents.filter(agent => {
                 if (filter === 'all') return true;
-                return filter === 'active' ?
-                    agent.status_name.toLowerCase() === 'active' :
-                    agent.status_name.toLowerCase() !== 'active';
+                return filter === 'active' ? agent.status_name.toLowerCase() === 'active' : agent
+                    .status_name.toLowerCase() !== 'active';
             });
-
             renderTable(filtered);
             showBackButton();
         });
     });
 
-    // Search filter with custom alert overlay
-    document.getElementById('applyFilterButton').addEventListener('click', () => {
-        const security_code = document.getElementById('filterSecurity_code').value.trim().toLowerCase();
-        const email = document.getElementById('filterEmail').value.trim().toLowerCase();
-        const city = document.getElementById('filterCity').value.trim().toLowerCase();
-
-        if (!code && !email && !city) {
-            showCustomAlert("Please enter at least one search value.");
-            return;
-        }
-
-        const filtered = allAgents.filter(agent => {
-            return (!code || agent.security_code.toLowerCase().includes(security_code)) &&
-                (!email || agent.email.toLowerCase().includes(email)) &&
-                (!city || agent.city_name.toLowerCase().includes(city));
-        });
-
-        renderTable(filtered);
-        showBackButton();
-    });
-
-    // Back button resets to All Agents + clears filters
-    backButton.addEventListener('click', () => {
-        document.getElementById('filterSecurity_code').value = '';
-        document.getElementById('filterEmail').value = '';
-        document.getElementById('filterCity').value = '';
-
-        document.querySelectorAll('.filter-button').forEach(b => b.classList.remove('active'));
-        const allBtn = document.querySelector('.filter-button[data-status="all"]');
-        allBtn.classList.add('active');
-
-        renderTable(allAgents);
-
-        hideBackButton();
-    });
-
-    // Modal open/close animation
+    // Modal open/close
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('open-settings')) {
             const agent = JSON.parse(e.target.getAttribute('data-agent'));
@@ -405,75 +420,31 @@ $name = $_SESSION['user'];
             document.getElementById('detailEmail').textContent = agent.email;
             document.getElementById('detailCity').textContent = agent.city_name;
             document.getElementById('detailAccessCode').textContent = agent.security_code;
-
             const detailStatus = document.getElementById('detailStatus');
             detailStatus.textContent = agent.status_name;
-
-            // Remove previous classes
             detailStatus.className = 'status-label';
-
-            // Add color class based on status
-            if (agent.status_name === 'Active') {
-                detailStatus.classList.add('bg-green');
-            } else if (agent.status_name === 'Inactive') {
-                detailStatus.classList.add('bg-red');
-            } else if (agent.status_name === 'Suspended') {
-                detailStatus.classList.add('bg-yellow');
-            } else {
-                detailStatus.classList.add('bg-gray');
-            }
-
-            // Set the agent ID to the "View Full Detail" button
-            detailViewBtn.dataset.id = agent.id; // This line was added/fixed
-
-            const modal = document.getElementById('agentDetailBox');
-            modal.classList.add('show');
+            if (agent.status_name === 'Active') detailStatus.classList.add('bg-green');
+            else if (agent.status_name === 'Inactive') detailStatus.classList.add('bg-red');
+            else if (agent.status_name === 'Suspended') detailStatus.classList.add('bg-yellow');
+            else detailStatus.classList.add('bg-gray');
+            detailViewBtn.dataset.id = agent.id;
+            document.getElementById('agentDetailBox').classList.add('show');
         }
-
-        if (e.target.id === 'closeModal' || e.target.id === 'closeModalBottom') {
-            const modal = document.getElementById('agentDetailBox');
-            modal.classList.remove('show');
-        }
+        if (e.target.id === 'closeModal' || e.target.id === 'closeModalBottom') document.getElementById(
+            'agentDetailBox').classList.remove('show');
+    });
+    document.getElementById('agentDetailBox').addEventListener('click', e => {
+        if (e.target.id === 'agentDetailBox') e.target.classList.remove('show');
     });
 
-    // Close modal when clicking outside modal content
-    document.getElementById('agentDetailBox').addEventListener('click', (e) => {
-        if (e.target.id === 'agentDetailBox') {
-            e.target.classList.remove('show');
-        }
-    });
-
-    // Friendly custom alert overlay
-    function showCustomAlert(message) {
-        const alertOverlay = document.getElementById('customAlertOverlay');
-        const alertMessage = document.getElementById('customAlertMessage');
-        alertMessage.textContent = message;
-        alertOverlay.style.display = 'flex';
-    }
-
-    // Close custom alert
-    document.getElementById('closeCustomAlert').addEventListener('click', () => {
-        document.getElementById('customAlertOverlay').style.display = 'none';
-    });
-
-
-    // Detail button click event (now correctly referencing detailViewBtn)
+    // Detail button redirect
     detailViewBtn.addEventListener('click', () => {
         const agentId = detailViewBtn.dataset.id;
-        if (agentId) {
-            // Assuming URLROOT is defined in your PHP context and accessible globally
-            // Or you might need to pass it as a JS variable from PHP
-            window.location.href = `<?php echo URLROOT; ?>/admincontroller/agent_profile?id=${agentId}`;
-        } else {
-            showCustomAlert("Agent ID not found for full detail view.");
-        }
+        if (agentId) window.location.href = `<?php echo URLROOT; ?>/admincontroller/agent_profile?id=${agentId}`;
+        else showNotification("Please select an agent.");
     });
 
-    // Initial render on page load
+    // Initial render
     hideBackButton();
     renderTable(allAgents);
 </script>
-
-</body>
-
-</html>
