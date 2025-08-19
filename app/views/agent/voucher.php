@@ -6,7 +6,6 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/bootstrap/css/bootstrap.min.css">
 
 <style>
     body {
@@ -96,7 +95,7 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
                     <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: #007</p>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
                 </div>
             </div>
         </div>
@@ -128,7 +127,8 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                         </div>
                         <div>
                             <label for="senderPhone" class="block text-sm text-gray-500">Phone:</label>
-                            <input type="tel" name="sender_phone" id="senderPhone" placeholder="Enter sender's phone number"
+                            <input type="tel" name="sender_phone" id="senderPhone"
+                                placeholder="Enter sender's phone number"
                                 class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                         </div>
                         <div>
@@ -138,7 +138,8 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                         </div>
                         <div class="md:col-span-2">
                             <label for="senderAddress" class="block text-sm text-gray-500">Address:</label>
-                            <textarea id="senderAddress" name="sender_address" rows="2" placeholder="Enter sender's address"
+                            <textarea id="senderAddress" name="sender_address" rows="2"
+                                placeholder="Enter sender's address"
                                 class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]"></textarea>
                         </div>
                     </div>
@@ -150,22 +151,26 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                         <div>
                             <label for="recipientName" class="block text-sm text-gray-500">Name:</label>
-                            <input type="text" name="receiver_name" id="recipientName" placeholder="Enter recipient's name"
+                            <input type="text" name="receiver_name" id="recipientName"
+                                placeholder="Enter recipient's name"
                                 class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                         </div>
                         <div>
                             <label for="recipientPhone" class="block text-sm text-gray-500">Phone:</label>
-                            <input type="tel" name="receiver_phone" id="recipientPhone" placeholder="Enter recipient's phone number"
+                            <input type="tel" name="receiver_phone" id="recipientPhone"
+                                placeholder="Enter recipient's phone number"
                                 class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                         </div>
                         <div>
                             <label for="recipientEmail" class="block text-sm text-gray-500">Email:</label>
-                            <input type="email" name="receiver_email" id="recipientEmail" placeholder="Enter recipient's email"
+                            <input type="email" name="receiver_email" id="recipientEmail"
+                                placeholder="Enter recipient's email"
                                 class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                         </div>
                         <div class="md:col-span-2">
                             <label for="recipientAddress" class="block text-sm text-gray-500"></label>
-                            <textarea id="recipientAddress" name="receiver_address" rows="2" placeholder="Enter recipient's address"
+                            <textarea id="recipientAddress" name="receiver_address" rows="2"
+                                placeholder="Enter recipient's address"
                                 class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]"></textarea>
                         </div>
                     </div>
@@ -177,12 +182,14 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 mb-4">
                         <div>
                             <label for="packageWeight" class="block text-sm text-gray-500">Weight (kg):</label>
-                            <input type="number" name="weight" id="packageWeight" step="0.1" placeholder="Enter package weight"
+                            <input type="number" name="weight" id="packageWeight" step="0.1"
+                                placeholder="Enter package weight"
                                 class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                         </div>
                         <div>
                             <label for="numberofpiece" class="block text-sm text-gray-500">Number of Piece</label>
-                            <input type="number" name="piece" id="numberofpiece" step="0.1" placeholder="Enter Number of Piece"
+                            <input type="number" name="piece" id="numberofpiece" step="0.1"
+                                placeholder="Enter Number of Piece"
                                 class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                         </div>
                         <div>
@@ -198,7 +205,8 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                         </div>
                         <div id="importantNoteContainer" class="hidden md:col-span-2">
                             <p class="text-sm text-red-600 mt-1 p-2 bg-red-50 rounded-md border border-red-200">
-                                **Important:** Selecting "Important/Import" means your delivery is faster and will increase an **extra cost** more than normal cost.
+                                **Important:** Selecting "Important/Import" means your delivery is faster and will
+                                increase an **extra cost** more than normal cost.
                             </p>
                         </div>
                         <div>
@@ -208,7 +216,8 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                         </div>
                     </div>
                     <label for="productType" class="block text-sm text-gray-500 mt-4">Product Type:</label>
-                    <textarea id="productType" name="product_type" rows="2" placeholder="Any special delivery instructions"
+                    <textarea id="productType" name="product_type" rows="2"
+                        placeholder="Any special delivery instructions"
                         class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]"></textarea>
                 </div>
 
@@ -218,7 +227,8 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                         <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Agent Locations</h2>
                         <div class="space-y-4">
                             <div>
-                                <label for="senderAgentRegion" class="block text-sm text-gray-500">Receiver Agent Region:</label>
+                                <label for="senderAgentRegion" class="block text-sm text-gray-500">Receiver Agent
+                                    Region:</label>
                                 <select id="senderAgentRegion" name="senderAgentRegion"
                                     class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                                     <option value="" disabled selected>Select Region</option>
@@ -230,14 +240,16 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                                 </select>
                             </div>
                             <div>
-                                <label for="senderAgentCity" class="block text-sm text-gray-500">Receiver Agent City:</label>
+                                <label for="senderAgentCity" class="block text-sm text-gray-500">Receiver Agent
+                                    City:</label>
                                 <select id="senderAgentCity" name="senderAgentCity"
                                     class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                                     <option value="" disabled selected>Select City</option>
                                 </select>
                             </div>
                             <div>
-                                <label for="senderAgentTownship" class="block text-sm text-gray-500">Receiver Agent Township:</label>
+                                <label for="senderAgentTownship" class="block text-sm text-gray-500">Receiver Agent
+                                    Township:</label>
                                 <select id="senderAgentTownship" name="senderAgentTownship"
                                     class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                                     <option value="" disabled selected>Select Township</option>
@@ -260,8 +272,7 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
 
                 <!-- Action Buttons -->
                 <div class="flex justify-end space-x-4 mt-6 no-print">
-                    <button
-                        type="submit"
+                    <button type="submit"
                         class="px-6 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
                         Save Voucher
                     </button>

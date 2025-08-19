@@ -131,7 +131,7 @@ $voucher = $data['create_data'];
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
                     <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: #007</p>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
                 </div>
             </div>
 
@@ -141,12 +141,14 @@ $voucher = $data['create_data'];
     <!-- Delivery Details Content -->
     <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
         <div id="printable-voucher" class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Order <?= htmlspecialchars($voucher['tracking_code']) ?></h2>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Order
+                <?= htmlspecialchars($voucher['tracking_code']) ?></h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 mb-8">
                 <div>
                     <p class="text-sm text-gray-500">Order ID:</p>
-                    <p class="text-lg font-semibold text-gray-900"><?= htmlspecialchars($voucher['tracking_code']) ?></p>
+                    <p class="text-lg font-semibold text-gray-900"><?= htmlspecialchars($voucher['tracking_code']) ?>
+                    </p>
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Current Status:</p>
@@ -158,7 +160,8 @@ $voucher = $data['create_data'];
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Assigned Driver:</p>
-                    <p class="text-lg font-semibold text-gray-900"><?= htmlspecialchars($voucher['sender_agent_name']) ?></p>
+                    <p class="text-lg font-semibold text-gray-900">
+                        <?= htmlspecialchars($voucher['sender_agent_name']) ?></p>
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Estimated Delivery:</p>
@@ -169,10 +172,14 @@ $voucher = $data['create_data'];
             <div class="mb-8">
                 <h3 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Sender Information</h3>
                 <div class="space-y-2">
-                    <p><strong class="text-gray-700">Name:</strong> <?= htmlspecialchars($voucher['sender_customer_name']) ?></p>
-                    <p><strong class="text-gray-700">Phone:</strong> <?= htmlspecialchars($voucher['sender_customer_phone']) ?></p>
-                    <p><strong class="text-gray-700">Email:</strong> <?= htmlspecialchars($voucher['sender_customer_email']) ?></p>
-                    <p><strong class="text-gray-700">Address:</strong> <?= htmlspecialchars($voucher['sender_customer_address']) ?><?= htmlspecialchars($voucher['from_region_name']) ?>
+                    <p><strong class="text-gray-700">Name:</strong>
+                        <?= htmlspecialchars($voucher['sender_customer_name']) ?></p>
+                    <p><strong class="text-gray-700">Phone:</strong>
+                        <?= htmlspecialchars($voucher['sender_customer_phone']) ?></p>
+                    <p><strong class="text-gray-700">Email:</strong>
+                        <?= htmlspecialchars($voucher['sender_customer_email']) ?></p>
+                    <p><strong class="text-gray-700">Address:</strong>
+                        <?= htmlspecialchars($voucher['sender_customer_address']) ?><?= htmlspecialchars($voucher['from_region_name']) ?>
                     </p>
                 </div>
             </div>
@@ -180,10 +187,15 @@ $voucher = $data['create_data'];
             <div class="mb-8">
                 <h3 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Recipient Information</h3>
                 <div class="space-y-2">
-                    <p><strong class="text-gray-700">Name:</strong><?= htmlspecialchars($voucher['receiver_customer_name']) ?></p>
-                    <p><strong class="text-gray-700">Phone:</strong> <?= htmlspecialchars($voucher['receiver_customer_phone']) ?></p>
-                    <p><strong class="text-gray-700">Email:</strong> <?= htmlspecialchars($voucher['receiver_customer_email']) ?></p>
-                    <p><strong class="text-gray-700">Address:</strong> <?= htmlspecialchars($voucher['receiver_customer_address']) ?><?= htmlspecialchars($voucher['to_region_name']) ?>
+                    <p><strong
+                            class="text-gray-700">Name:</strong><?= htmlspecialchars($voucher['receiver_customer_name']) ?>
+                    </p>
+                    <p><strong class="text-gray-700">Phone:</strong>
+                        <?= htmlspecialchars($voucher['receiver_customer_phone']) ?></p>
+                    <p><strong class="text-gray-700">Email:</strong>
+                        <?= htmlspecialchars($voucher['receiver_customer_email']) ?></p>
+                    <p><strong class="text-gray-700">Address:</strong>
+                        <?= htmlspecialchars($voucher['receiver_customer_address']) ?><?= htmlspecialchars($voucher['to_region_name']) ?>
                     </p>
                 </div>
             </div>
@@ -192,9 +204,13 @@ $voucher = $data['create_data'];
             <div class="mb-8">
                 <h3 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Pickup Location</h3>
                 <div class="space-y-2">
-                    <p><strong class="text-gray-700">Pickup Agent Name:</strong><?= htmlspecialchars($voucher['receiver_agent_name']) ?></p>
-                    <p><strong class="text-gray-700">Pickup Agent Phone:</strong> <?= htmlspecialchars($voucher['receiver_agent_phone']) ?></p>
-                    <p><strong class="text-gray-700">Pickup Agent Address:</strong> <?= htmlspecialchars($voucher['receiver_agent_address']) ?>,<?= htmlspecialchars($voucher['to_region_name']) ?></p>
+                    <p><strong class="text-gray-700">Pickup Agent
+                            Name:</strong><?= htmlspecialchars($voucher['receiver_agent_name']) ?></p>
+                    <p><strong class="text-gray-700">Pickup Agent Phone:</strong>
+                        <?= htmlspecialchars($voucher['receiver_agent_phone']) ?></p>
+                    <p><strong class="text-gray-700">Pickup Agent Address:</strong>
+                        <?= htmlspecialchars($voucher['receiver_agent_address']) ?>,<?= htmlspecialchars($voucher['to_region_name']) ?>
+                    </p>
                 </div>
             </div>
 
@@ -203,8 +219,10 @@ $voucher = $data['create_data'];
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8">
                     <p><strong class="text-gray-700">Weight:</strong><?= htmlspecialchars($voucher['weight']) ?></p>
                     <p><strong class="text-gray-700">Amount:</strong> <?= htmlspecialchars($voucher['amount']) ?></p>
-                    <p><strong class="text-gray-700">Duration Time:</strong> <?= htmlspecialchars($voucher['duration']) ?></p>
-                    <p><strong class="text-gray-700">Product Type:</strong> <?= htmlspecialchars($voucher['product_type']) ?></p>
+                    <p><strong class="text-gray-700">Duration Time:</strong>
+                        <?= htmlspecialchars($voucher['duration']) ?></p>
+                    <p><strong class="text-gray-700">Product Type:</strong>
+                        <?= htmlspecialchars($voucher['product_type']) ?></p>
                 </div>
             </div>
 
@@ -213,8 +231,10 @@ $voucher = $data['create_data'];
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8">
                     <p><strong class="text-gray-700">Weight:</strong><?= htmlspecialchars($voucher['weight']) ?></p>
                     <p><strong class="text-gray-700">Amount:</strong> <?= htmlspecialchars($voucher['amount']) ?></p>
-                    <p><strong class="text-gray-700">Duration Time:</strong> <?= htmlspecialchars($voucher['duration']) ?></p>
-                    <p><strong class="text-gray-700">Product Type:</strong> <?= htmlspecialchars($voucher['product_type']) ?></p>
+                    <p><strong class="text-gray-700">Duration Time:</strong>
+                        <?= htmlspecialchars($voucher['duration']) ?></p>
+                    <p><strong class="text-gray-700">Product Type:</strong>
+                        <?= htmlspecialchars($voucher['product_type']) ?></p>
                 </div>
             </div>
 

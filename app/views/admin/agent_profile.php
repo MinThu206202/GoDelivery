@@ -196,13 +196,15 @@ if ($statusLower === 'active') {
     <section class="agent-view-panel panel">
         <div class="agent-profile-section">
             <div class="agent-avatar">
-                <img id="agentProfilePhoto" src="https://placehold.co/100x100/F0F4F7/1F265B?text=Agent" alt="Agent Profile Photo">
+                <img id="agentProfilePhoto" src="https://placehold.co/100x100/F0F4F7/1F265B?text=Agent"
+                    alt="Agent Profile Photo">
             </div>
             <div class="agent-details">
                 <div class="detail-row">
                     <span class="label">Name</span>
                     <span class="value" id="currentAgentName"><?= htmlspecialchars($data['agent']['name']) ?></span>
-                    <span class="value status-tag <?= $statusClass ?>" id="currentAgentStatus"><?= htmlspecialchars($status) ?></span>
+                    <span class="value status-tag <?= $statusClass ?>"
+                        id="currentAgentStatus"><?= htmlspecialchars($status) ?></span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Phone:</span>
@@ -214,7 +216,8 @@ if ($statusLower === 'active') {
                 </div>
                 <div class="detail-row">
                     <span class="label">Code:</span>
-                    <span class="value" id="currentAgentCode"><?= htmlspecialchars($data['agent']['email']) ?></span>
+                    <span class="value"
+                        id="currentAgentCode"><?= htmlspecialchars($data['agent']['access_code']) ?></span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Password:</span>
@@ -253,9 +256,9 @@ if ($statusLower === 'active') {
                     <?php if (!empty($data['delivery'])): ?>
                         <?php foreach ($data['delivery'] as $delivery): ?>
                             <tr>
-                                <td><?= htmlspecialchars($delivery['customer_sender_name']) ?></td>
-                                <td><?= htmlspecialchars($delivery['customer_sender_email']) ?></td>
-                                <td><?= htmlspecialchars($delivery['delivery_status_name']) ?></td>
+                                <td><?= htmlspecialchars($delivery['tracking_code']) ?></td>
+                                <td><?= htmlspecialchars($delivery['sender_customer_name']) ?></td>
+                                <td><?= htmlspecialchars($delivery['delivery_status']) ?></td>
                                 <td><?= htmlspecialchars($delivery['created_at']) ?></td>
                             </tr>
                         <?php endforeach; ?>

@@ -21,7 +21,7 @@
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
                     <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: #007</p>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
                 </div>
             </div>
 
@@ -123,14 +123,25 @@
                             }
                         ?>
                             <tr data-status="<?= htmlspecialchars($delivery['delivery_status']) ?>">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><span><?= htmlspecialchars($delivery['tracking_code']) ?></span>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <span><?= htmlspecialchars($delivery['tracking_code']) ?></span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['sender_customer_name']) ?></span></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['created_at']) ?></span></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['sender_agent_city'] ?? 'N/A') ?></span></td> <!-- New Column Data -->
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['receiver_agent_city'] ?? 'N/A') ?></span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span><?= htmlspecialchars($delivery['sender_customer_name']) ?></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span><?= htmlspecialchars($delivery['created_at']) ?></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span><?= htmlspecialchars($delivery['sender_agent_city'] ?? 'N/A') ?></span>
+                                </td>
+                                <!-- New Column Data -->
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span><?= htmlspecialchars($delivery['receiver_agent_city'] ?? 'N/A') ?></span>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
                                         <?= htmlspecialchars($delivery['delivery_status']) ?>
                                     </span>
                                 </td>

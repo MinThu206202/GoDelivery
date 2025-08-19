@@ -206,15 +206,28 @@
     <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
         <div id="message-box-container"></div>
 
+        <?php if (isset($_SESSION['flash_message'])): ?>
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    showCustomAlert("<?= $_SESSION['flash_message']['message'] ?>",
+                        "<?= $_SESSION['flash_message']['type'] ?>");
+                });
+            </script>
+            <?php unset($_SESSION['flash_message']); ?>
+        <?php endif; ?>
+
+
         <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-xl border border-gray-200">
             <div
                 class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8 pb-8 mb-8 border-b border-gray-200">
                 <div class="flex-shrink-0">
-                    <div class="profile-image-container">
-                        <img id="profileImage" src="https://placehold.co/150x150/1F265B/FFFFFF?text=JD" alt="Agent Profile Picture"
-                            class="w-full h-full object-cover border-4 border-[#1F265B] shadow-lg">
+                    <div class="profile-image-container w-24 h-24 md:w-28 md:h-28">
+                        <img id="profileImage" src="https://placehold.co/150x150/1F265B/FFFFFF?text=JD"
+                            alt="Agent Profile Picture"
+                            class="w-full h-full object-cover border-4 border-[#1F265B] shadow-md rounded-full">
                     </div>
                 </div>
+
                 <div class="text-center md:text-left flex-grow">
                     <h2 class="text-4xl font-bold text-gray-900 mb-2">John Doe</h2>
                     <p class="text-xl text-gray-600 mb-4">Delivery Agent</p>
@@ -268,16 +281,22 @@
 
             <div id="editProfileFormContainer" class="hidden">
                 <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Edit Profile</h3>
-                <form class="space-y-6">
+                <form id="updateProfileForm" class="space-y-6" action="<?= URLROOT ?>/agentcontroller/updateprofile"
+                    method="POST" enctype="multipart/form-data">
                     <div class="flex flex-col items-center mb-6">
-                        <div class="profile-image-container">
-                            <img id="editProfileImagePreview" src="https://placehold.co/150x150/1F265B/FFFFFF?text=JD" alt="Profile Preview"
-                                class="w-full h-full object-cover border-4 border-[#1F265B] shadow-lg">
-                            <input type="file" name="image" id="imageUpload" class="hidden" accept="image/*" onchange="previewEditImage(event)" required>
-                            <label for="imageUpload" class="change-photo-overlay">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <div class="profile-image-container w-32 h-32">
+                            <img id="editProfileImagePreview" src="https://placehold.co/150x150/1F265B/FFFFFF?text=JD"
+                                alt="Profile Preview"
+                                class="w-full h-full object-cover border-4 border-[#1F265B] shadow-lg rounded-full">
+                            <input type="file" name="image" id="imageUpload" class="hidden" accept="image/*"
+                                onchange="previewEditImage(event)">
+                            <label for="imageUpload" class="change-photo-overlay cursor-pointer">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z">
+                                    </path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
                                 Change Photo
                             </label>
@@ -288,50 +307,113 @@
                         <div>
                             <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                             <input type="text" id="fullName" name="fullName" value="John Doe"
-                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm">
+                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm"
+                                required>
                         </div>
                         <div>
                             <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
                             <input type="text" id="address" name="address" value="123 Delivery St, Cityville, CA 90210"
-                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm">
+                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm"
+                                required>
                         </div>
                     </div>
+                    <input type="hidden" name="email" value="<?= htmlspecialchars($agent['email'] ?? '') ?>">
+
+
                     <div class="flex justify-end space-x-4">
                         <button type="button" onclick="toggleProfileForm('hide_all')"
-                            class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200 shadow-sm hover:shadow-md">Cancel</button>
+                            class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200 shadow-sm hover:shadow-md">
+                            Cancel
+                        </button>
                         <button type="submit"
-                            class="px-6 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#1F265B] focus:ring-opacity-50">Save
-                            Changes</button>
+                            class="px-6 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#1F265B] focus:ring-opacity-50">
+                            Save Changes
+                        </button>
                     </div>
+                </form>
+
+            </div>
+
+            <!-- Change Password (logged in, with current password) -->
+            <div id="changePasswordFormContainer" class="hidden">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-8">Change Password</h3>
+                <form class="space-y-6" action="<?= URLROOT ?>/agentcontroller/changepassword" method="POST">
+                    <!-- Current Password -->
+                    <div class="relative">
+                        <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-1">Current
+                            Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm pr-10">
+                        <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                            onclick="togglePassword('currentPassword', this)">...</span>
+                    </div>
+
+                    <!-- New Password -->
+                    <div class="relative">
+                        <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-1">New
+                            Password</label>
+                        <input type="password" id="newPassword" name="newPassword"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm pr-10">
+                        <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                            onclick="togglePassword('newPassword', this)">...</span>
+                    </div>
+
+                    <!-- Confirm New Password -->
+                    <div class="relative">
+                        <label for="confirmNewPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm New
+                            Password</label>
+                        <input type="password" id="confirmNewPassword" name="confirmNewPassword"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm pr-10">
+                        <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                            onclick="togglePassword('confirmNewPassword', this)">...</span>
+                        <a href="#" onclick="openForgotPasswordModal(event)"
+                            class="text-sm text-blue-600 hover:underline">Forgot Password?</a>
+                    </div>
+                    <input type="hidden" name="email" value="<?= htmlspecialchars($agent['email'] ?? '') ?>">
+
+                    <button type="submit"
+                        class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 shadow-md">
+                        Change Password
+                    </button>
                 </form>
             </div>
 
-            <div id="changePasswordFormContainer" class="hidden">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-8">Change Password</h3>
-                <form class="space-y-6" action="/agentcontroller/reset_password_submit" method="POST">
-                    <div id="currentPasswordInputGroup">
-                        <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                        <input type="password" id="currentPassword" name="currentPassword"
-                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm">
-                    </div>
+            <!-- Reset Password (forgot password, via OTP) -->
+            <div id="resetPasswordFormContainer" class="hidden">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-8">Reset Password</h3>
+                <form id="resetPasswordForm" class="space-y-6"
+                    action="<?= URLROOT ?>/agentcontroller/reset_password_submit" method="POST">
+                    <!-- OTP verification message -->
                     <div id="newPasswordResetMessage" class="hidden text-sm text-gray-600 mb-4">
                         <p class="text-green-700 font-medium">OTP Verified! Please set your new password.</p>
                     </div>
-                    <div>
-                        <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                        <input type="password" id="newPassword" name="newPassword"
-                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm">
+
+                    <!-- New Password -->
+                    <div class="relative">
+                        <label for="newPasswordReset" class="block text-sm font-medium text-gray-700 mb-1">New
+                            Password</label>
+                        <input type="password" id="newPasswordReset" name="newPassword"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm pr-10">
+                        <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                            onclick="togglePassword('newPasswordReset', this)">...</span>
                     </div>
-                    <div>
-                        <label for="confirmNewPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-                        <input type="password" id="confirmNewPassword" name="confirmNewPassword"
-                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm">
+
+                    <!-- Confirm New Password -->
+                    <div class="relative">
+                        <label for="confirmNewPasswordReset"
+                            class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                        <input type="password" id="confirmNewPasswordReset" name="confirmNewPassword"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm pr-10">
+                        <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                            onclick="togglePassword('confirmNewPasswordReset', this)">...</span>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <a href="#" onclick="openForgotPasswordModal(event)" class="text-sm text-blue-600 hover:underline">Forgot Password?</a>
-                        <button type="submit"
-                            class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50">Change Password</button>
-                    </div>
+                    <input type="hidden" name="email" value="<?= htmlspecialchars($agent['email'] ?? '') ?>">
+
+
+                    <button type="submit"
+                        class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 shadow-md">
+                        Reset Password
+                    </button>
                 </form>
             </div>
         </div>
@@ -341,9 +423,11 @@
 
 
 <div id="forgotPasswordModal" class="modal-overlay">
-    <form action="<?= URLROOT ?>/agentcontroller/send_otp" method="POST" class="modal-content" onsubmit="sendOTP(event)">
+    <form action="<?= URLROOT ?>/agentcontroller/send_otp" method="POST" class="modal-content"
+        onsubmit="sendOTP(event)">
         <h3 class="text-xl font-semibold text-gray-800 mb-4">Send OTP Code?</h3>
-        <p class="text-gray-700 mb-6">Are you sure you want to send an OTP code to your registered email/phone for password reset?</p>
+        <p class="text-gray-700 mb-6">Are you sure you want to send an OTP code to your registered email/phone for
+            password reset?</p>
         <input type="hidden" name="user_id" value="<?= $agent['id'] ?? '' ?>">
         <input type="hidden" name="email" value="<?= htmlspecialchars($agent['email'] ?? '') ?>">
 
@@ -364,242 +448,420 @@
     <div class="modal-content">
         <h3 class="text-xl font-semibold text-gray-800 mb-4">Enter OTP Code</h3>
         <p class="text-gray-700 mb-6">A 6-digit OTP code has been sent to your registered email/phone.</p>
-        <form id="otpVerificationForm" action="/agentcontroller/verify_otp_submit" method="POST">
+        <form id="otpVerificationForm" action="<?= URLROOT ?>/agentcontroller/verify_otp_submit" method="POST">
             <div class="otp-input-group">
-                <input type="number" class="otp-input" id="otp1" name="otp[]" maxlength="1" onkeyup="moveToNext(this, 'otp2')" onkeydown="handleBackspace(event, this, null)" required>
-                <input type="number" class="otp-input" id="otp2" name="otp[]" maxlength="1" onkeyup="moveToNext(this, 'otp3')" onkeydown="handleBackspace(event, this, 'otp1')" required>
-                <input type="number" class="otp-input" id="otp3" name="otp[]" maxlength="1" onkeyup="moveToNext(this, 'otp4')" onkeydown="handleBackspace(event, this, 'otp2')" required>
-                <input type="number" class="otp-input" id="otp4" name="otp[]" maxlength="1" onkeyup="moveToNext(this, 'otp5')" onkeydown="handleBackspace(event, this, 'otp3')" required>
-                <input type="number" class="otp-input" id="otp5" name="otp[]" maxlength="1" onkeyup="moveToNext(this, 'otp6')" onkeydown="handleBackspace(event, this, 'otp4')" required>
-                <input type="number" class="otp-input" id="otp6" name="otp[]" maxlength="1" onkeyup="moveToNext(this, null)" onkeydown="handleBackspace(event, this, 'otp5')" required>
+                <input type="number" class="otp-input" id="otp1" name="otp[]" maxlength="1"
+                    onkeyup="moveToNext(this, 'otp2')" onkeydown="handleBackspace(event, this, null)" required>
+                <input type="number" class="otp-input" id="otp2" name="otp[]" maxlength="1"
+                    onkeyup="moveToNext(this, 'otp3')" onkeydown="handleBackspace(event, this, 'otp1')" required>
+                <input type="number" class="otp-input" id="otp3" name="otp[]" maxlength="1"
+                    onkeyup="moveToNext(this, 'otp4')" onkeydown="handleBackspace(event, this, 'otp2')" required>
+                <input type="number" class="otp-input" id="otp4" name="otp[]" maxlength="1"
+                    onkeyup="moveToNext(this, 'otp5')" onkeydown="handleBackspace(event, this, 'otp3')" required>
+                <input type="number" class="otp-input" id="otp5" name="otp[]" maxlength="1"
+                    onkeyup="moveToNext(this, 'otp6')" onkeydown="handleBackspace(event, this, 'otp4')" required>
+                <input type="number" class="otp-input" id="otp6" name="otp[]" maxlength="1"
+                    onkeyup="moveToNext(this, null)" onkeydown="handleBackspace(event, this, 'otp5')" required>
             </div>
+            <p class="text-sm text-gray-500 mt-2">Resend OTP in <span id="otpTimer">30</span>s</p>
             <input type="hidden" name="user_identifier" value="<?= htmlspecialchars($_GET['identifier'] ?? '') ?>">
+            <input type="hidden" name="email" value="<?= htmlspecialchars($agent['email'] ?? '') ?>">
 
             <div class="flex justify-between items-center mt-4">
-                <a href="/agentcontroller/resend_otp_request?identifier=<?= htmlspecialchars($_GET['identifier'] ?? '') ?>" class="text-sm text-blue-600 hover:underline">Resend OTP</a>
+                <button type="button" onclick="resendOTP(event)"
+                    data-url="<?= URLROOT ?>/agentcontroller/resend_otp_request?identifier=<?= htmlspecialchars($_GET['identifier'] ?? '') ?>"
+                    class="text-sm text-blue-600 hover:underline bg-transparent border-none p-0">
+                    Resend OTP
+                </button>
+
                 <button type="submit"
                     class="px-6 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-[#1F265B] focus:ring-opacity-50">
                     Verify OTP
                 </button>
             </div>
         </form>
-        <button type="button" onclick="closeModal('otpVerificationModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl font-bold">&times;</button>
+        <button type="button" onclick="closeModal('otpVerificationModal')"
+            class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl font-bold">&times;</button>
     </div>
 </div>
 
 
 <script>
     /**
-     * Displays a custom alert message.
-     * @param {string} message - The message to display.
-     * @param {string} type - The type of message ('success' or 'error').
+     * Displays a custom alert message that auto-dismisses.
      */
     function showCustomAlert(message, type) {
         const container = document.getElementById('message-box-container');
         if (!container) return;
 
-        // Create the alert element
         const alertDiv = document.createElement('div');
         alertDiv.className = `custom-alert ${type}`;
         alertDiv.innerHTML = `
-            <span>${message}</span>
-            <span class="custom-alert-close" onclick="this.parentElement.remove()">&times;</span>
-        `;
+        <span>${message}</span>
+        <span class="custom-alert-close" onclick="this.parentElement.remove()">&times;</span>
+    `;
         container.appendChild(alertDiv);
 
-        // Add 'show' class after a short delay to trigger fade-in animation
         setTimeout(() => alertDiv.classList.add('show'), 10);
-
-        // Removed the automatic dismissal with setTimeout
-        // The alert will now persist until the 'X' button is clicked.
+        setTimeout(() => {
+            alertDiv.classList.remove('show');
+            setTimeout(() => alertDiv.remove(), 500);
+        }, 5000);
     }
 
     /**
-     * Toggles the visibility of the profile forms.
-     * Hides all forms first, then shows the specified one.
-     * @param {string} formType - 'edit' to show edit profile form, 'password' to show change password form, 'password_reset' to show password form for reset, 'hide_all' to hide both.
+     * Toggle profile forms (edit / password / password_reset)
      */
     function toggleProfileForm(formType) {
         const editForm = document.getElementById('editProfileFormContainer');
-        const passwordForm = document.getElementById('changePasswordFormContainer');
-        const currentPasswordInputGroup = document.getElementById('currentPasswordInputGroup');
+        const changePasswordForm = document.getElementById('changePasswordFormContainer');
+        const resetPasswordForm = document.getElementById('resetPasswordFormContainer');
         const newPasswordResetMessage = document.getElementById('newPasswordResetMessage');
-        const newPasswordInput = document.getElementById('newPassword');
 
-        // Hide all forms and reset password form specific elements
-        editForm.classList.add('hidden');
-        passwordForm.classList.add('hidden');
-        currentPasswordInputGroup.classList.remove('hidden'); // Ensure visible by default for regular change
-        newPasswordResetMessage.classList.add('hidden'); // Ensure hidden by default
+        // Hide all forms by default
+        editForm?.classList.add('hidden');
+        changePasswordForm?.classList.add('hidden');
+        resetPasswordForm?.classList.add('hidden');
+        newPasswordResetMessage?.classList.add('hidden');
 
-        // Show the requested form
+        // Show the selected form
         if (formType === 'edit') {
-            editForm.classList.remove('hidden');
-            // When opening edit form, ensure the preview image matches the main display image
-            const mainProfileImageSrc = document.getElementById('profileImage').src;
-            document.getElementById('editProfileImagePreview').src = mainProfileImageSrc;
+            editForm?.classList.remove('hidden');
         } else if (formType === 'password') {
-            passwordForm.classList.remove('hidden');
-            // For regular password change, current password is required
-            currentPasswordInputGroup.classList.remove('hidden');
-            newPasswordInput.focus(); // Focus on current password
+            changePasswordForm?.classList.remove('hidden');
+            document.getElementById('newPassword')?.focus();
         } else if (formType === 'password_reset') {
-            passwordForm.classList.remove('hidden');
-            currentPasswordInputGroup.classList.add('hidden'); // Hide current password for reset flow
-            newPasswordResetMessage.classList.remove('hidden'); // Show reset message
-            newPasswordInput.focus(); // Focus on new password
+            resetPasswordForm?.classList.remove('hidden');
+            newPasswordResetMessage?.classList.remove('hidden');
+            document.getElementById('newPasswordReset')?.focus();
         }
-        // If formType is 'hide_all' or anything else, both remain hidden.
     }
 
     /**
-     * Handles the image file selection and displays a preview in the main profile image.
-     * This function is for the *main* profile image area.
-     * @param {Event} event - The change event from the file input.
+     * Preview images
      */
     function previewImage(event) {
         const profileImage = document.getElementById('profileImage');
         const file = event.target.files[0];
-
         if (file) {
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = e => {
                 profileImage.src = e.target.result;
-                // Also update the preview in the edit form if it's open
                 const editProfileImagePreview = document.getElementById('editProfileImagePreview');
-                if (editProfileImagePreview) {
-                    editProfileImagePreview.src = e.target.result;
-                }
+                if (editProfileImagePreview) editProfileImagePreview.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
     }
 
-    /**
-     * Handles the image file selection and displays a preview specifically for the edit profile form.
-     * @param {Event} event - The change event from the file input.
-     */
     function previewEditImage(event) {
         const editProfileImagePreview = document.getElementById('editProfileImagePreview');
         const mainProfileImage = document.getElementById('profileImage');
         const file = event.target.files[0];
-
         if (file) {
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = e => {
                 editProfileImagePreview.src = e.target.result;
-                mainProfileImage.src = e.target.result; // Update main display too
+                mainProfileImage.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
     }
 
+    // const updateProfileForm = document.getElementById('updateProfileForm');
+    // if (updateProfileForm) {
+    //     updateProfileForm.addEventListener('submit', function(e) {
+    //         e.preventDefault(); // prevent normal form submission
+
+    //         const formData = new FormData(this);
+
+    //         fetch(this.action, {
+    //                 method: 'POST',
+    //                 body: formData
+    //             })
+    //             .then(res => res.json())
+    //             .then(data => {
+    //                 showCustomAlert(data.message, data.status); // show success/error
+    //                 if (data.status === 'success') {
+    //                     // Optional: update profile info on page dynamically
+    //                     document.getElementById('profileImage').src = formData.get('image') ? URL
+    //                         .createObjectURL(formData.get('image')) : document.getElementById('profileImage')
+    //                         .src;
+    //                     document.querySelector('h2.text-4xl').textContent = formData.get('fullName');
+    //                     updateProfileForm.reset();
+    //                     toggleProfileForm('hide_all'); // hide edit form
+    //                 }
+    //             })
+    //             .catch(err => {
+    //                 console.error(err);
+    //                 showCustomAlert('Something went wrong. Try again.', 'error');
+    //             });
+    //     });
+    // }
+
+
     /**
-     * Opens the "Forgot Password?" confirmation modal.
-     * @param {Event} event - The click event from the "Forgot Password?" link.
+     * Modal open/close
      */
     function openForgotPasswordModal(event) {
-        event.preventDefault(); // Prevent the default link behavior (e.g., navigating to '#')
+        event.preventDefault();
         document.getElementById('forgotPasswordModal').classList.add('show');
     }
 
-    /**
-     * Closes a specified modal.
-     * @param {string} modalId - The ID of the modal to close.
-     */
     function closeModal(modalId) {
         document.getElementById(modalId).classList.remove('show');
     }
 
     /**
-     * Function to handle the submission of the "Forgot Password" form.
-     * It will close the "Forgot Password" modal and open the "OTP Verification" modal.
-     * @param {Event} event - The submit event from the form.
-     */
-    function sendOTP(event) {
-        // We prevent the default submission here because we want the modal to show instantly.
-        // Your PHP backend will still receive the form submission to send the OTP.
-        // If you were using AJAX, you'd make the AJAX call here.
-        // For a full page reload scenario, this approach ensures the modals show correctly
-        // while the server processes the OTP request and potentially redirects back.
-        event.preventDefault();
-
-        closeModal('forgotPasswordModal'); // Close the forgot password modal
-        document.getElementById('otpVerificationModal').classList.add('show'); // Show the OTP verification modal
-        document.getElementById('otp1').focus(); // Focus on the first OTP input
-
-        // Manually submit the form to your PHP backend after displaying the modal.
-        // This simulates the form submission that would have happened normally.
-        const form = event.target;
-        form.submit();
-    }
-
-
-    /**
-     * Moves focus to the next OTP input field automatically.
-     * @param {HTMLInputElement} currentInput - The current input element.
-     * @param {string|null} nextInputId - The ID of the next input element to focus, or null if it's the last.
+     * OTP input helpers
      */
     function moveToNext(currentInput, nextInputId) {
-        if (currentInput.value.length === currentInput.maxLength) {
-            if (nextInputId) {
-                document.getElementById(nextInputId).focus();
-            }
+        if (currentInput.value.length === currentInput.maxLength && nextInputId) {
+            document.getElementById(nextInputId).focus();
+        }
+    }
+
+    function handleBackspace(event, currentInput, prevInputId) {
+        if (event.key === 'Backspace' && currentInput.value === '' && prevInputId) {
+            document.getElementById(prevInputId).focus();
+        }
+    }
+
+    function togglePassword(inputId, iconSpan) {
+        const input = document.getElementById(inputId);
+        const svg = iconSpan.querySelector('svg');
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            svg.innerHTML =
+                `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7
+                a10.05 10.05 0 012.131-3.674m3.59-2.468A9.953 9.953 0 0112 5c4.477 0
+                8.268 2.943 9.542 7a9.96 9.96 0 01-1.447 2.395M3 3l18 18"/>`;
+        } else {
+            input.type = 'password';
+            svg.innerHTML =
+                `<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                 <path d="M2.458 12C3.732 7.943 7.523 5 12 5
+                 c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065
+                 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>`;
         }
     }
 
     /**
-     * Handles backspace key press in OTP input fields to move focus to the previous field.
-     * @param {Event} event - The keyboard event.
-     * @param {HTMLInputElement} currentInput - The current input element.
-     * @param {string|null} prevInputId - The ID of the previous input element to focus, or null if it's the first.
+     * OTP AJAX verification
      */
-    function handleBackspace(event, currentInput, prevInputId) {
-        if (event.key === 'Backspace' && currentInput.value === '') {
-            if (prevInputId) {
-                document.getElementById(prevInputId).focus();
-            }
-        }
+    const otpForm = document.getElementById('otpVerificationForm');
+    if (otpForm) {
+        otpForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        showCustomAlert(data.message, 'success');
+                        document.getElementById('otpVerificationModal').classList.remove('show');
+                        toggleProfileForm('password_reset');
+                    } else {
+                        showCustomAlert(data.message, 'error');
+                        document.querySelectorAll('#otpVerificationForm .otp-input')
+                            .forEach(input => input.value = '');
+                        document.getElementById('otp1').focus();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    showCustomAlert('Something went wrong. Try again.', 'error');
+                });
+        });
     }
 
-    // Initial setup on page load
+    document.getElementById("resetPasswordForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    window.location.href = data.redirect; // ✅ go to profile
+                } else {
+                    showCustomAlert(data.message, "error"); // show error instantly
+                }
+            })
+            .catch(() => {
+                showCustomAlert("Something went wrong", "error");
+            });
+    });
+
+
+    /**
+     * OTP Timer & Resend
+     */
+    let otpCountdown;
+    const otpTime = 30;
+
+    function startOTPTimer() {
+        clearInterval(otpCountdown);
+        const timerDisplay = document.getElementById('otpTimer');
+        const resendBtn = document.querySelector('#otpVerificationForm button[onclick^="resendOTP"]');
+        if (!timerDisplay || !resendBtn) return;
+
+        let timeLeft = otpTime;
+        timerDisplay.textContent = timeLeft;
+        resendBtn.disabled = true;
+        resendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+        otpCountdown = setInterval(() => {
+            timeLeft--;
+            timerDisplay.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(otpCountdown);
+                resendBtn.disabled = false;
+                resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                timerDisplay.textContent = '0';
+            }
+        }, 1000);
+    }
+
+    /**
+     * Reset Password form (AJAX)
+     */
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
+    if (resetPasswordForm) {
+        resetPasswordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            fetch(this.action || '/agentcontroller/reset_password_submit', {
+                    method: 'POST',
+                    body: new FormData(this)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        showCustomAlert(data.message, 'success');
+                        resetPasswordForm.reset();
+                    } else {
+                        showCustomAlert(data.message, 'error');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    showCustomAlert("Something went wrong. Try again.", 'error');
+                });
+        });
+    }
+
+
+    document.querySelector('#changePasswordFormContainer form').addEventListener('submit', function(e) {
+        e.preventDefault(); // prevent form submit
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                // Use your custom alert
+                showCustomAlert(data.message, data.status);
+                if (data.status === 'success') {
+                    // Optional: clear password fields
+                    this.reset();
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showCustomAlert('Something went wrong', 'error');
+            });
+    });
+
+
+    function resendOTP(event) {
+        event.preventDefault();
+        const btn = event.currentTarget;
+        const url = btn.dataset.url;
+
+        const otpModal = document.getElementById('otpVerificationModal');
+        if (!otpModal.classList.contains('show')) otpModal.classList.add('show');
+
+        document.querySelectorAll('#otpVerificationForm .otp-input').forEach(input => input.value = '');
+        const firstOtpInput = document.getElementById('otp1');
+        if (firstOtpInput) firstOtpInput.focus();
+
+        startOTPTimer();
+
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showCustomAlert(data.message, 'success');
+                } else {
+                    showCustomAlert(data.message || 'Failed to resend OTP', 'error');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showCustomAlert('Something went wrong. Try again.', 'error');
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }, 30000);
+            });
+    }
+
+    /**
+     * On DOM ready: handle modal display and messages
+     */
     document.addEventListener('DOMContentLoaded', () => {
-        toggleProfileForm('hide_all'); // Ensure forms are hidden initially
+        toggleProfileForm('hide_all');
 
         const urlParams = new URLSearchParams(window.location.search);
+        const otpSent = urlParams.get('otp_sent');
         const action = urlParams.get('action');
         const message = urlParams.get('message');
         const messageType = urlParams.get('message_type');
-        const otpSent = urlParams.get('otp_sent'); // Check for otp_sent parameter
 
-        // If OTP was just sent (redirected from send_otp PHP)
         if (otpSent === '1') {
-            document.getElementById('otpVerificationModal').classList.add('show');
+            const modal = document.getElementById('otpVerificationModal');
+            modal.classList.add('show');
             document.getElementById('otp1').focus();
-            // Optionally show a success message that OTP was sent
+            startOTPTimer();
             if (message && messageType) {
                 showCustomAlert(decodeURIComponent(message), messageType);
             } else {
                 showCustomAlert('OTP sent to your registered email/phone.', 'success');
             }
         } else if (action === 'reset_password') {
-            // If redirected after successful OTP verification
             toggleProfileForm('password_reset');
-            if (message) {
-                showCustomAlert(decodeURIComponent(message), 'success');
-            }
-        } else {
-            // Default state: hide both forms
-            toggleProfileForm('hide_all');
+            if (message) showCustomAlert(decodeURIComponent(message), 'success');
+        } else if (message && messageType) {
+            showCustomAlert(decodeURIComponent(message), messageType);
         }
 
-        // Display any general messages from redirects (e.g., profile update success/error)
-        // This will catch messages not related to OTP flow, or error messages from OTP verification
-        if (message && messageType && otpSent !== '1' && action !== 'reset_password') {
-            showCustomAlert(decodeURIComponent(message), messageType);
+        if (otpSent || action || message) {
+            window.history.replaceState({}, document.title, window.location.pathname);
         }
     });
 </script>
+
+
+
 </body>
 
 </html>
