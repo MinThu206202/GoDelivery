@@ -19,181 +19,178 @@ if (!isset($data['regions'])) {
     ];
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/bootstrap/css/bootstrap.min.css">
-    <title>Create Route</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Apply Inter font globally and ensure basic styling */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            /* Light gray background */
-        }
+<link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/addroute.css">
 
-        /* Form container styles */
-        .route-form-container {
-            max-width: 900px;
-            /* Increased max-width to accommodate two columns comfortably */
-            margin: 20px auto;
-            /* Decreased top/bottom margin */
-            padding: 25px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
 
-        .form-group {
-            margin-bottom: 12px;
-            /* Decreased margin-bottom */
-        }
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    /* Apply Inter font globally and ensure basic styling */
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+        /* Light gray background */
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #1F265B;
-        }
+    /* Form container styles */
+    .route-form-container {
+        max-width: 900px;
+        /* Increased max-width to accommodate two columns comfortably */
+        margin: 20px auto;
+        /* Decreased top/bottom margin */
+        padding: 25px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
 
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px 12px;
-            /* Decreased padding */
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 16px;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
+    .form-group {
+        margin-bottom: 12px;
+        /* Decreased margin-bottom */
+    }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #3b82f6;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-        }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #1F265B;
+    }
 
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1F265B;
-            margin-bottom: 15px;
-            /* Decreased margin-bottom */
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e5e7eb;
-        }
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px 12px;
+        /* Decreased padding */
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 16px;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
 
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 30px;
-        }
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #3b82f6;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
 
-        .modal-button-primary {
-            background-color: #1F265B;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1F265B;
+        margin-bottom: 15px;
+        /* Decreased margin-bottom */
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e7eb;
+    }
 
-        .modal-button-primary:hover {
-            background-color: #151b40;
-            transform: translateY(-2px);
-        }
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 30px;
+    }
 
-        .modal-button-secondary {
-            background-color: #6b7280;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
+    .modal-button-primary {
+        background-color: #1F265B;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
 
-        .modal-button-secondary:hover {
-            background-color: #4b5563;
-            transform: translateY(-2px);
-        }
+    .modal-button-primary:hover {
+        background-color: #151b40;
+        transform: translateY(-2px);
+    }
 
-        /* Centered Notification Modal Styles */
-        #notificationOverlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
+    .modal-button-secondary {
+        background-color: #6b7280;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
 
-        #notificationOverlay.hidden {
-            display: none;
-        }
+    .modal-button-secondary:hover {
+        background-color: #4b5563;
+        transform: translateY(-2px);
+    }
 
-        #notificationBox {
-            background: white;
-            padding: 25px 30px;
-            border-radius: 12px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
+    /* Centered Notification Modal Styles */
+    #notificationOverlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    }
 
-        .notification-title {
-            color: #1F265B;
-            margin-bottom: 15px;
-            font-weight: 700;
-            font-size: 22px;
-        }
+    #notificationOverlay.hidden {
+        display: none;
+    }
 
-        /* Basic header styling for better appearance */
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 30px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
+    #notificationBox {
+        background: white;
+        padding: 25px 30px;
+        border-radius: 12px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
 
-        .page-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #1F265B;
-        }
+    .notification-title {
+        color: #1F265B;
+        margin-bottom: 15px;
+        font-weight: 700;
+        font-size: 22px;
+    }
 
-        .admin-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 500;
-            color: #4b5563;
-        }
+    /* Basic header styling for better appearance */
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
 
-        .profile-icon {
-            font-size: 1.5rem;
-            color: #3b82f6;
-        }
-    </style>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    .page-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1F265B;
+    }
+
+    .admin-profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        color: #4b5563;
+    }
+
+    .profile-icon {
+        font-size: 1.5rem;
+        color: #3b82f6;
+    }
+</style>
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
@@ -214,7 +211,8 @@ if (!isset($data['regions'])) {
             <div class="panel-header-with-button">
                 <h3>Define Route</h3>
             </div>
-            <form id="routeForm" action="<?= URLROOT; ?>/routepage/createRoute" method="POST" onsubmit="return validateForm(event)">
+            <form id="routeForm" action="<?= URLROOT; ?>/routepage/createRoute" method="POST"
+                onsubmit="return validateForm(event)">
                 <!-- Two-column layout for From and To Locations -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
                     <!-- From Location Section -->
@@ -222,17 +220,20 @@ if (!isset($data['regions'])) {
                         <h4 class="section-title">From Location</h4>
                         <div class="form-group">
                             <label for="fromRegion">Region</label>
-                            <select id="fromRegion" name="from_region_id" class="form-select rounded-md" onchange="loadCities(this.value, 'fromCity', 'fromTownship')">
+                            <select id="fromRegion" name="from_region_id" class="form-select rounded-md"
+                                onchange="loadCities(this.value, 'fromCity', 'fromTownship')">
                                 <option value="">-- Select Region --</option>
                                 <?php foreach ($data['regions'] as $region): ?>
-                                    <option value="<?= htmlspecialchars($region['id']) ?>"><?= htmlspecialchars($region['name']) ?></option>
+                                    <option value="<?= htmlspecialchars($region['id']) ?>">
+                                        <?= htmlspecialchars($region['name']) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label for="fromCity">City</label>
-                            <select id="fromCity" name="from_city_id" class="form-select rounded-md" onchange="loadTownships(this.value, 'fromTownship')">
+                            <select id="fromCity" name="from_city_id" class="form-select rounded-md"
+                                onchange="loadTownships(this.value, 'fromTownship')">
                                 <option value="">-- Select City --</option>
                             </select>
                         </div>
@@ -250,17 +251,20 @@ if (!isset($data['regions'])) {
                         <h4 class="section-title md:mt-0 mt-8">To Location</h4> <!-- Adjust margin for mobile -->
                         <div class="form-group">
                             <label for="toRegion">Region</label>
-                            <select id="toRegion" name="to_region_id" class="form-select rounded-md" onchange="loadCities(this.value, 'toCity', 'toTownship')">
+                            <select id="toRegion" name="to_region_id" class="form-select rounded-md"
+                                onchange="loadCities(this.value, 'toCity', 'toTownship')">
                                 <option value="">-- Select Region --</option>
                                 <?php foreach ($data['regions'] as $region): ?>
-                                    <option value="<?= htmlspecialchars($region['id']) ?>"><?= htmlspecialchars($region['name']) ?></option>
+                                    <option value="<?= htmlspecialchars($region['id']) ?>">
+                                        <?= htmlspecialchars($region['name']) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label for="toCity">City</label>
-                            <select id="toCity" name="to_city_id" class="form-select rounded-md" onchange="loadTownships(this.value, 'toTownship')">
+                            <select id="toCity" name="to_city_id" class="form-select rounded-md"
+                                onchange="loadTownships(this.value, 'toTownship')">
                                 <option value="">-- Select City --</option>
                             </select>
                         </div>

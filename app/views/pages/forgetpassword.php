@@ -62,7 +62,7 @@ session_start();
             IN FAST & RELIABLE DELIVERIES
         </div>
         <div class="delivery-image">
-            <img src="/GoDelivery/assets/image/forget.png" alt="Delivery Van with Driver">
+            <img src="<?php echo URLROOT; ?>/public/images/otp.png" alt="Delivery Van with Driver">
         </div>
     </div>
 </body>

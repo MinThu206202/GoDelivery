@@ -68,7 +68,7 @@ if (session_status() === PHP_SESSION_NONE) {
             IN FAST & RELIABLE DELIVERIES
         </div>
         <div class="delivery-image">
-            <img src="/GoDelivery/assets/image/logo1.png" alt="Delivery Van with Driver">
+            <img src="<?php echo URLROOT; ?>/public/images/otp.png" alt="Delivery Van with Driver">
         </div>
     </div>
 </body>

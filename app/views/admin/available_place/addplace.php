@@ -19,6 +19,8 @@ if (!isset($data['regions'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/addroute.css">
+
     <title>Create New Places</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -206,13 +208,15 @@ if (!isset($data['regions'])) {
             <div class="panel-header-with-button">
                 <h3>Add Place</h3>
             </div>
-            <form id="placeForm" action="<?= URLROOT; ?>/availablecontroller/addplace" method="POST" onsubmit="return validateForm(event)">
+            <form id="placeForm" action="<?= URLROOT; ?>/availablecontroller/addplace" method="POST"
+                onsubmit="return validateForm(event)">
                 <div class="form-group">
                     <label for="region">Region</label>
                     <select id="region" name="region" class="form-select rounded-md">
                         <option value="">-- Select Region --</option>
                         <?php foreach ($data['regions'] as $region): ?>
-                            <option value="<?= htmlspecialchars($region['id']) ?>"><?= htmlspecialchars($region['name']) ?></option>
+                            <option value="<?= htmlspecialchars($region['id']) ?>"><?= htmlspecialchars($region['name']) ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -224,7 +228,8 @@ if (!isset($data['regions'])) {
 
                 <div class="form-group">
                     <label for="township">Township</label>
-                    <input id="township" type="text" name="township" placeholder="Enter Township" class="form-input rounded-md">
+                    <input id="township" type="text" name="township" placeholder="Enter Township"
+                        class="form-input rounded-md">
                 </div>
 
                 <input type="hidden" name="user_id" value="<?= htmlspecialchars($name['id']) ?>">

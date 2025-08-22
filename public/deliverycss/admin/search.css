@@ -488,7 +488,7 @@
 }
 
 .back-button {
-    background-color: var(--primary-color);
+    background-color: #1F265B;
     color: var(--white);
     border: none;
     padding: 12px 25px;

@@ -50,13 +50,13 @@ if (session_status() === PHP_SESSION_NONE) {
                 <?php require APPROOT . '/views/components/auth_message.php'; ?>
                 <div class="otp-input-container">
                     <?php for ($i = 0; $i < 6; $i++): ?>
-                        <input type="text" name="otp[]" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="one-time-code" required />
+                        <input type="text" name="otp[]" maxlength="1" pattern="[0-9]" inputmode="numeric"
+                            autocomplete="one-time-code" required />
                     <?php endfor; ?>
                 </div>
 
                 <!-- Timer and resend code container -->
-                <div
-                    id="timerContainer"
+                <div id="timerContainer"
                     style="margin: 15px 0; font-family: 'Poppins', sans-serif; font-size: 14px; color: #555;">
                     <span id="codeMessage"><span id="timer"></span></span>
                 </div>
@@ -72,7 +72,8 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
 
         <div class="bottom-navigation">
-            <a href="<?php echo URLROOT; ?>/pages/forgetpassword" class="back-link"><i class="fas fa-arrow-left"></i> BACK</a>
+            <a href="<?php echo URLROOT; ?>/pages/forgetpassword" class="back-link"><i class="fas fa-arrow-left"></i>
+                BACK</a>
             <div class="dots-navigation">
                 <div class="dot"></div>
                 <div class="dot active"></div>
@@ -86,7 +87,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="welcome-title">WELCOME TO GODELIVERY</div>
         <div class="tagline">YOUR TRUSTED PARTNER<br />IN FAST & RELIABLE DELIVERIES</div>
         <div class="delivery-image">
-            <img src="/GoDelivery/assets/image/forget.png" alt="Delivery Van with Driver" />
+            <img src="<?php echo URLROOT; ?>/public/images/otp.png" alt="Delivery Van with Driver" />
         </div>
     </div>
 

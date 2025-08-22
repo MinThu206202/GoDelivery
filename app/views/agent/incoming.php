@@ -17,7 +17,7 @@
         <h1 class="text-3xl font-semibold text-gray-800">Deliveries</h1>
         <div class="flex items-center space-x-4">
             <div class="flex items-center space-x-2">
-                <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
+                <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
                     <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
@@ -61,67 +61,110 @@
                 </a>
             </div>
 
-            <div class="overflow-auto max-h-[750px] border border-gray-200 rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200 text-sm text-left text-gray-500">
-                    <thead class="bg-gray-50 sticky top-0 z-10">
-                        <tr>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID
-                            </th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Customer
-                            </th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery
-                                Date</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">From City
-                            </th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Destination
-                                City</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200" id="deliveryTableBody">
-                        <?php if (empty($data['delivery'])): ?>
+            <div class="overflow-x-auto">
+                <div class="overflow-x-auto h-[450px] flex">
+                    <table class="min-w-full divide-y divide-gray-200 self-start w-full">
+                        <thead class="bg-gray-50 sticky top-0 z-10">
                             <tr>
-                                <td colspan="7" class="px-6 py-10 text-center text-gray-400">No deliveries found.</td>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Order ID</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Customer</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Delivery Date</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    From City</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Destination City</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions</th>
                             </tr>
-                        <?php else: ?>
-                            <?php foreach ($data['delivery'] as $delivery):
-                                $statusClass = match ($delivery['delivery_status']) {
-                                    'Delivered' => 'bg-green-100 text-green-800',
-                                    'Pending' => 'bg-yellow-100 text-yellow-800',
-                                    'In Transit' => 'bg-blue-100 text-blue-800',
-                                    'Cancelled' => 'bg-red-100 text-red-800',
-                                    'Return' => 'bg-purple-100 text-purple-800',
-                                    default => 'bg-gray-100 text-gray-800'
-                                };
-                            ?>
-                                <tr data-status="<?= htmlspecialchars($delivery['delivery_status']) ?>">
-                                    <td class="px-6 py-4 font-medium text-gray-900">
-                                        <?= htmlspecialchars($delivery['tracking_code']) ?></td>
-                                    <td class="px-6 py-4"><?= htmlspecialchars($delivery['sender_customer_name']) ?></td>
-                                    <td class="px-6 py-4"><?= htmlspecialchars($delivery['created_at']) ?></td>
-                                    <td class="px-6 py-4"><?= htmlspecialchars($delivery['sender_agent_city'] ?? 'N/A') ?></td>
-                                    <td class="px-6 py-4"><?= htmlspecialchars($delivery['receiver_agent_city'] ?? 'N/A') ?>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span
-                                            class="inline-flex px-2 py-1 rounded-full text-xs font-semibold <?= $statusClass ?>">
-                                            <?= htmlspecialchars($delivery['delivery_status']) ?>
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap space-x-2">
-                                        <a href="<?= URLROOT ?>/agentcontroller/delivery_detail/<?= $delivery['tracking_code'] ?>"
-                                            class="text-white bg-[#1F265B] px-3 py-2 rounded hover:bg-[#2A346C]">View</a>
-                                        <a href="<?= URLROOT ?>/agentcontroller/edit_incomedelivery/<?= $delivery['tracking_code'] ?>"
-                                            class="text-white bg-blue-500 px-3 py-2 rounded hover:bg-blue-600">Edit</a>
+                        </thead>
+                        <tbody id="deliveryTableBody" class="bg-white divide-y divide-gray-200">
+                            <?php if (!empty($data['delivery'])): ?>
+                                <?php foreach ($data['delivery'] as $delivery):
+                                    $statusClass = match ($delivery['delivery_status']) {
+                                        'Pending' => 'bg-gray-100 text-gray-800',
+                                        'Awaiting Acceptance' => 'bg-yellow-100 text-yellow-800',
+                                        'Rejected' => 'bg-red-100 text-red-800',
+                                        'In Transit' => 'bg-blue-100 text-blue-800',
+                                        'Delivered' => 'bg-green-100 text-green-800',
+                                        'Return' => 'bg-purple-100 text-purple-800',
+                                        'Cancelled' => 'bg-rose-100 text-rose-800',
+                                        'Failed Delivery' => 'bg-orange-100 text-orange-800',
+                                        default => 'bg-gray-100 text-gray-800',
+                                    };
+                                ?>
+                                    <tr data-status="<?= htmlspecialchars($delivery['delivery_status']) ?>">
+                                        <!-- Order ID -->
+                                        <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words max-w-[120px]">
+                                            <?= htmlspecialchars($delivery['tracking_code']) ?>
+                                        </td>
+
+                                        <!-- Customer -->
+                                        <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
+                                            <?= htmlspecialchars($delivery['sender_customer_name']) ?>
+                                        </td>
+
+                                        <!-- Delivery Date -->
+                                        <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
+                                            <?= htmlspecialchars($delivery['created_at']) ?>
+                                        </td>
+
+                                        <!-- From City -->
+                                        <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
+                                            <?= htmlspecialchars($delivery['from_city_name'] ?? 'N/A') ?>
+                                        </td>
+
+                                        <!-- Destination City -->
+                                        <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
+                                            <?= htmlspecialchars($delivery['to_city_name'] ?? 'N/A') ?>
+                                        </td>
+
+                                        <!-- Status -->
+                                        <td class="px-6 py-4 text-sm">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?> 
+                     break-words max-w-[120px] text-center">
+                                                <?= htmlspecialchars($delivery['delivery_status']) ?>
+                                            </span>
+                                        </td>
+
+                                        <!-- Actions (View / Edit buttons) -->
+                                        <td class="px-4 py-3 flex flex-wrap gap-2">
+                                            <a href="<?= URLROOT ?>/agentcontroller/delivery_detail/<?= $delivery['tracking_code'] ?>"
+                                                class="text-white bg-[#1F265B] px-3 py-2 rounded hover:bg-[#2A346C] break-words text-center w-[80px]">
+                                                View
+                                            </a>
+
+                                            <a href="<?= URLROOT ?>/agentcontroller/edit_incomedelivery/<?= $delivery['tracking_code'] ?>"
+                                                class="text-white bg-blue-500 px-3 py-2 rounded hover:bg-blue-600 break-words text-center w-[80px]">
+                                                Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="7" class="text-center text-gray-500 text-sm py-6">
+                                        🚚 No delivery requests available.
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
         </div>
     </main>
 </div>
@@ -164,14 +207,17 @@
         }
     }
 
-    // Initialize with 'All' deliveries displayed and 'All' button active
     document.addEventListener('DOMContentLoaded', () => {
-        const allLink = document.querySelector('.filter-link.active');
-        if (allLink) {
-            filterDeliveries({
-                currentTarget: allLink,
-                preventDefault: () => {}
-            }, 'All'); // Pass a mock event object
+        const tbody = document.getElementById('deliveryTableBody');
+        const rows = tbody.querySelectorAll('tr');
+        const container = tbody.closest('div');
+
+        if (rows.length <= 0) {
+            // center if only 1 or 2 rows
+            container.classList.add("items-center");
+        } else {
+            // normal scroll if many
+            container.classList.remove("items-center");
         }
     });
 </script>

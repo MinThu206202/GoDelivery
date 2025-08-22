@@ -1,4 +1,7 @@
-<?php require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
+<?php require_once APPROOT . '/views/inc/agentsidebar.php';
+// var_dump($agent['profile_image']);
+// die();
+?>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -190,16 +193,14 @@
         <h1 class="text-3xl font-semibold text-gray-800">Agent Profile</h1>
         <div class="flex items-center space-x-4">
             <div class="flex items-center space-x-2">
-                <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
+                <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500 shadow-md">
                 <div>
-                    <p class="text-lg font-medium text-gray-800">John Doe</p>
-                    <p class="text-sm text-gray-500">Agent ID: #007</p>
+                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
                 </div>
             </div>
-            <a href="#"
-                class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200 shadow-md hover:shadow-lg">Back
-                to Dashboard</a>
+
         </div>
     </header>
 
@@ -222,14 +223,14 @@
                 class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8 pb-8 mb-8 border-b border-gray-200">
                 <div class="flex-shrink-0">
                     <div class="profile-image-container w-24 h-24 md:w-28 md:h-28">
-                        <img id="profileImage" src="https://placehold.co/150x150/1F265B/FFFFFF?text=JD"
+                        <img id="profileImage" src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>"
                             alt="Agent Profile Picture"
                             class="w-full h-full object-cover border-4 border-[#1F265B] shadow-md rounded-full">
                     </div>
                 </div>
 
                 <div class="text-center md:text-left flex-grow">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-2">John Doe</h2>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-2"><?= htmlspecialchars($agent['name']) ?></h2>
                     <p class="text-xl text-gray-600 mb-4">Delivery Agent</p>
                     <div class="flex items-center justify-center md:justify-start space-x-2 mb-2">
                         <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -237,7 +238,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-2 4v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7"></path>
                         </svg>
-                        <p class="text-lg text-gray-700">john.doe@example.com</p>
+                        <p class="text-lg text-gray-700"><?= htmlspecialchars($agent['email']) ?></p>
                     </div>
                     <div class="flex items-center justify-center md:justify-start space-x-2 mb-4">
                         <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -246,7 +247,7 @@
                                 d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
                             </path>
                         </svg>
-                        <p class="text-lg text-gray-700">+1 (555) 123-4567</p>
+                        <p class="text-lg text-gray-700"><?= htmlspecialchars($agent['phone']) ?></p>
                     </div>
                     <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-md font-medium shadow-sm">
                         Status: Active
@@ -567,37 +568,6 @@
             reader.readAsDataURL(file);
         }
     }
-
-    // const updateProfileForm = document.getElementById('updateProfileForm');
-    // if (updateProfileForm) {
-    //     updateProfileForm.addEventListener('submit', function(e) {
-    //         e.preventDefault(); // prevent normal form submission
-
-    //         const formData = new FormData(this);
-
-    //         fetch(this.action, {
-    //                 method: 'POST',
-    //                 body: formData
-    //             })
-    //             .then(res => res.json())
-    //             .then(data => {
-    //                 showCustomAlert(data.message, data.status); // show success/error
-    //                 if (data.status === 'success') {
-    //                     // Optional: update profile info on page dynamically
-    //                     document.getElementById('profileImage').src = formData.get('image') ? URL
-    //                         .createObjectURL(formData.get('image')) : document.getElementById('profileImage')
-    //                         .src;
-    //                     document.querySelector('h2.text-4xl').textContent = formData.get('fullName');
-    //                     updateProfileForm.reset();
-    //                     toggleProfileForm('hide_all'); // hide edit form
-    //                 }
-    //             })
-    //             .catch(err => {
-    //                 console.error(err);
-    //                 showCustomAlert('Something went wrong. Try again.', 'error');
-    //             });
-    //     });
-    // }
 
 
     /**

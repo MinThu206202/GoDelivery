@@ -34,7 +34,7 @@ class Admin extends Controller
         $data = [
             'alldeliverydata' => $user
         ];
-        $this->view('admin/deliveryhistory',$data);
+        $this->view('admin/deliveryhistory', $data);
     }
 
     public function managedelivery()
@@ -71,16 +71,16 @@ class Admin extends Controller
         $data = [
             'allUserData' => $allUserData
         ];
-        $this->view('admin/access_code',$data);
+        $this->view('admin/access_code', $data);
     }
 
     public function route()
     {
         $code = $this->db->readAll('route_full_info');
         $data = [
-            'allroutedata' =>$code
+            'allroutedata' => $code
         ];
-        $this->view('admin/route',$data);
+        $this->view('admin/route', $data);
     }
 
 

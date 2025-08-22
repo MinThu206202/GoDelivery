@@ -34,7 +34,7 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
                 </button>
             </form>
             <div class="flex items-center space-x-2">
-                <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
+                <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
                     <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>

@@ -238,7 +238,7 @@
         <div class="header-right">
             <div class="admin-profile">
                 <div class="profile-icon"><i class="fas fa-user-circle"></i></div>
-                <span>Admin</span>
+                <span><?= htmlspecialchars($_SESSION['user']['name']) ?></span>
             </div>
         </div>
     </header>
@@ -307,7 +307,8 @@
                             <td><?= htmlspecialchars($agent['created_at']) ?></td>
                             <td><?= htmlspecialchars($agent['payment_status']) ?></td>
                             <td>
-                                <a href="<?php echo URLROOT; ?>/admincontroller/delivery_detail?tracking_code=<?= urlencode($agent['tracking_code']) ?>" class="view-button">
+                                <a href="<?php echo URLROOT; ?>/admincontroller/delivery_detail?tracking_code=<?= urlencode($agent['tracking_code']) ?>"
+                                    class="view-button">
                                     View
                                 </a>
                             </td>
@@ -350,7 +351,8 @@
         const toDateInput = document.getElementById('toDateFilter');
         const searchInput = document.getElementById('searchInput'); // Get the search input
         const searchButton = document.getElementById('searchButton'); // Get the search button
-        const allDeliveriesButton = document.getElementById('allDeliveriesButton'); // Reference to All Deliveries button
+        const allDeliveriesButton = document.getElementById(
+            'allDeliveriesButton'); // Reference to All Deliveries button
 
         // New: Back to All Deliveries Button
         const backToAllDeliveriesButton = document.getElementById('backToAllDeliveriesButton');
@@ -482,7 +484,9 @@
         searchButton.addEventListener('click', function(e) {
             e.preventDefault(); // Prevent default form submission if it's inside a form
             if (searchInput.value.trim() === '') {
-                showNotification('Please enter a date or a tracking code to search.'); // Use the exact message from the image
+                showNotification(
+                    'Please enter a date or a tracking code to search.'
+                ); // Use the exact message from the image
             } else {
                 applyFilters(); // Apply filters including the search term
             }
@@ -493,7 +497,9 @@
             if (e.key === 'Enter') {
                 e.preventDefault();
                 if (searchInput.value.trim() === '') {
-                    showNotification('Please enter a date or a tracking code to search.'); // Use the exact message from the image
+                    showNotification(
+                        'Please enter a date or a tracking code to search.'
+                    ); // Use the exact message from the image
                 } else {
                     applyFilters();
                 }

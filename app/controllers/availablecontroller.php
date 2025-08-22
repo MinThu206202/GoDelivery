@@ -1,9 +1,11 @@
-<?php 
+<?php
 
 
-class Availablecontroller extends Controller {
+class Availablecontroller extends Controller
+{
     private $db;
-    public function __construct(){
+    public function __construct()
+    {
         $this->db = new Database();
         $this->model('notification');
         $this->model('CityModel');
@@ -11,43 +13,43 @@ class Availablecontroller extends Controller {
         $this->model('Available_locationModel');
     }
 
-    public function deployresult(){
+    public function deployresult()
+    {
         $id = $_POST['agent_id'];
         $location_id = $_POST['location_id'];
         $email = $_POST['agent_email'];
         $location_id = $_POST['location_id'];
 
 
-        $assignedid = $this->db->columnFilter('available_location','id',$location_id);
-        if($assignedid['agent_id']){
-            $change_assign_agent_status = $this->db->update('users',$assignedid['agent_id'],['status_id' => 3]);
+        $assignedid = $this->db->columnFilter('available_location', 'id', $location_id);
+        if ($assignedid['agent_id']) {
+            $change_assign_agent_status = $this->db->update('users', $assignedid['agent_id'], ['status_id' => 3]);
         }
 
         $data = [
             'status_id' => 1
         ];
-        
-        $activeagent = $this->db->update('users', $id, $data);
-        $activeplace = $this->db->update('available_location',$location_id , ['agent_id' => $id , 'status_location_id' => 1]);
-        $activeagent = $this->db->update('users',$id,$data);
-        if($activeagent){
 
-            $sendmailuser = $this->db->columnFilter('user_full_info','id',$id);
-           
+        $activeagent = $this->db->update('users', $id, $data);
+        $activeplace = $this->db->update('available_location', $location_id, ['agent_id' => $id, 'status_location_id' => 1]);
+        $activeagent = $this->db->update('users', $id, $data);
+        if ($activeagent) {
+
+            $sendmailuser = $this->db->columnFilter('user_full_info', 'id', $id);
+
             $user =  new Mail();
-            $new = $user->acceptagentbytownshhip($sendmailuser['email'],$sendmailuser['name'],$sendmailuser['township_name'],$sendmailuser['security_code']);
+            $new = $user->acceptagentbytownshhip($sendmailuser['email'], $sendmailuser['name'], $sendmailuser['township_name'], $sendmailuser['security_code']);
             $successMessage = urlencode('Agent is successfully assigned');
             header("Location: " . URLROOT . "/available_place/place_detail?id=" . urlencode($location_id) .
                 "&message_type=success&message={$successMessage}");
             exit();
         }
-
     }
 
 
     public function updateLocationStatus()
     {
-        
+
         session_start();
         $userId = $_SESSION['user']['id'];
         $id = $_POST['location_id'];
@@ -62,15 +64,15 @@ class Availablecontroller extends Controller {
         // Fetch township
         $location = $this->db->columnFilter('view_available_locations', 'id', $id);
 
-        $change_assign_agnet = $this->db->columnFilter('user_full_info','id',$location['agent_id']);
+        $change_assign_agnet = $this->db->columnFilter('user_full_info', 'id', $location['agent_id']);
         // var_dump($change_assign_agnet);
         // die();
 
-        if($newStatusId === 2){
-            
-        $user = new Mail();
-        $user->agentchangestatusbytownship($change_assign_agnet['email'],$change_assign_agnet['name'],$change_assign_agnet['township_name']);
-        }else{
+        if ($newStatusId === 2) {
+
+            $user = new Mail();
+            $user->agentchangestatusbytownship($change_assign_agnet['email'], $change_assign_agnet['name'], $change_assign_agnet['township_name']);
+        } else {
             $user = new Mail();
             $user->agentchangestatusbytownshipactive($change_assign_agnet['email'], $change_assign_agnet['name'], $change_assign_agnet['township_name']);
         }
@@ -126,12 +128,12 @@ class Availablecontroller extends Controller {
             $cityName = $_POST['city'];
             $townshipName = $_POST['township'] . ' Township';
             echo $townshipName;
-           
 
-            $townshipcheck = $this->db->columnFilter('townships','name',$townshipName);
-            if($townshipcheck){
-                setMessage ('error','Address is already exit');
-                redirect ('available_place/addplace');
+
+            $townshipcheck = $this->db->columnFilter('townships', 'name', $townshipName);
+            if ($townshipcheck) {
+                setMessage('error', 'Address is already exit');
+                redirect('available_place/addplace');
             }
 
             // Find or create city
@@ -170,10 +172,4 @@ class Availablecontroller extends Controller {
             redirect('available_place/addplace?success=1');
         }
     }
-
 }
-
-
-
-
-?>

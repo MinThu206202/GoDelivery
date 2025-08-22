@@ -1,4 +1,5 @@
-<?php require_once APPROOT . '/views/inc/sidebar.php'; ?>
+<?php require_once APPROOT . '/views/inc/sidebar.php';
+?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/route.css">
 
 <style>
@@ -107,7 +108,12 @@
                     <input type="text" id="filterPlace" placeholder="Enter City">
                 </div>
                 <button id="searchPlaceBtn" class="search-button"><i class="fas fa-search"></i> Search</button>
-
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="admin-profile">
+                <div class="profile-icon"><i class="fas fa-user-circle"></i></div>
+                <span><?= htmlspecialchars($data['user']['name']) ?></span>
             </div>
         </div>
     </header>

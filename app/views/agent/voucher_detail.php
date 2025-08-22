@@ -127,7 +127,7 @@ $voucher = $data['create_data'];
         <h1 class="text-3xl font-semibold text-gray-800">Delivery Details</h1>
         <div class="flex items-center space-x-4">
             <div class="flex items-center space-x-2">
-                <img src="https://placehold.co/40x40/FF6347/FFFFFF?text=JD" alt="Agent Avatar"
+                <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div>
                     <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
@@ -239,7 +239,7 @@ $voucher = $data['create_data'];
             </div>
 
             <div class="flex justify-end space-x-4 mt-6 no-print">
-                <button onclick="window.print()"
+                <button onclick="printVoucher()"
                     class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200">
                     Print Voucher
                 </button>
@@ -252,6 +252,38 @@ $voucher = $data['create_data'];
         </div>
     </main>
 </div>
+
+
+<script>
+    function printVoucher() {
+        // Get only voucher content
+        const printContent = document.getElementById('printable-voucher').innerHTML;
+
+        // Open a new window for clean print
+        const win = window.open('', '', 'height=700,width=900');
+        win.document.write(`
+            <html>
+                <head>
+                    <title>Print Voucher</title>
+                    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Inter', sans-serif; background: #fff; padding: 20px; }
+                        @media print { .no-print { display: none !important; } }
+                    </style>
+                </head>
+                <body>
+                    ${printContent}
+                </body>
+            </html>
+        `);
+
+        win.document.close();
+        win.focus();
+        win.print();
+        win.close();
+    }
+</script>
 
 </body>
 
