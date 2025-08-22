@@ -188,7 +188,7 @@ if ($statusLower === 'active') {
         <div class="header-right">
             <div class="admin-profile">
                 <div class="profile-icon"><i class="fas fa-user-circle"></i></div>
-                <span>Admin</span>
+                <span><?= htmlspecialchars($_SESSION['user']['name']) ?></span>
             </div>
         </div>
     </header>

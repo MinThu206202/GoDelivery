@@ -127,4 +127,9 @@ class Agent extends Controller
     {
         $this->view('agent/result');
     }
+
+    public function pickup()
+    {
+        $this->view('agent/pickuprequest');
+    }
 }

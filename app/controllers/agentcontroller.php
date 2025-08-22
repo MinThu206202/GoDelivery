@@ -196,7 +196,7 @@ class Agentcontroller extends Controller
     $receiverData = $user->getReceiverData($_POST, $agent);
 
     $route = $this->db->checkroute('route', $agent['township_id'], $senderData['township_id']);
-    $receiverAgent = $this->db->checkadmin('users', 'township_id', $senderData['city_id']);
+    $receiverAgent = $this->db->checkadmin('users', 'township_id', $senderData['township_id']);
 
 
     if (!$route) {
@@ -657,17 +657,93 @@ class Agentcontroller extends Controller
 
   public function updateprofile()
   {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      // Example: process uploaded image & other fields here
-      $email = $_POST['email'];
-      $name = $_POST['fullName'];
-      $address = $_POST['address'];
-      $image = $_POST['image'];
-      echo $email;
-      echo $name;
-      echo $address;
-      echo $image;
-      die();
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      try {
+        // --- Get text inputs ---
+        $email   = $_POST['email'] ?? '';
+        $name    = $_POST['fullName'] ?? '';
+        $address = $_POST['address'] ?? '';
+
+        // --- Load existing agent info from DB ---
+        $agent = $this->db->columnFilter('users', 'email', $email);
+        if (!$agent) {
+          throw new Exception("Agent not found.");
+        }
+
+        // --- Default image path (keep old if no new upload) ---
+        $imageUrl = $agent['profile_image'];
+
+        // --- Handle file upload ---
+        if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+          $file = $_FILES['image'];
+
+          // Upload directory inside project
+          $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/Delivery/public/uploads/";
+
+
+          // Ensure folder exists
+          if (!is_dir($uploadDir)) {
+            if (!mkdir($uploadDir, 0755, true)) {
+              throw new Exception("Failed to create upload folder: " . $uploadDir);
+            }
+          }
+
+          // Check writable
+          if (!is_writable($uploadDir)) {
+            throw new Exception("Upload folder is not writable: " . $uploadDir);
+          }
+
+          // Validate file size (max 5MB)
+          $maxFileSize = 5 * 1024 * 1024; // 5MB
+          if ($file['size'] > $maxFileSize) {
+            throw new Exception("File is too large. Max 5MB.");
+          }
+
+          // Validate MIME type
+          $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/avif'];
+          $finfo = finfo_open(FILEINFO_MIME_TYPE);
+          $mimeType = finfo_file($finfo, $file['tmp_name']);
+          finfo_close($finfo);
+
+          if (!in_array($mimeType, $allowedMimeTypes)) {
+            throw new Exception("Invalid file type. Only JPG, PNG, AVIF, GIF allowed.");
+          }
+
+          // Sanitize and create unique filename
+          $originalName  = pathinfo($file['name'], PATHINFO_FILENAME);
+          $extension     = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+          $sanitizedBase = preg_replace("/[^A-Za-z0-9_\-]/", '', $originalName);
+          $sanitizedBase = substr($sanitizedBase, 0, 50);
+          $newFileName   = uniqid('user_', true) . '_' . $sanitizedBase . '.' . $extension;
+
+          $targetPath = $uploadDir . $newFileName;
+
+          // Move uploaded file
+          if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            throw new Exception("Failed to move uploaded file.");
+          }
+
+          // Delete old image if exists
+          if (!empty($agent['image']) && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $agent['image'])) {
+            unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $agent['image']);
+          }
+
+          // Save new image path relative to project
+          $imageUrl = 'public/uploads/' . $newFileName;
+        }
+
+        // --- Update agent info in DB ---
+        $this->db->update('users', $agent['id'], [
+          'name'    => $name,
+          'address' => $address,
+          'profile_image'   => $imageUrl
+        ],);
+
+        setMessage('profile_message', 'Profile updated successfully.');
+        redirect('agent/profile');
+      } catch (Exception $e) {
+        die("Error: " . $e->getMessage());
+      }
     }
   }
 

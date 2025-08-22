@@ -238,7 +238,7 @@ class Database
 
 
 
-    public function 
+    public function
     columnFilter($table, $column, $value)
     {
         // $sql = 'SELECT * FROM ' . $table . ' WHERE `' . $column . '` = :value';
@@ -249,7 +249,7 @@ class Database
         $row = $stm->fetch(PDO::FETCH_ASSOC);
         return ($success) ? $row : [];
     }
-    
+
     public function columnFilterAll($table, $column, $value)
     {
         $sql = 'SELECT * FROM ' . $table . ' WHERE `' . str_replace('`', '', $column) . '` = :value';
@@ -295,7 +295,7 @@ class Database
         $stm->bindValue(':sender_agent_id', $id);
         $success = $stm->execute();
         $row = $stm->fetchAll(PDO::FETCH_ASSOC);
-       //  print_r($row);
+        //  print_r($row);
         return ($success) ? $row : [];
     }
 
@@ -347,11 +347,11 @@ class Database
     public function getCalculatedPrice($distance)
     {
         $sql = "SELECT Calculateprice(:distance) AS price";
-        $stmt = $this->pdo->prepare($sql); 
-        $stmt->bindValue(':distance', $distance); 
-        $stmt->execute(); 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC); 
-        return $row ? $row['price'] : null; 
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':distance', $distance);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? $row['price'] : null;
     }
 
 
@@ -399,14 +399,4 @@ class Database
 
         return $stmt->execute();
     }
-
-
-
 }
-
-
-
-
-
-
-

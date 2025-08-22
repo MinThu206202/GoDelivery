@@ -1,5 +1,6 @@
 <?php require_once APPROOT . '/views/inc/sidebar.php' ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/search.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/deliveryhistory.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
@@ -109,7 +110,7 @@
             <h2 class="page-title">Dashboard/Delivery Detail</h2>
             <div class="admin-profile">
                 <div class="profile-icon"><i class="fas fa-user-circle"></i></div>
-                <span>Admin</span>
+                <span><?= htmlspecialchars($_SESSION['user']['name']) ?></span>
             </div>
         </header>
 
@@ -117,30 +118,40 @@
             <div class="delivery-details-grid">
                 <!-- Row 1: Tracking Code and Paid/Prepaid Amount -->
                 <div class="grid-cell tracking-code-cell">
-                    <span class="label"><i class="fas fa-barcode"></i> Tracking Code(<span><?= htmlspecialchars($user['tracking_code']); ?></span>)</span>
+                    <span class="label"><i class="fas fa-barcode"></i> Tracking
+                        Code(<span><?= htmlspecialchars($user['tracking_code']); ?></span>)</span>
                 </div>
                 <div class="grid-cell paid-amount-cell">
                     <span class="label"><i class="fas fa-money-bill-wave"></i> Paid / PerPaid Amount</span>
-                    <span class="value" id="paidAmount"><i class="fas fa-money-bill"></i><?= htmlspecialchars($user['amount']); ?> MMK</span>
+                    <span class="value" id="paidAmount"><i
+                            class="fas fa-money-bill"></i><?= htmlspecialchars($user['amount']); ?> MMK</span>
                 </div>
 
                 <!-- Row 2: From Section and To Section -->
                 <div class="grid-cell from-to-section from-section">
                     <span class="section-label"><i class="fas fa-location-dot"></i> From:</span>
-                    <span class="value" id="fromName"><i class="fas fa-user-circle"></i><?= htmlspecialchars($user['sender_customer_name']); ?></span>
-                    <span class="value" id="fromPhone"><i class="fas fa-phone"></i><?= htmlspecialchars($user['sender_customer_phone']); ?></span>
-                    <span class="value" id="fromAddress"><i class="fas fa-map-pin"></i><?= htmlspecialchars($user['sender_customer_address']); ?></span>
+                    <span class="value" id="fromName"><i
+                            class="fas fa-user-circle"></i><?= htmlspecialchars($user['sender_customer_name']); ?></span>
+                    <span class="value" id="fromPhone"><i
+                            class="fas fa-phone"></i><?= htmlspecialchars($user['sender_customer_phone']); ?></span>
+                    <span class="value" id="fromAddress"><i
+                            class="fas fa-map-pin"></i><?= htmlspecialchars($user['sender_customer_address']); ?></span>
                     <span class="value label-small">From City</span>
-                    <span class="value" id="fromCity"><i class="fas fa-city"></i><?= htmlspecialchars($user['from_city_name']); ?></span>
+                    <span class="value" id="fromCity"><i
+                            class="fas fa-city"></i><?= htmlspecialchars($user['from_city_name']); ?></span>
                 </div>
                 <div class="grid-cell from-to-section to-section">
                     <span class="section-label"><i class="fas fa-map-location-dot"></i> To:</span>
-                    <span class="value" id="toName"><i class="fas fa-user-circle"></i><?= htmlspecialchars($user['receiver_customer_name']); ?></span>
-                    <span class="value" id="toPhone"><i class="fas fa-phone"></i><?= htmlspecialchars($user['receiver_customer_phone']); ?></span>
-                    <span class="value" id="toAddress"><i class="fas fa-map-pin"></i><?= htmlspecialchars($user['receiver_customer_address']); ?>
+                    <span class="value" id="toName"><i
+                            class="fas fa-user-circle"></i><?= htmlspecialchars($user['receiver_customer_name']); ?></span>
+                    <span class="value" id="toPhone"><i
+                            class="fas fa-phone"></i><?= htmlspecialchars($user['receiver_customer_phone']); ?></span>
+                    <span class="value" id="toAddress"><i
+                            class="fas fa-map-pin"></i><?= htmlspecialchars($user['receiver_customer_address']); ?>
                     </span>
                     <span class="value label-small">To City</span>
-                    <span class="value" id="toCity"><i class="fas fa-city"></i><?= htmlspecialchars($user['to_city_name']); ?></span>
+                    <span class="value" id="toCity"><i
+                            class="fas fa-city"></i><?= htmlspecialchars($user['to_city_name']); ?></span>
                 </div>
 
                 <!-- Row 3: Truck icon and associated Address/Phone numbers -->
@@ -169,7 +180,8 @@
                 </div>
                 <div class="grid-cell bottom-details-cell">
                     <span class="label"><i class="fas fa-wallet"></i> Pay/Perpaid pay</span>
-                    <span class="value" id="payPerpaidPay"><i class="fas fa-money-check-alt"></i><?= htmlspecialchars($user['payment_status']); ?></span>
+                    <span class="value" id="payPerpaidPay"><i
+                            class="fas fa-money-check-alt"></i><?= htmlspecialchars($user['payment_status']); ?></span>
                 </div>
 
                 <!-- Row 5: Content Description -->
@@ -177,7 +189,8 @@
                     <span class="label"><i class="fas fa-box-open"></i> Content Description</span>
                 </div>
                 <div class="grid-cell content-description-cell">
-                    <span class="value" id="contentDescription"><i class="fas fa-box-open"></i><?= htmlspecialchars($user['product_type']); ?></span>
+                    <span class="value" id="contentDescription"><i
+                            class="fas fa-box-open"></i><?= htmlspecialchars($user['product_type']); ?></span>
                 </div>
 
                 <!-- Row 6: Status - Icon added here -->

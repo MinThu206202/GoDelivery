@@ -1,4 +1,22 @@
-<?php require_once APPROOT . '/views/inc/sidebar.php'; ?>
+<?php require_once APPROOT . '/views/inc/sidebar.php';
+$totalAgents = count($data['allUserData']);
+
+// Count total deliveries
+$totalDeliveries = count($data['allDeliveryData']);
+
+// Separate complete vs not complete
+$completeDeliveries = 0;
+$notCompleteDeliveries = 0;
+
+foreach ($data['allDeliveryData'] as $delivery) {
+    if ($delivery['delivery_status'] === 'complete') {
+        $completeDeliveries++;
+    } else {
+        $notCompleteDeliveries++;
+    }
+}
+
+?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/home.css">
 
@@ -21,19 +39,19 @@
     <section class="summary-cards">
         <div class="card">
             <p class="card-title">Total Deliveries</p>
-            <p class="card-value">100</p>
+            <p class="card-value"><?= htmlspecialchars($totalDeliveries); ?></p>
         </div>
         <div class="card">
             <p class="card-title">Completed Deliveries</p>
-            <p class="card-value">50</p>
+            <p class="card-value"><?= htmlspecialchars(string: $completeDeliveries); ?></p>
         </div>
         <div class="card">
             <p class="card-title">Pending Delivery</p>
-            <p class="card-value">20</p>
+            <p class="card-value"><?= htmlspecialchars($notCompleteDeliveries); ?></p>
         </div>
         <div class="card">
             <p class="card-title">Total Agent</p>
-            <p class="card-value">75</p>
+            <p class="card-value"><?= htmlspecialchars($totalAgents); ?></p>
         </div>
     </section>
 

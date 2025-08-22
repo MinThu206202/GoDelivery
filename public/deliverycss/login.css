@@ -52,14 +52,16 @@
     box-sizing: border-box;
 }
 
+/* FIX: Added height: 100% to html and body to enable full-page height. */
+html,
 body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
     color: var(--text-color);
     background-color: var(--light-grey);
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
 }
 
 /* Base styles for public pages */
@@ -425,27 +427,25 @@ body {
 
 
 /* --- Login Page Specific Styles --- */
-html,
-body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
+/* FIX: The following rules are removed to fix the overflow issue.
+    - min-height: 100vh;
+    - overflow: hidden;
+    The new styles allow the content to scroll.
+*/
 .login-container {
     display: flex;
+    /* FIX: Added min-height to ensure the container stretches. */
     min-height: 100vh;
-    overflow: hidden;
 }
 
 .login-left {
     flex: 1;
     background-color: var(--white);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    position: relative;
 }
 
 .login-form-wrapper {
@@ -575,11 +575,14 @@ body {
     color: var(--white);
 }
 
+/* FIX: Removed margin-left to center text on the right panel. */
 .login-right p {
     font-size: 18px;
     color: rgba(255, 255, 255, 0.9);
-    text-align: left;
-    margin-left: 100px;
+    text-align: center;
+    /* Changed from left to center for better alignment */
+    margin-left: 0;
+    /* Removed the 100px margin */
 }
 
 /* Styling for the image added to the welcome-content section */
@@ -602,10 +605,10 @@ body {
     font-weight: 500;
 }
 
+/* FIX: Changed justify-content to center to align OTP inputs in the middle. */
 .otp-input-container {
     display: flex;
-    /* Changed from justify-content: space-between to flex-start for better grouping control */
-    justify-content: flex-start;
+    justify-content: center;
     margin-bottom: 20px;
     gap: 10px;
     /* Space between the boxes */
@@ -636,7 +639,8 @@ body {
 
 /* Added rule for visual grouping (e.g., XXX XXX) */
 .otp-input-container input:nth-child(3) {
-    margin-right: 20px; /* Adds extra space after the third input */
+    margin-right: 20px;
+    /* Adds extra space after the third input */
 }
 
 /* Responsive adjustments for OTP inputs */
@@ -659,6 +663,9 @@ body {
 /* --- Responsive Design for Login Page (Adjusted to accommodate new styles) --- */
 @media (max-width: 900px) {
 
+    /* FIX: Updated `body` to allow for a column layout and prevent overflow.
+        This also enables scrolling on smaller screens.
+    */
     body {
         flex-direction: column;
         overflow: auto;

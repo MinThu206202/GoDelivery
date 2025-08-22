@@ -14,8 +14,9 @@ class Pages extends Controller
         $this->view('pages/index');
     }
 
-    public function calculator(){
-        $this->view('pages/calculator');
+    public function calculator()
+    {
+        $this->view('user/calculator');
     }
 
     public function forgetpassword()
@@ -25,7 +26,7 @@ class Pages extends Controller
 
     public function ournetwork()
     {
-        $this->view('pages/ournetwork');
+        $this->view('user/ournetwork');
     }
 
     public function register()
@@ -50,6 +51,24 @@ class Pages extends Controller
         $this->view('pages/changepassword');
     }
 
+    public function pickup()
+    {
+        $region = $this->db->readAll('regions');
+        $cities = $this->db->readAll('cities'); // Fetch all cities from DB
+
+        $data = [
+            'regions' => $region,
+            'cities' => $cities
+        ];
+
+        $this->view('user/pickup', $data);
+    }
+
+    public function pickuphistory()
+    {
+        $this->view('user/pickuphistory');
+    }
+
     public function user_tracking()
     {
         $code = $_POST['code'];
@@ -60,8 +79,30 @@ class Pages extends Controller
             'update_status' => $update_status
         ];
 
-        $this->view('pages/user_tracking',$data);
+        $this->view('pages/user_tracking', $data);
     }
 
-   
+    public function who()
+    {
+        $this->view(('pages/whoami'));
+    }
+
+    public function customerlogin()
+    {
+        $this->view('pages/customerlogin');
+    }
+
+    public function customerregister()
+    {
+        $this->view('pages/customerregister');
+    }
+
+    public function notification()
+    {
+        $this->view('user/notification');
+    }
+    public function Dashboard()
+    {
+        $this->view('pickupagent/Dashboard');
+    }
 }

@@ -1,31 +1,38 @@
-<?php 
+<?php
 
 
-class Available_place extends Controller{
+class Available_place extends Controller
+{
     private $db;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->db = new Database();
     }
 
     public function available()
     {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        $name = $_SESSION['user'];
         $alldata = $this->db->readAll('view_available_locations');
         $data = [
-            'availabel_place' => $alldata
+            'availabel_place' => $alldata,
+            'user' => $name
         ];
-        $this->view('/admin/available_place/place',$data);
+        $this->view('/admin/available_place/place', $data);
     }
 
-    public function addplace() 
+    public function addplace()
     {
         $this->view(('/admin/available_place/addplace'));
     }
 
     public function place_detail()
     {
-        $id = $_GET['id']; 
-        $location = $this->db->columnFilter('view_available_locations','id',$id);
+        $id = $_GET['id'];
+        $location = $this->db->columnFilter('view_available_locations', 'id', $id);
 
         $pendingagent = $this->db->getAgentsByTownship($location['township_name']);
 
@@ -38,19 +45,11 @@ class Available_place extends Controller{
             "message_type" => $msgType,
             "message" => $msgText
         ];
-        $this->view('/admin/available_place/confirm_place',$data);
-        
+        $this->view('/admin/available_place/confirm_place', $data);
     }
 
     public function confrim_place()
     {
         $this->view('/admin/available_place/confirm_place');
     }
-
-    
-
 }
-
-
-
-?>

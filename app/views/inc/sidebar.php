@@ -8,7 +8,6 @@ $currentRoute = $_SERVER['REQUEST_URI'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoDelivery - Admin Dashboard</title>
-   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -57,8 +56,7 @@ $currentRoute = $_SERVER['REQUEST_URI'];
                     <i class="fas fa-user"></i> Profile
                 </a>
 
-                <a href="<?= URLROOT ?>/admincontroller/logout"
-                    class="nav-item logout">
+                <a href="<?= URLROOT ?>/admincontroller/logout" class="nav-item logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </nav>

@@ -150,10 +150,28 @@ $currentRoute = $_SERVER['REQUEST_URI'];
                 Available Route
             </a>
 
+            <a href="<?= URLROOT ?>/agent/pickup" class="flex items-center px-4 py-3 rounded-lg transition duration-200 
+   <?= strpos($currentRoute, '/agent/pickup') !== false
+        ? 'active-sidebar-link text-white'
+        : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
+
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 13h2l1-5h13l1 5h2m-4 4a2 2 0 11-4 0h4zm-10 0a2 2 0 11-4 0h4z" />
+                </svg>
+
+                Pickup Request
+            </a>
+
+
             <!-- Logout Link -->
-            <a href="<?= URLROOT; ?>/agentcontroller/logout" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-[#2A346C] hover:text-white transition-colors duration-200">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            <a href="<?= URLROOT; ?>/agentcontroller/logout"
+                class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-[#2A346C] hover:text-white transition-colors duration-200">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
                 Logout
             </a>
