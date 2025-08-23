@@ -2,7 +2,8 @@
 
 require_once __DIR__ . '/BaseModel.php';
 
-class UserModel extends BaseModel{
+class UserModel extends BaseModel
+{
     protected  $name;
     protected $phone;
     protected $email;
@@ -20,10 +21,8 @@ class UserModel extends BaseModel{
     protected $security_code;
     protected $is_login;
     protected $user_type_id;
-
     protected $access_code;
+    protected $vehicle_id;
+    protected $vehicle_number;
+    protected $created_by_agent;
 }
-
-
-
-?>

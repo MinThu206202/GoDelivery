@@ -167,7 +167,7 @@ class Pickupcontroller extends Controller
         // ✅ Generate request code
         $townshipname = $this->db->getById('townships', $pickup_township);
         $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-        $requestcode = $this->getTownshipShortCode($townshipname['name']) . $otp;
+        $requestCode = 'PR-' . $this->getTownshipShortCode($townshipname) . '-' . rand(100000, 999999);
 
         // ✅ Find available agent
         $checkagent = $this->db->columnFilter('available_location', 'township_id', $pickup_township);
@@ -201,7 +201,7 @@ class Pickupcontroller extends Controller
         $pickup->setReceiverCityId($receiver_city);
         $pickup->setReceiverTownshipId($receiver_township);
         $pickup->setReceiverAddress($receiver_address);
-        $pickup->setRequestCode($requestcode);
+        $pickup->setRequestCode($requestCode);
         $pickup->setAgentId($checkagent['agent_id']);
         $pickup->setPickupAgentId(null);
         $pickup->setCreatedAt(date('Y-m-d H:i:s'));
@@ -210,5 +210,12 @@ class Pickupcontroller extends Controller
 
         $this->db->create('pickup_requests', $pickup->toArray());
         redirect('pages/index');
+    }
+
+    public function detail()
+    {
+        $request_code = $_GET['request_code'];
+        $data = $this->db->columnFilter('pickup_requests_view', 'request_code', $request_code);
+        $this->view('user/pickupdetail', $data);
     }
 }

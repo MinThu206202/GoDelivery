@@ -18,5 +18,6 @@ define('ADMIN', 'Admin');
 define('AGENT', 'Agent');
 define('ADMIN_ROLE', 1);
 define('AGENT_ROLE', 2);
+define('PICKUPAGENT_ROLE', 4);
 define('Normal_user', 1);
 define('Premium_user', 2);

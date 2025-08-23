@@ -40,8 +40,6 @@ class Auth extends Controller
         }
     }
 
-
-
     // In your controller
     public function login()
     {
@@ -67,13 +65,19 @@ class Auth extends Controller
         $agent = $this->db->columnFilter('user_full_info', 'id', $user['id']);
         $_SESSION['user'] = $user;
 
-        $route = $user['role_id'] === ADMIN_ROLE ? 'admin/home' : 'agent/home';
+
+        if ($user['role_id'] === ADMIN_ROLE) {
+            $route = 'admin/home';
+        } elseif ($user['role_id'] === AGENT_ROLE) {
+            $route = 'agent/home';
+        } elseif ($user['role_id'] === PICKUPAGENT_ROLE) {
+            $route = 'pickupagentcontroller/Dashboard';
+        } else {
+            $route = 'pages/index'; // fallback or customer login
+        }
+
         redirect($route);
     }
-
-
-
-
 
     public function forgetpassword()
     {
@@ -339,5 +343,57 @@ class Auth extends Controller
         $this->db->insertuser(...$params);
         setMessage('success', 'Account created successfully');
         redirect('pages/customerlogin');
+    }
+
+    public function customerlogin()
+    {
+        session_start();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
+
+        $email = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+
+        // Basic validation
+        if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL) || !$password) {
+            setMessage('error', 'Please enter a valid email and password');
+            redirect('pages/customerlogin');
+            return;
+        }
+
+        $user = $this->db->columnFilter('users', 'email', $email);
+
+        // Check user exists and password matches
+        if (!$user || base64_decode($user['password']) !== $password) {
+            setMessage('error', 'Invalid email or password');
+            redirect('pages/customerlogin');
+            return;
+        }
+
+        // Check role
+        if ($user['role_id'] != 3) {
+            setMessage('error', 'Unauthorized login');
+            redirect('pages/customerlogin');
+            return;
+        }
+
+        // Success: set session and redirect
+        $_SESSION['customer'] = $user;
+        redirect('pages/index');
+    }
+
+    public function logout()
+    {
+        session_start();
+
+        $id = $_SESSION['user']['id'] ?? null;
+        if ($id) {
+            $this->db->unsetLogin($id);
+        }
+
+        session_destroy();
+
+        $this->view('pages/customerlogin');
+        exit();
     }
 }

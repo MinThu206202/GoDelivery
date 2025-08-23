@@ -13,6 +13,30 @@
         body {
             font-family: 'Poppins', sans-serif;
         }
+
+        .auth-message {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .auth-message.error {
+            background: #fee2e2;
+            /* light red background */
+            color: #dc2626;
+            /* red text */
+            border: 1px solid #fecaca;
+        }
+
+        .auth-message.success {
+            background: #d1fae5;
+            /* light green background */
+            color: #065f46;
+            /* green text */
+            border: 1px solid #a7f3d0;
+        }
     </style>
 </head>
 
@@ -25,7 +49,7 @@
         <div class="relative flex flex-1 items-center justify-center p-8 md:p-12 lg:p-16 bg-white">
 
             <!-- Back Button -->
-            <a href="javascript:history.back()"
+            <a href="<?php echo URLROOT; ?>/pages/index"
                 class="absolute top-4 left-4 p-2 text-gray-500 hover:text-gray-700 transition-colors duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
@@ -44,7 +68,9 @@
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login to your account</h2>
 
                 <!-- Login Form -->
-                <form class="space-y-6" id="loginForm" method="POST" action="#">
+                <form class="space-y-6" id="loginForm" method="POST" action="<?php echo URLROOT; ?>/auth/customerlogin">
+                    <?php require APPROOT . '/views/components/auth_message.php'; ?>
+
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
                         <input type="email" id="email" name="email" placeholder="you@example.com" required
@@ -84,6 +110,10 @@
                     <p>Don't have an account?
                         <a href="<?php echo URLROOT; ?>/pages/customerregister"
                             class="font-semibold text-[#1F265B] hover:text-[#1a237e]">Sign Up</a>
+                    </p>
+                    <p>Login as a staff member?
+                        <a href="<?php echo URLROOT; ?>/pages/login"
+                            class="font-semibold text-[#1F265B] hover:text-[#1a237e]">Staff</a>
                     </p>
                 </div>
 

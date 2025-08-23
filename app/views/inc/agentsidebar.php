@@ -150,6 +150,20 @@ $currentRoute = $_SERVER['REQUEST_URI'];
                 Available Route
             </a>
 
+            <a href="<?= URLROOT; ?>/agent/pickupagentlist"
+                class="flex items-center px-4 py-3 rounded-lg transition duration-200 
+   <?= strpos($currentRoute, '/agent/pickupagentlist') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
+
+                <!-- Users Icon -->
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a4 4 0 00-4-4h-1m-6 6v-2a4 4 0 014-4h1m-6 6H2v-2a4 4 0 014-4h1m6-6a4 4 0 100-8 4 4 0 000 8z" />
+                </svg>
+                Pickup Agent List
+            </a>
+
+
             <a href="<?= URLROOT ?>/agent/pickup" class="flex items-center px-4 py-3 rounded-lg transition duration-200 
    <?= strpos($currentRoute, '/agent/pickup') !== false
         ? 'active-sidebar-link text-white'

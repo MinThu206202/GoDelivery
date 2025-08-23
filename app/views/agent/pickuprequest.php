@@ -1,4 +1,6 @@
-<?php require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
+<?php require_once APPROOT . '/views/inc/agentsidebar.php';
+
+?>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- Inter Font -->
@@ -55,13 +57,13 @@
                         <tr>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
-                                Request ID / Tracking Code</th>
+                                Request ID </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Customer Name</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Pickup Address / Location</th>
+                                Pickup Location</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Contact Number</th>
@@ -70,7 +72,7 @@
                                 Requested Date & Time</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Parcel Details</th>
+                                Parcel Status</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
                                 Actions</th>
@@ -79,49 +81,61 @@
                     <tbody class="bg-white divide-y divide-gray-200 h-full">
                         <?php if (!empty($data['pickup_requests'])): ?>
                             <?php foreach ($data['pickup_requests'] as $res): ?>
+
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        <?= htmlspecialchars($res['tracking_code'] ?? '') ?>
+                                        <?= htmlspecialchars($res['request_code'] ?? '') ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <?= htmlspecialchars($res['sender_customer_name'] ?? 'N/A') ?>
+                                        <?= htmlspecialchars($res['sender_name'] ?? 'N/A') ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <?= htmlspecialchars($res['sender_city'] ?? 'N/A') ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        N/A
-                                        <!-- Placeholder for Contact Number -->
+                                        <?= htmlspecialchars($res['sender_phone'] ?? '0.00') ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <?= htmlspecialchars($res['created_at'] ?? '0.00') ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        N/A
-                                        <!-- Placeholder for Parcel Details -->
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <?php
+                                        $status = $res['status'] ?? '';
+
+                                        // assign bg color based on status
+                                        $statusClasses = [
+                                            'pending'          => 'bg-yellow-100 text-yellow-800',
+                                            'accepted'         => 'bg-blue-100 text-blue-800',
+                                            'collected'        => 'bg-purple-100 text-purple-800',
+                                            'voucher_created'  => 'bg-indigo-100 text-indigo-800',
+                                            'delivered'        => 'bg-green-100 text-green-800',
+                                            'arrived_office'   => 'bg-teal-100 text-teal-800',
+                                            'rejected'         => 'bg-red-100 text-red-800',
+                                            'agent_checked'    => 'bg-pink-100 text-pink-800',
+                                            'awaiting_payment' => 'bg-orange-100 text-orange-800',
+                                            'payment_success'  => 'bg-emerald-100 text-emerald-800',
+                                            'default'          => 'bg-gray-100 text-gray-800'
+                                        ];
+
+                                        $class = $statusClasses[$status] ?? 'bg-gray-100 text-gray-800';
+                                        ?>
+                                        <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full <?= $class ?>">
+                                            <?= htmlspecialchars($status) ?>
+                                        </span>
                                     </td>
+
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end space-x-2">
-                                        <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($res['tracking_code']) ?>"
+                                        <!-- View Button -->
+                                        <a href="<?= URLROOT; ?>/agent/pickup_detail?request_code=<?= htmlspecialchars($res['request_code']) ?>"
                                             class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
                                             View
                                         </a>
-                                        <form action="<?= URLROOT; ?>/agentcontroller/pickup_accept" method="POST"
-                                            style="display: inline;">
-                                            <input type="hidden" name="tracking_code" value="<?= $res['tracking_code'] ?>">
-                                            <button type="submit"
-                                                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
-                                                Accept
-                                            </button>
-                                        </form>
-                                        <form action="<?= URLROOT; ?>/agentcontroller/pickup_reject" method="POST"
-                                            style="display: inline;">
-                                            <input type="hidden" name="tracking_code" value="<?= $res['tracking_code'] ?>">
-                                            <button type="submit"
-                                                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
-                                                Reject
-                                            </button>
-                                        </form>
+                                        <!-- Edit Button -->
+                                        <a href="<?= URLROOT; ?>/agent/action?request_code=<?= htmlspecialchars($res['request_code']) ?>"
+                                            class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200">
+                                            Actions
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

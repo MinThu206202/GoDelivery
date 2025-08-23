@@ -10,17 +10,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
-    <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/images/icons/logo.png" />
-    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css"
-        href="<?php echo URLROOT; ?>/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/animate/animate.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/css-hamburgers/hamburgers.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/select2/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/css/util.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/css/main.css">
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
@@ -44,6 +33,30 @@
 
         input[type="number"] {
             -moz-appearance: textfield;
+        }
+
+        .auth-message {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .auth-message.error {
+            background: #fee2e2;
+            /* light red background */
+            color: #dc2626;
+            /* red text */
+            border: 1px solid #fecaca;
+        }
+
+        .auth-message.success {
+            background: #d1fae5;
+            /* light green background */
+            color: #065f46;
+            /* green text */
+            border: 1px solid #a7f3d0;
         }
     </style>
 </head>
@@ -149,7 +162,8 @@
                 <!-- Sign in section -->
                 <div class="mt-8 text-center text-base text-gray-600">
                     <p>Already have an account?
-                        <a href="#" class="font-semibold text-[#1F265B] hover:text-[#1a237e]">Log In</a>
+                        <a href="<?php echo URLROOT; ?>pages/customerlogin"
+                            class="font-semibold text-[#1F265B] hover:text-[#1a237e]">Log In</a>
                     </p>
                 </div>
             </div>
