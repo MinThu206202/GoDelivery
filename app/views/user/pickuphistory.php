@@ -92,95 +92,53 @@ require_once APPROOT . '/views/inc/nav.php'
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200" id="historyTableBody">
                     <!-- Static Data for Demonstration -->
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">GD-78901234</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-26 10:30 AM</td>
-                        <!-- This is the updated Pickup Address column -->
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <strong>Region:</strong> Myanmar<br>
-                            <strong>City:</strong> Yangon<br>
-                            <strong>Township:</strong> Bahan Township
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <strong>Name:</strong> Jane Smith<br>
-                            <strong>Phone:</strong> 09-987-654321<br>
-                            <strong>Address:</strong> 456 Oak Ave, Somewher, USA
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <span
-                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="text-indigo-600 hover:text-indigo-900">View</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">GD-12345678</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-25 03:00 PM</td>
-                        <!-- This is the updated Pickup Address column -->
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <strong>Region:</strong> Thailand<br>
-                            <strong>City:</strong> Bangkok<br>
-                            <strong>Township:</strong> Khet Din Daeng
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <strong>Name:</strong> Bob Johnson<br>
-                            <strong>Phone:</strong> 09-345-678901<br>
-                            <strong>Address:</strong> 101 Cedar Rd, C-town, USA
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <span
-                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="text-indigo-600 hover:text-indigo-900">View</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">GD-87654321</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-24 11:15 AM</td>
-                        <!-- This is the updated Pickup Address column -->
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <strong>Region:</strong> Vietnam<br>
-                            <strong>City:</strong> Hanoi<br>
-                            <strong>Township:</strong> Cau Giay
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <strong>Name:</strong> Diana Prince<br>
-                            <strong>Phone:</strong> 09-567-890123<br>
-                            <strong>Address:</strong> 202 Birch Blvd, E-city, USA
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <span
-                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">In
-                                Transit</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="text-indigo-600 hover:text-indigo-900">View</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">GD-54321098</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-23 09:00 AM</td>
-                        <!-- This is the updated Pickup Address column -->
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <strong>Region:</strong> Indonesia<br>
-                            <strong>City:</strong> Jakarta<br>
-                            <strong>Township:</strong> Kebayoran Baru
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <strong>Name:</strong> Frank White<br>
-                            <strong>Phone:</strong> 09-789-012345<br>
-                            <strong>Address:</strong> 303 Cherry St, G-town, USA
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <span
-                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Canceled</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="text-indigo-600 hover:text-indigo-900">View</button>
-                        </td>
-                    </tr>
+                    <?php if (!empty($data['pickup'])): ?> <?php foreach ($data['pickup'] as $pickup): ?> <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?= $pickup['request_code']; ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <?= date('Y-m-d h:i A', strtotime($pickup['created_at'])); ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <strong>Region:</strong> <?= $pickup['sender_region']; ?><br>
+                                    <strong>City:</strong> <?= $pickup['sender_city']; ?><br>
+                                    <strong>Township:</strong> <?= $pickup['sender_township']; ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <strong>Name:</strong> <?= $pickup['receiver_name']; ?><br>
+                                    <strong>Phone:</strong> <?= $pickup['receiver_phone']; ?><br>
+                                    <strong>Address:</strong> <?= $pickup['receiver_address']; ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <?php
+                                                                $statusColors = [
+                                                                    'pending' => 'bg-yellow-100 text-yellow-800',
+                                                                    'accepted' => 'bg-blue-100 text-blue-800',
+                                                                    'collected' => 'bg-orange-100 text-orange-800',
+                                                                    'voucher_created' => 'bg-purple-100 text-purple-800',
+                                                                    'delivered' => 'bg-green-100 text-green-800'
+                                                                ];
+                                    ?>
+
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusColors[$pickup['status']] ?? '' ?>">
+                                        <?= ucfirst(str_replace('_', ' ', $pickup['status'])) ?>
+                                    </span>
+
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button
+                                        onclick="window.location.href='<?php echo URLROOT; ?>/pickupcontroller/detail?request_code=<?= $pickup['request_code']; ?>'"
+                                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-md transition duration-200 ease-in-out">
+                                        View
+                                    </button>
+                                </td>
+
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No pickups found.</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

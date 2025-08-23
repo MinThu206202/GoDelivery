@@ -54,8 +54,7 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" class="form-input" value="Aung Aung"
-                        placeholder="Enter full name">
+                    <input type="text" id="fullName" class="form-input" value="Aung Aung" placeholder="Enter full name">
                 </div>
                 <div class="form-group">
                     <label for="phoneNumber">Phone Number</label>
@@ -89,7 +88,8 @@
                     </div>
                     <div class="form-group">
                         <label for="newPhone">New Phone Number</label>
-                        <input type="tel" id="newPhone" name="new_phone" class="form-input" placeholder="Enter new phone number">
+                        <input type="tel" id="newPhone" name="new_phone" class="form-input"
+                            placeholder="Enter new phone number">
                     </div>
                     <div class="form-group">
                         <label for="confirmNewPhone">Enter Password</label>
@@ -113,7 +113,8 @@
                     </div>
                     <div class="form-group">
                         <label for="newPassword">New Password</label>
-                        <input type="password" id="newPassword" class="form-input" name="new_password" placeholder="Enter new password">
+                        <input type="password" id="newPassword" class="form-input" name="new_password"
+                            placeholder="Enter new password">
                     </div>
                     <div class="form-group">
                         <label for="confirmNewPassword">Confirm New Password</label>
@@ -234,7 +235,8 @@
         const modalNewPhoneInput = document.getElementById('modalNewPhoneInput');
         const modalPasswordInput = document.getElementById('modalPasswordInput'); // New password input
         const newProfilePhotoInput = document.getElementById('newProfilePhotoInput'); // File input for photo
-        const modalProfilePhotoPreview = document.getElementById('modalProfilePhotoPreview'); // Photo preview in modal
+        const modalProfilePhotoPreview = document.getElementById(
+            'modalProfilePhotoPreview'); // Photo preview in modal
 
         // Event listener to open the modal
         openUpdateModalButton.addEventListener('click', () => {
@@ -302,7 +304,8 @@
                 mainProfilePhoto.src = newPhotoSrc;
             } else if (newPhotoSrc === "https://placehold.co/100x100/CCCCCC/333333?text=Preview") {
                 // If the user selected an image but then cancelled, or didn't select, keep the original
-                mainProfilePhoto.src = "https://placehold.co/120x120/1F265B/FFFFFF?text=A"; // Reset to default if no new photo
+                mainProfilePhoto.src =
+                    "https://placehold.co/120x120/1F265B/FFFFFF?text=A"; // Reset to default if no new photo
             }
 
             updateProfileModal.classList.add('hidden'); // Hide the modal

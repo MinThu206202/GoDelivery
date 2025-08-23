@@ -20,10 +20,7 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
         <h1 class="text-3xl font-semibold text-gray-800">Dashboard</h1>
         <div class="flex items-center space-x-4">
             <form action="<?= URLROOT ?>/agentcontroller/search" method="GET" class="relative">
-                <input
-                    type="text"
-                    name="q"
-                    placeholder="Search..."
+                <input type="text" name="q" placeholder="Search..."
                     class="px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <button type="submit">
                     <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none"
@@ -82,7 +79,9 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
             <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-500">Total Earnings (Week)</p>
-                    <p class="text-3xl font-bold text-gray-900"><span><?= number_format((float)$totalAmount, 0, '.', ',') ?> MMK</span></p>
+                    <p class="text-3xl font-bold text-gray-900">
+                        <span><?= number_format((float)$totalAmount, 0, '.', ',') ?> MMK</span>
+                    </p>
                 </div>
                 <div class="p-3 bg-green-100 rounded-full">
                     <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -97,7 +96,8 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Recent Orders Table -->
-            <div class="bg-white p-6 rounded-xl shadow-md lg:col-span-2"> <!-- Made it span full width -->
+            <div class="bg-white p-6 rounded-xl shadow-md lg:col-span-2">
+                <!-- Made it span full width -->
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Orders</h2>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -148,13 +148,21 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
                                 }
                             ?>
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><span><?= htmlspecialchars($delivery['tracking_code']) ?></span>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        <span><?= htmlspecialchars($delivery['tracking_code']) ?></span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['sender_customer_name']) ?></span></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><span><?= htmlspecialchars($delivery['to_township_name']) ?></span></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span>MMK<?= htmlspecialchars(number_format($delivery['amount'] ?? 0.00, 2)) ?></span></td> <!-- New Amount Column Data -->
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span><?= htmlspecialchars($delivery['sender_customer_name']) ?></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span><?= htmlspecialchars($delivery['to_township_name']) ?></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span>MMK<?= htmlspecialchars(number_format($delivery['amount'] ?? 0.00, 2)) ?></span>
+                                    </td> <!-- New Amount Column Data -->
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
                                             <?= htmlspecialchars($delivery['delivery_status']) ?>
                                         </span>
                                     </td>

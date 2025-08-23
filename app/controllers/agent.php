@@ -130,6 +130,87 @@ class Agent extends Controller
 
     public function pickup()
     {
-        $this->view('agent/pickuprequest');
+        $allpickup = $this->db->readAll('pickup_requests_view');
+
+        $filteredPickup = array_filter($allpickup, function ($pickup) {
+            return $pickup['agent_id'] == $this->agent['id'];
+        });
+        $data = [
+            'pickup_requests' => $filteredPickup,
+        ];
+        $this->view('agent/pickuprequest', $data);
+    }
+
+    public function pickup_detail()
+    {
+        $request_code = $_GET['request_code'];
+        $alldata = $this->db->columnFilter('pickup_requests_view', 'request_code', $request_code);
+        $data = [
+            'pickup' => $alldata,
+        ];
+        $this->view('agent/pickuprequestdetail', $data);
+    }
+
+    public function action()
+    {
+        $request_code = $_GET['request_code'];
+        $allrequestdata = $this->db->columnFilter('pickup_requests_view', 'request_code', $request_code);
+        $checkadmin = $this->db->columnFilter('user_full_info', 'id', $allrequestdata['agent_id']);
+        $checklocation = $this->db->columnFilter('view_available_locations', 'township_name', $allrequestdata['receiver_township']);
+        $checkroute = $this->db->checkroutename('route_full_info', $allrequestdata['sender_township'], $allrequestdata['receiver_township']);
+        $data = [
+            'pickup' => $allrequestdata,
+            'admin' => $checkadmin,
+            'location' => $checklocation,
+            'route' => $checkroute,
+        ];
+        // var_dump($checklocation);
+        // var_dump($checkroute);
+        // die();
+        $this->view('agent/pickuprequestaction', $data);
+    }
+
+    public function edit_pickup()
+    {
+        $request_code = $_GET['request_code'];
+        $allrequestdata = $this->db->columnFilter('pickup_requests_view', 'request_code', $request_code);
+        $checkadmin = $this->db->columnFilter('user_full_info', 'id', $allrequestdata['agent_id']);
+        $checklocation = $this->db->columnFilter('view_available_locations', 'township_name', $allrequestdata['receiver_township']);
+        $checkroute = $this->db->checkroutename('route_full_info', $allrequestdata['sender_township'], $allrequestdata['receiver_township']);
+        $data = [
+            'pickup' => $allrequestdata,
+            'admin' => $checkadmin,
+            'location' => $checklocation,
+            'route' => $checkroute,
+        ];
+        $this->view('agent/pickupaction', $data);
+    }
+
+    public function pickupagentlist()
+    {
+        $allUsers = $this->db->readAll('user_full_info');
+        $agentId = $this->agent['id'] ?? 0;
+        $pickupAgents = array_filter($allUsers, function ($user) use ($agentId) {
+            return $user['role_name'] === 'Pickup Agent' && $user['created_by_agent'] == $agentId;
+        });
+        $data = [
+            'pickupAgents' => $pickupAgents
+        ];
+        $this->view('agent/pickupagentlist', $data);
+    }
+
+    public function addpickupagent()
+    {
+        $this->view('agent/pickupagentadd');
+    }
+
+    public function pickupagentdetail()
+    {
+        $access_code = $_GET['access_code'];
+        $pickupagent = $this->db->columnFilter('user_full_info', 'access_code', $access_code);
+        $data = [
+            'pickupagent' => $pickupagent,
+        ];
+        $this->view('agent/pickupagentdetail', $data);
     }
 }

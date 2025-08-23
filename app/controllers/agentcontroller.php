@@ -244,9 +244,6 @@ class Agentcontroller extends Controller
     $this->view('agent/voucher_detail', ['create_data' => $deliveryDetails]);
   }
 
-
-
-
   public function search()
   {
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -602,14 +599,6 @@ class Agentcontroller extends Controller
   }
 
 
-  // private function jsonResponse($status, $message)
-  // {
-  //   echo json_encode([
-  //     'status' => $status,
-  //     'message' => $message
-  //   ]);
-  //   return; // no exit needed, keeps it clean
-  // }
 
   public function changepassword()
   {
@@ -745,6 +734,139 @@ class Agentcontroller extends Controller
         die("Error: " . $e->getMessage());
       }
     }
+  }
+
+  public function getTownshipShortCode($township)
+  {
+    $codes = [
+      'Insein Township'         => 'INS',
+      'Lanmadaw Township'       => 'LMD',
+      'Chanayethazan Township'  => 'CYZ',
+      'South Okkalapa Township' => 'SOK',
+      'North Okkalapa Township' => 'NOK',
+      'Kyauktan Township'       => 'KYT',
+      'Thanlyin Township'       => 'TNL',
+      'Thaketa Township'        => 'TKT',
+      'Pyin Oo Lwin Township'   => 'POL',
+      'Myingyan Township'       => 'MYG',
+      'Amarapura Township'      => 'AMP',
+      'Meiktila Township'       => 'MKL',
+      'Hmawbi Township'         => 'HMB',
+      'Hlaing Township'         => 'HLG',
+      'Halo Township'           => 'HAL',
+      'hi Township'             => 'HI',
+      'dfds Township'           => 'DFD',
+      'kk Township'             => 'KK',
+      'mdm Township'            => 'MDM',
+      'pyawbwe Township'        => 'PYW',
+      'aass Township'           => 'AAS',
+      '5555 Township'           => 'T555',
+      '2 Township'              => 'T2'
+    ];
+
+    return $codes[$township] ?? strtoupper(substr($township, 0, 3));
+  }
+  public function pickupagentadd()
+  {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
+
+    session_start();
+    $userinfo = $_SESSION['user'] ?? [];
+
+    // Collect and sanitize input
+    $data = array_map('trim', [
+      'name'           => $_POST['fullName'] ?? '',
+      'phone'          => $_POST['phoneNumber'] ?? '',
+      'email'          => $_POST['email'] ?? '',
+      'password'       => $_POST['password'] ?? '',
+      'vehicle_id'     => $_POST['assignedVehicle'] ?? null,
+      'vehicle_number' => $_POST['vehicleNumber'] ?? null
+    ]);
+
+    // Basic validation
+    if (!$data['name'] || !$data['phone'] || !$data['password']) {
+      setMessage('error', 'Fields are required.');
+      redirect('agent/addpickupagent');
+    }
+
+    if ($data['email'] && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+      setMessage('error', 'Invalid email format.');
+      redirect('agent/addpickupagent');
+    }
+
+    // Check unique constraints
+    if ($this->db->columnFilter('users', 'email', $data['email'])) {
+      setMessage('error', 'Email is already registered.');
+      redirect('agent/addpickupagent');
+    }
+    if ($this->db->columnFilter('users', 'phone', $data['phone'])) {
+      setMessage('error', 'Phone is already registered.');
+      redirect('agent/addpickupagent');
+    }
+
+    // Encode password and generate security code
+    $data['password'] = base64_encode($data['password']);
+    $data['security_code'] = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+
+    $user = $this->db->getById('user_full_info', $userinfo['id']);
+    $data['accesscode'] = $this->getTownshipShortCode($user['township_name']) . '-PGA-' . str_pad(rand(0, 999999), 4, '0', STR_PAD_LEFT);
+
+    // Prepare user object
+    $user = new UserModel();
+    $user->name             = $data['name'];
+    $user->access_code       = $data['accesscode'];
+    $user->phone            = $data['phone'];
+    $user->email            = $data['email'] ?: null;
+    $user->address          = $userinfo['address'] ?? null;
+    $user->city_id          = $userinfo['city_id'] ?? null;
+    $user->region_id        = $userinfo['region_id'] ?? null;
+    $user->township_id      = $userinfo['township_id'] ?? null;
+    $user->ward_id          = null;
+    $user->password         = $data['password'];
+    $user->otp_code         = null;
+    $user->otp_expiry       = null;
+    $user->security_code    = $data['security_code'];
+    $user->status_id        = 3; // Active
+    $user->role_id          = 4; // Pickup Agent
+    $user->is_login         = 0;
+    $user->created_at       = date('Y-m-d H:i:s');
+    $user->user_type_id     = null;
+    $user->vehicle_id       = $data['vehicle_id'];
+    $user->vehicle_number   = $data['vehicle_number'];
+    $user->created_by_agent = $userinfo['id'] ?? null;
+
+    // Insert user
+    $this->db->create('users', $user->toArray());
+
+    redirect('agent/pickupagentlist');
+  }
+
+  public function updatestatuspickupagent()
+  {
+    $access_code = $_GET['access_code'] ?? null;
+    $status = $_GET['status'] ?? null;
+
+    if (!$access_code || !$status) {
+      die("Invalid request");
+    }
+
+    $status_info = $this->db->columnFilter('statuses', 'name', $status);
+    $user = $this->db->columnFilter('users', 'access_code', $access_code);
+
+    if (!$user || !$status_info) {
+      die("Invalid data");
+    }
+
+    $this->db->update('users', $user['id'], ['status_id' => $status_info['id']]);
+
+    // Set flash message
+    session_start();
+    $_SESSION['flash_message'] = [
+      'type' => $status === 'Active' ? 'success' : 'error',
+      'message' => $status === 'Active' ? 'Pickup Agent Activated Successfully!' : 'Pickup Agent Deactivated Successfully!'
+    ];
+
+    redirect('agent/pickupagentdetail?access_code=' . $access_code);
   }
 
 

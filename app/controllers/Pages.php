@@ -1,12 +1,21 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 class Pages extends Controller
 {
 
     private $db;
+    private $customer;
 
     public function __construct()
     {
         $this->db = new Database();
+        if (session_id() === '') {
+            session_start();
+        }
+
+        $this->customer = $_SESSION['customer'] ?? null;
     }
 
     public function index()
@@ -66,7 +75,15 @@ class Pages extends Controller
 
     public function pickuphistory()
     {
-        $this->view('user/pickuphistory');
+        $allPickup = $this->db->readAll('pickup_requests_view');
+
+        $pickup = array_filter($allPickup, function ($row) {
+            return $row['sender_email'] === $this->customer['email'];
+        });
+        $data = [
+            'pickup' => $pickup,
+        ];
+        $this->view('user/pickuphistory', $data);
     }
 
     public function user_tracking()
