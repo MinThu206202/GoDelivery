@@ -129,7 +129,7 @@ $route = $data['route'];
                                     <?= htmlspecialchars($pickup['sender_address']) ?>
                                 </p>
                             </div>
-                            <div>
+                            <!-- <div>
                                 <p class="text-sm font-medium text-gray-500">Region</p>
                                 <p class="mt-1 text-base font-semibold text-gray-900">
                                     <?= htmlspecialchars($pickup['sender_region']) ?>
@@ -140,7 +140,7 @@ $route = $data['route'];
                                 <p class="mt-1 text-base font-semibold text-gray-900">
                                     <?= htmlspecialchars($pickup['sender_city']) ?>
                                 </p>
-                            </div>
+                            </div> -->
                             <div>
                                 <p class="text-sm font-medium text-gray-500">Township</p>
                                 <p class="mt-1 text-base font-semibold text-gray-900">
@@ -173,7 +173,7 @@ $route = $data['route'];
                                     <?= htmlspecialchars($pickup['receiver_address']) ?>
                                 </p>
                             </div>
-                            <div>
+                            <!-- <div>
                                 <p class="text-sm font-medium text-gray-500">Region</p>
                                 <p class="mt-1 text-base font-semibold text-gray-900">
                                     <?= htmlspecialchars($pickup['receiver_region']) ?>
@@ -184,7 +184,7 @@ $route = $data['route'];
                                 <p class="mt-1 text-base font-semibold text-gray-900">
                                     <?= htmlspecialchars($pickup['receiver_city']) ?>
                                 </p>
-                            </div>
+                            </div> -->
                             <div>
                                 <p class="text-sm font-medium text-gray-500">Township</p>
                                 <p class="mt-1 text-base font-semibold text-gray-900">
@@ -217,6 +217,16 @@ $route = $data['route'];
                                 <p class="text-sm font-medium text-gray-500">Requested Date & Time</p>
                                 <p class="mt-1 text-base font-semibold text-gray-900">
                                     <?= htmlspecialchars($pickup['created_at']) ?></p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Payment Type</p>
+                                <p class="mt-1 text-base font-semibold text-gray-900">
+                                    <?= htmlspecialchars($pickup['payment_status_name']) ?></p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Delivery Type</p>
+                                <p class="mt-1 text-base font-semibold text-gray-900">
+                                    <?= htmlspecialchars($pickup['delivery_type_name']) ?></p>
                             </div>
                         </div>
                     </div>

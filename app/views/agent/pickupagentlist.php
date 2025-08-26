@@ -67,7 +67,7 @@
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
                                         <?= htmlspecialchars($res['phone']) ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
-                                        <?= htmlspecialchars($res['vehicle_name']) ?></td>
+                                        <?= htmlspecialchars($res['vehicle_type_name']) ?></td>
                                     <td class="px-6 py-4 text-sm">
                                         <?php
                                         $statusClass = '';

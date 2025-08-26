@@ -1,5 +1,4 @@
 <?php require_once APPROOT . '/views/inc/nav.php';
-
 if (!isset($data['regions'])) {
     $data['regions'] = [
         ['id' => 1, 'name' => 'Yangon Region'],
@@ -73,22 +72,7 @@ if (!isset($data['regions'])) {
         <form class="space-y-6" method="POST" action="<?php echo URLROOT; ?>/pickupcontroller/pickuprequest">
             <!-- Name, Phone Number, and Email -->
             <?php require APPROOT . '/views/components/auth_message.php'; ?>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                    <input type="text" id="name" name="name" placeholder="Enter your name" class="input-style">
-                </div>
-                <div>
-                    <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-1">Phone
-                        Number</label>
-                    <input type="tel" id="phone_number" name="phone_number" placeholder="Enter your phone number"
-                        class="input-style">
-                </div>
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" class="input-style">
-                </div>
-            </div>
+
 
             <!-- New Region, City, and Township Dropdowns for Pickup Address -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -145,8 +129,8 @@ if (!isset($data['regions'])) {
                         <!-- Heroicons calendar -->
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 
-          00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                     </span>
                 </div>
@@ -184,12 +168,36 @@ if (!isset($data['regions'])) {
                 </div>
             </div>
 
+            <!-- Payment Type and Delivery Type -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="payment_type" class="block text-sm font-medium text-gray-700 mb-1">Payment
+                        Type</label>
+                    <select id="payment_type" name="payment_type" class="input-style">
+                        <option value="">Select payment type</option>
+                        <option value=1>Sender Pay</option>
+                        <option value=2>Receiver Pay</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="delivery_type" class="block text-sm font-medium text-gray-700 mb-1">Delivery
+                        Type</label>
+                    <select id="delivery_type" name="delivery_type" class="input-style">
+                        <option value="">Select delivery type</option>
+                        <option value=1>Normal</option>
+                        <option value=2>Express</option>
+                        <option value=3>In-City</option>
+                        <option value=4>Important</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Special Notes -->
             <!-- <div>
-                <label for="special_notes" class="block text-sm font-medium text-gray-700 mb-1">Special
-                    Notes</label>
-                <textarea id="special_notes" name="special_notes" rows="3"
-                    placeholder="Any special instructions for the agent" class="input-style"></textarea>
+            <label for="special_notes" class="block text-sm font-medium text-gray-700 mb-1">Special
+            Notes</label>
+            <textarea id="special_notes" name="special_notes" rows="3"
+            placeholder="Any special instructions for the agent" class="input-style"></textarea>
             </div> -->
 
             <!-- Receiver Info with separate fields -->

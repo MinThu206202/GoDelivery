@@ -177,11 +177,13 @@ class Agent extends Controller
         $checkadmin = $this->db->columnFilter('user_full_info', 'id', $allrequestdata['agent_id']);
         $checklocation = $this->db->columnFilter('view_available_locations', 'township_name', $allrequestdata['receiver_township']);
         $checkroute = $this->db->checkroutename('route_full_info', $allrequestdata['sender_township'], $allrequestdata['receiver_township']);
+        $availablepickupagent = $this->db->columnFilterAll('users', 'created_by_agent', $this->agent['id']);
         $data = [
             'pickup' => $allrequestdata,
             'admin' => $checkadmin,
             'location' => $checklocation,
             'route' => $checkroute,
+            'availableAgents' => $availablepickupagent,
         ];
         $this->view('agent/pickupaction', $data);
     }

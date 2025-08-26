@@ -23,6 +23,5 @@ class UserModel extends BaseModel
     protected $user_type_id;
     protected $access_code;
     protected $vehicle_id;
-    protected $vehicle_number;
     protected $created_by_agent;
 }

@@ -43,45 +43,145 @@ require_once APPROOT . '/views/inc/nav.php'
     </div>
 
     <!-- Details Section -->
-    <div class="bg-white p-8 md:p-12 rounded-xl shadow-lg w-full max-w-2xl">
+    <div class="bg-white p-8 md:p-12 rounded-xl shadow-lg w-full max-w-4xl">
         <h2 class="text-center text-4xl font-semibold text-gray-800 mb-8">Pickup Details</h2>
 
-        <!-- Details Card -->
-        <div class="space-y-6">
-            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 class="text-xl font-bold text-gray-700 mb-4">Request Information</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
-                    <div>
-                        <strong>Tracking ID:</strong> <?= htmlspecialchars($data['request_code']) ?>
+        <div class="space-y-8">
+            <!-- Request & Status Section (Two Columns) -->
+            <div class="pb-6 border-b border-gray-200">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Request & Status</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-gray-600">
+                    <!-- First Column -->
+                    <div class="space-y-4">
+                        <div>
+                            <strong>Tracking ID:</strong> <?= htmlspecialchars($data['request_code']) ?>
+                        </div>
+                        <div>
+                            <strong>Requested on:</strong> <?= htmlspecialchars($data['preferred_date']) ?>
+                        </div>
                     </div>
-                    <div>
-                        <strong>Requested on:</strong> <?= htmlspecialchars($data['preferred_date']) ?>
-                    </div>
-                    <div>
-                        <strong>Status:</strong> <span
-                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"><?= htmlspecialchars($data['status']) ?></span>
+                    <!-- Second Column -->
+                    <div class="space-y-4">
+                        <div>
+                            <strong>Status:</strong> <span
+                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"><?= htmlspecialchars($data['status']) ?></span>
+                        </div>
+                        <?php if ($data['status'] == 'pending'): ?>
+                            <div>
+                                <a href="<?= URLROOT ?>/Pickupcontroller/cancel?id=<?= $data['id'] ?>&request_code=<?= urlencode($data['request_code']) ?>"
+                                    class="bg-red-500 text-white font-bold py-2 px-6 rounded-full shadow-md hover:bg-red-600 transition-colors duration-200 inline-block">
+                                    Cancelled
+                                </a>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
 
-            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 class="text-xl font-bold text-gray-700 mb-4">Pickup Address</h3>
-                <div class="space-y-2 text-gray-600">
-                    <p><strong>Region:</strong> <?= htmlspecialchars($data['sender_region']) ?></p>
-                    <p><strong>City:</strong> <?= htmlspecialchars($data['sender_city']) ?></p>
-                    <p><strong>Township:</strong> <?= htmlspecialchars($data['sender_township']) ?></p>
+            <!-- Sender and Receiver Information Section (Two Columns) -->
+            <div class="pb-6 border-b border-gray-200">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Sender & Receiver Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-gray-600">
+                    <!-- Sender Details Column -->
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-medium text-gray-700">Sender</h4>
+                        <div>
+                            <strong>Name:</strong> <?= htmlspecialchars($data['sender_name']) ?? 'N/A' ?>
+                        </div>
+                        <div>
+                            <strong>Phone:</strong> <?= htmlspecialchars($data['sender_phone']) ?>
+                        </div>
+                        <div>
+                            <strong>Address:</strong> <?= htmlspecialchars($data['sender_address']) ?>
+                        </div>
+                    </div>
+
+                    <!-- Receiver Details Column -->
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-medium text-gray-700">Receiver</h4>
+                        <div>
+                            <strong>Name:</strong> <?= htmlspecialchars($data['receiver_name']) ?? 'N/A' ?>
+                        </div>
+                        <div>
+                            <strong>Phone:</strong> <?= htmlspecialchars($data['receiver_phone']) ?>
+                        </div>
+                        <div>
+                            <strong>Address:</strong> <?= htmlspecialchars($data['receiver_address']) ?>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 class="text-xl font-bold text-gray-700 mb-4">Receiver Information</h3>
-                <div class="space-y-2 text-gray-600">
-                    <p><strong>Name:</strong> <?= htmlspecialchars($data['receiver_name']) ?? 'N/A' ?></p>
-                    <p><strong>Phone:</strong> <?= htmlspecialchars($data['receiver_phone']) ?></p>
-                    <p><strong>Address:</strong> <?= htmlspecialchars($data['receiver_address']) ?></p>
+            <!-- Agent Information Section (Single Column) -->
+            <?php if ($data['status'] !== 'pending' || $data['status'] !== 'rejected'): ?>
+                <div class="pb-6 border-b border-gray-200">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Agent Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 text-gray-600">
+                        <div>
+                            <strong>Name:</strong> <?= htmlspecialchars($data['pickup_agent_name']) ?? 'N/A' ?>
+                        </div>
+                        <div>
+                            <strong>Phone:</strong> <?= htmlspecialchars($data['sender_phone']) ?? 'N/A' ?>
+                        </div>
+                        <div>
+                            <strong>Name:</strong> <?= htmlspecialchars($data['pickup_agent_name']) ?? 'N/A' ?>
+                        </div>
+                        <div>
+                            <strong>Phone:</strong> <?= htmlspecialchars($data['sender_phone']) ?? 'N/A' ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="pb-6 border-b border-gray-200">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Payment Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 text-gray-600">
+                    <div>
+                        <strong>Payment Type:</strong> <?= htmlspecialchars($data['pickup_agent_name']) ?? 'N/A' ?>
+                    </div>
+                    <div>
+                        <strong>Amount:</strong> <?= htmlspecialchars($data['sender_phone']) ?? 'N/A' ?>
+                    </div>
+                    <div>
+                        <strong>Name:</strong> <?= htmlspecialchars($data['pickup_agent_name']) ?? 'N/A' ?>
+                    </div>
+                    <div>
+                        <strong>Phone:</strong> <?= htmlspecialchars($data['sender_phone']) ?? 'N/A' ?>
+                    </div>
                 </div>
             </div>
+
+            <!-- Payment Method Section (Single Column) -->
+            <?php if ($data['status'] === 'payment_pending'): ?>
+                <div class="pb-6 w-full md:w-1/2">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Payment Method</h3>
+                    <form action="<?= URLROOT; ?>/Pickupcontroller/updatepayment" method="GET"
+                        class="flex flex-col space-y-3">
+                        <!-- Payment Dropdown -->
+                        <select id="paymentMethod" name="payment_method"
+                            class="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring focus:border-blue-300">
+                            <option value=1>Cash</option>
+                            <option value=2>Online</option>
+                            <option value=3>Banking</option>
+                        </select>
+
+                        <input type="hidden" name="id" value="<?= htmlspecialchars($data['id']) ?>">
+                        <input type="hidden" name="request_code" value="<?= htmlspecialchars($data['request_code']) ?>">
+                        <input type="hidden" name="request_code" value="<?= htmlspecialchars($data['request_code']) ?>">
+
+                        <!-- Proceed Button -->
+                        <button type="submit"
+                            class="inline-block bg-[#1F265B] hover:bg-[#141a40] text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors duration-200 w-36 text-center">
+                            Proceed
+                        </button>
+
+                        <!-- Line Under Button -->
+                        <hr class="border-t border-gray-300 mt-2">
+                    </form>
+                </div>
+            <?php endif; ?>
         </div>
+
 
         <div class="mt-8 text-center">
             <a href="<?php echo URLROOT; ?>/page/pickuphistory"

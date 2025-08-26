@@ -1,4 +1,6 @@
-<?php require_once APPROOT . '/views/inc/pickupagentsiderbar.php'; ?>
+<?php require_once APPROOT . '/views/inc/pickupagentsiderbar.php';
+$vehicle = $data['profile'];
+?>
 
 
 <!-- Main Content -->
@@ -6,22 +8,14 @@
     <!-- Header -->
     <header class="bg-white text-gray-800 shadow-sm py-4 px-6 md:px-8 lg:px-12 flex items-center justify-between">
         <h1 class="text-xl md:text-2xl font-bold">Agent Profile</h1>
-        <div class="flex-1 max-w-lg mx-auto">
-            <div class="relative">
-                <input type="text"
-                    class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Search...">
-                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            </div>
-        </div>
         <div class="flex items-center space-x-4">
             <div class="flex items-center space-x-2">
                 <div
                     class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-700">
                     MM</div>
                 <div>
-                    <span class="text-sm font-medium text-gray-600">Mi Mi</span>
-                    <p class="text-xs text-gray-500">Agent ID: YGN0001</p>
+                    <span class="text-sm font-medium text-gray-600"><?= htmlspecialchars($user['name']) ?></span>
+                    <p class="text-xs text-gray-500"><?= htmlspecialchars($user['access_code']) ?></p>
                 </div>
             </div>
         </div>
@@ -38,9 +32,9 @@
                     MM
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Mi Mi</h2>
-                    <p class="text-sm text-gray-500">Agent ID: YGN0001</p>
-                    <p class="text-sm text-gray-500">Member since: January 2023</p>
+                    <h2 class="text-2xl font-bold text-gray-800"><?= htmlspecialchars($user['name']) ?></h2>
+                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($user['access_code']) ?></p>
+                    <p class="text-sm text-gray-500">Member since: <?= htmlspecialchars($user['created_at']) ?></p>
                 </div>
                 <div class="ml-auto">
                     <button
@@ -55,23 +49,27 @@
                 <div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Contact Information</h3>
                     <div class="space-y-3 text-gray-600">
-                        <p class="flex items-center"><i class="fas fa-envelope mr-3 text-blue-500"></i>mimi@go.delivery
+                        <p class="flex items-center"><i
+                                class="fas fa-envelope mr-3 text-blue-500"></i><?= htmlspecialchars($user['email']) ?>
                         </p>
-                        <p class="flex items-center"><i class="fas fa-phone-alt mr-3 text-blue-500"></i>+95 912 345
-                            6789</p>
-                        <p class="flex items-center"><i class="fas fa-map-marker-alt mr-3 text-blue-500"></i>Yangon,
-                            Myanmar</p>
+                        <p class="flex items-center"><i
+                                class="fas fa-phone-alt mr-3 text-blue-500"></i><?= htmlspecialchars($user['phone']) ?>
+                        </p>
+                        <p class="flex items-center"><i
+                                class="fas fa-map-marker-alt mr-3 text-blue-500"></i><?= htmlspecialchars($vehicle['region_name']) ?>,<?= htmlspecialchars($vehicle['township_name']) ?>
+                        </p>
                     </div>
                 </div>
                 <div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Vehicle Information</h3>
                     <div class="space-y-3 text-gray-600">
                         <p class="flex items-center"><i class="fas fa-motorcycle mr-3 text-blue-500"></i>Vehicle
-                            Type: Motorbike</p>
+                            Type: <?= htmlspecialchars($vehicle['vehicle_type_name']) ?></p>
                         <p class="flex items-center"><i class="fas fa-id-card mr-3 text-blue-500"></i>License Plate:
-                            YGN 8G-9999</p>
+                            <?= htmlspecialchars($vehicle['plate_number']) ?></p>
                         <p class="flex items-center"><i class="fas fa-tag mr-3 text-blue-500"></i>Vehicle Make:
-                            Honda Click 125i</p>
+                            <?= htmlspecialchars($vehicle['make']) ?>(<?= htmlspecialchars($vehicle['color']) ?> color)
+                        </p>
                     </div>
                 </div>
             </div>
