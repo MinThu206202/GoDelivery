@@ -346,6 +346,31 @@ $pickup = $data['pickup'];
                                 <p class="mt-1 text-base font-semibold text-gray-900">
                                     <?= htmlspecialchars($pickup['created_at'] ?? 'N/A') ?></p>
                             </div>
+                            <div>
+                                <p class="flex items-center text-sm font-medium text-gray-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path
+                                            d="M5 4a2 2 0 00-2 2v2a2 2 0 002 2h2.228A2 2 0 019 12.338V14a2 2 0 002 2h2a2 2 0 002-2v-1.662c.45-.444.97-1.12.97-1.12l.147-.146A2 2 0 0015.772 10H18a2 2 0 002-2V6a2 2 0 00-2-2h-1.662a2 2 0 00-1.12.97l-.146.147A2 2 0 0113 9.772V12h-2V9.772A2 2 0 017.338 9H5a2 2 0 00-2-2z" />
+                                    </svg>
+                                    Payment Type
+                                </p>
+                                <p class="mt-1 text-base font-semibold text-gray-900">
+                                    <?= htmlspecialchars($pickup['payment_status_name'] ?? 'N/A') ?></p>
+                            </div>
+                            <div>
+                                <p class="flex items-center text-sm font-medium text-gray-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Delivery Type
+                                </p>
+                                <p class="mt-1 text-base font-semibold text-gray-900">
+                                    <?= htmlspecialchars($pickup['delivery_type_name'] ?? 'N/A') ?></p>
+                            </div>
                         </div>
                     </div>
 

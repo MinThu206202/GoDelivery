@@ -67,14 +67,14 @@ class Pickupcontroller extends Controller
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
+        $sender = $_SESSION['customer'];
 
         // ✅ Define required fields
         $required = [
-            'name',
-            'phone_number',
-            'email',
             'pickup_region',
             'pickup_city',
+            'payment_type',
+            'delivery_type',
             'pickup_township',
             'pickup_address',
             'preferred_date',
@@ -99,10 +99,8 @@ class Pickupcontroller extends Controller
             }
         }
 
-        // ✅ Extract + sanitize
-        $sendername      = trim($_POST['name']);
-        $senderphone     = trim($_POST['phone_number']);
-        $senderemail     = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $delivery_type  = $_POST['delivery_type'];
+        $payment_type   = $_POST['payment_type'];
         $pickup_region   = (int) $_POST['pickup_region'];
         $pickup_city     = (int) $_POST['pickup_city'];
         $pickup_township = (int) $_POST['pickup_township'];
@@ -121,12 +119,7 @@ class Pickupcontroller extends Controller
         $receiver_township = (int) $_POST['receiver_township'];
         $receiver_address = trim($_POST['receiver_address']);
 
-        // ✅ Validation rules
-        if (!filter_var($senderemail, FILTER_VALIDATE_EMAIL)) {
-            setMessage('error', "Invalid sender email");
-            redirect('pages/pickup');
-            return;
-        }
+
 
         if (!filter_var($receiver_email, FILTER_VALIDATE_EMAIL)) {
             setMessage('error', "Invalid receiver email");
@@ -134,11 +127,6 @@ class Pickupcontroller extends Controller
             return;
         }
 
-        if (!preg_match('/^[0-9]{6,15}$/', $senderphone)) {
-            setMessage('error', "Invalid sender phone number");
-            redirect('pages/pickup');
-            return;
-        }
 
         if (!preg_match('/^[0-9]{6,15}$/', $receiver_phone)) {
             setMessage('error', "Invalid receiver phone number");
@@ -167,7 +155,7 @@ class Pickupcontroller extends Controller
         // ✅ Generate request code
         $townshipname = $this->db->getById('townships', $pickup_township);
         $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-        $requestCode = 'PR-' . $this->getTownshipShortCode($townshipname) . '-' . rand(100000, 999999);
+        $requestCode = 'PR-' . $this->getTownshipShortCode($townshipname['name']) . '-' . rand(100000, 999999);
 
         // ✅ Find available agent
         $checkagent = $this->db->columnFilter('available_location', 'township_id', $pickup_township);
@@ -182,9 +170,7 @@ class Pickupcontroller extends Controller
 
         // ✅ Save to DB
         $pickup = new PickupModel();
-        $pickup->setSenderName($sendername);
-        $pickup->setSenderEmail($senderemail);
-        $pickup->setSenderPhone($senderphone);
+        $pickup->setSenderId($sender['id']);
         $pickup->setSenderRegionId($pickup_region);
         $pickup->setSenderCityId($pickup_city);
         $pickup->setSenderTownshipId($pickup_township);
@@ -193,6 +179,8 @@ class Pickupcontroller extends Controller
         $pickup->setPreferredDate($preferred_date);
         $pickup->setParcelTypeId($parcel_type);
         $pickup->setWeight($weight);
+        $pickup->setDeliveryType($delivery_type);
+        $pickup->setPaymentType($payment_type);
         $pickup->setQuantity($quantity);
         $pickup->setReceiverName($receiver_name);
         $pickup->setReceiverEmail($receiver_email);
@@ -217,5 +205,34 @@ class Pickupcontroller extends Controller
         $request_code = $_GET['request_code'];
         $data = $this->db->columnFilter('pickup_requests_view', 'request_code', $request_code);
         $this->view('user/pickupdetail', $data);
+    }
+
+    public function updatepayment()
+    {
+        $id = $_GET['id'] ?? null;
+        $payment = $_GET['payment_method'] ?? null;
+        $request_code = $_GET['request_code'] ?? null;
+
+        if ($id && $payment) {
+            // Set status dynamically based on payment type
+            $status_id = ($payment == 1) ? 11 : 6;
+
+            // Update pickup request
+            $this->db->update('pickup_requests', $id, [
+                'payment_type_id' => $payment,
+                'status_id' => $status_id
+            ]);
+        }
+        redirect('pickupcontroller/detail?request_code=' . urlencode($request_code));
+        return;
+    }
+
+    public function cancel()
+    {
+        $id = $_GET['id'];
+        $request_code = $_GET['request_code'];
+        $this->db->update('pickup_requests', $id, ['status_id' => 12]);
+        redirect('pages/pickuphistory');
+        return;
     }
 }

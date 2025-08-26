@@ -3,9 +3,7 @@
 class PickupModel
 {
     // Sender Info
-    private $sender_name;
-    private $sender_email;
-    private $sender_phone;
+    private $sender_id;
     private $sender_address;
     private $sender_region_id;
     private $sender_city_id;
@@ -26,6 +24,8 @@ class PickupModel
     private $weight;
     private $quantity;
     private $preferred_date;
+    private $delivery_type;
+    private $payment_type;
 
     // Agents & Status
     private $agent_id;
@@ -38,32 +38,16 @@ class PickupModel
     private $updated_at;
 
     // === Setters and Getters ===
-    public function setSenderName($name)
+    public function setSenderId($sender_id)
     {
-        $this->sender_name = $name;
+        $this->sender_id = $sender_id;
     }
-    public function getSenderName()
+    public function getSenderId()
     {
-        return $this->sender_name;
-    }
-
-    public function setSenderEmail($email)
-    {
-        $this->sender_email = $email;
-    }
-    public function getSenderEmail()
-    {
-        return $this->sender_email;
+        return $this->sender_id;
     }
 
-    public function setSenderPhone($phone)
-    {
-        $this->sender_phone = $phone;
-    }
-    public function getSenderPhone()
-    {
-        return $this->sender_phone;
-    }
+
 
     public function setSenderAddress($address)
     {
@@ -191,6 +175,24 @@ class PickupModel
         return $this->weight;
     }
 
+    public function setPaymentType($payment_type)
+    {
+        $this->payment_type = $payment_type;
+    }
+    public function getPaymentType()
+    {
+        return $this->payment_type;
+    }
+
+    public function setDeliveryType($delivery_type)
+    {
+        $this->delivery_type = $delivery_type;
+    }
+    public function getDeliveryType()
+    {
+        return $this->delivery_type;
+    }
+
     public function setQuantity($quantity)
     {
         $this->quantity = $quantity;
@@ -267,9 +269,7 @@ class PickupModel
     public function toArray()
     {
         return [
-            "sender_name" => $this->getSenderName(),
-            "sender_email" => $this->getSenderEmail(),
-            "sender_phone" => $this->getSenderPhone(),
+            "sender_id" => $this->getSenderId(),
             "sender_address" => $this->getSenderAddress(),
             "sender_region_id" => $this->getSenderRegionId(),
             "landmark" => $this->getLandmark(),
@@ -284,6 +284,8 @@ class PickupModel
             "receiver_township_id" => $this->getReceiverTownshipId(),
             "parcel_type_id" => $this->getParcelTypeId(),
             "weight" => $this->getWeight(),
+            "delivery_type_id" => $this->getDeliveryType(),
+            "payment_status_id" => $this->getPaymentType(),
             "quantity" => $this->getQuantity(),
             "preferred_date" => $this->getPreferredDate(),
             "agent_id" => $this->getAgentId(),

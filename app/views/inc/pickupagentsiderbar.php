@@ -1,5 +1,7 @@
 <?php
 $current_page = $_SERVER['REQUEST_URI'];
+$user = $_SESSION['user'];
+
 ?>
 
 <!DOCTYPE html>
@@ -87,7 +89,7 @@ $current_page = $_SERVER['REQUEST_URI'];
                 <i class="fas fa-bell mr-3"></i> Notifications
             </a>
 
-            <a href="<?php echo URLROOT; ?>/pickupagentcontroller/logout" class="flex items-center py-3 px-4 rounded-lg font-semibold transition duration-200 hover:bg-gray-800 
+            <a href="<?php echo URLROOT; ?>/agentcontroller/logout" class="flex items-center py-3 px-4 rounded-lg font-semibold transition duration-200 hover:bg-gray-800 
                <?php echo (strpos($current_page, 'logout') !== false) ? 'active-link' : 'text-gray-300'; ?>">
                 <i class="fas fa-sign-out-alt mr-3"></i> Logout
             </a>

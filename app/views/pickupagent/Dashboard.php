@@ -19,8 +19,8 @@
                     class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-700">
                     Mi</div>
                 <div>
-                    <span class="text-sm font-medium text-gray-600">Mi Mi</span>
-                    <p class="text-xs text-gray-500">Agent ID: YGN0001</p>
+                    <span class="text-sm font-medium text-gray-600"><?= htmlspecialchars($user['name']) ?></span>
+                    <p class="text-xs text-gray-500">Agent ID: <?= htmlspecialchars($user['access_code']) ?></p>
                 </div>
             </div>
         </div>
@@ -80,48 +80,51 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:underline cursor-pointer">
-                                        #PCK-001
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        Jane Doe
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        123 Main St, Anytown
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-700">
-                                            Pending
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        2:00 PM
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:underline cursor-pointer">
-                                        #PCK-002
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        John Smith
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        456 Oak Ave, Somewhere
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-700">
-                                            Pending
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        3:30 PM
-                                    </td>
-                                </tr>
+                                <?php if (!empty($data['allpickupdata'])): ?>
+                                    <?php foreach ($data['allpickupdata'] as $pickup): ?>
+                                        <tr>
+                                            <td
+                                                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:underline cursor-pointer">
+                                                <?= htmlspecialchars($pickup['request_code']) ?>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <?= htmlspecialchars($pickup['sender_name']) ?>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <?= htmlspecialchars($pickup['sender_address']) ?>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <?php
+                                                // Map statuses to Tailwind badge colors
+                                                $statusColors = [
+                                                    'pending' => 'bg-yellow-300 text-yellow-900',       // waiting
+                                                    'accepted' => 'bg-blue-300 text-blue-900',         // assigned
+                                                    'collected' => 'bg-orange-300 text-orange-900',    // picked up
+                                                    'on_the_way' => 'bg-teal-300 text-teal-900',       // in transit
+                                                    'rejected' => 'bg-red-300 text-red-900',           // failed/rejected
+                                                    'awaiting_payment' => 'bg-amber-300 text-amber-900', // payment pending
+                                                    'payment_success' => 'bg-green-300 text-green-900'   // completed/delivered
+                                                ];
+
+
+                                                $badgeClass = $statusColors[$pickup['status']] ?? 'bg-gray-100 text-gray-700';
+                                                ?>
+                                                <span
+                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $badgeClass ?>">
+                                                    <?= htmlspecialchars(ucwords(str_replace('_', ' ', $pickup['status']))) ?>
+                                                </span>
+                                            </td>
+
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <?= htmlspecialchars($pickup['created_at']) ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="5" class="text-center text-gray-500">No pickups found</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

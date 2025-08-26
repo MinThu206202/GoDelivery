@@ -14,7 +14,6 @@ class Pages extends Controller
         if (session_id() === '') {
             session_start();
         }
-
         $this->customer = $_SESSION['customer'] ?? null;
     }
 

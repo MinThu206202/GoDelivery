@@ -100,6 +100,24 @@ $pickup = $data['pickupagent'];
 
         <!-- Agent Details Content -->
         <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
+            <?php if (isset($_SESSION['flash_message'])):
+                $flash = $_SESSION['flash_message'];
+                unset($_SESSION['flash_message']);
+            ?>
+                <div id="flashMessage" class="mx-auto mb-6 max-w-lg text-center 
+                px-6 py-3 rounded shadow-md text-white font-medium
+                <?= $flash['type'] === 'success' ? 'bg-green-500' : 'bg-red-500' ?>">
+                    <?= htmlspecialchars($flash['message']) ?>
+                </div>
+
+                <script>
+                    setTimeout(() => {
+                        const flash = document.getElementById('flashMessage');
+                        if (flash) flash.style.display = 'none';
+                    }, 4000); // Hide after 4 seconds
+                </script>
+            <?php endif; ?>
+
             <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
                 <div class="flex justify-between items-center mb-6">
                     <h2 id="agentNameHeader" class="text-2xl font-semibold text-gray-800">
@@ -155,6 +173,26 @@ $pickup = $data['pickupagent'];
                                 <p id="securityCode" class="text-gray-900">
                                     <?= htmlspecialchars($pickup['access_code']) ?></p>
                             </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Status</p>
+                                <?php
+                                $status = strtolower($pickup['status_name']);
+                                switch ($status) {
+                                    case 'active':
+                                        $statusClass = 'bg-green-100 text-green-800';
+                                        break;
+                                    case 'inactive':
+                                        $statusClass = 'bg-red-100 text-red-800';
+                                        break;
+                                    default:
+                                        $statusClass = 'bg-gray-100 text-gray-800'; // fallback
+                                }
+                                ?>
+                                <span id="status"
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
+                                    <?= htmlspecialchars($pickup['status_name']) ?>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -164,34 +202,12 @@ $pickup = $data['pickupagent'];
                     <h3 class="text-xl font-semibold text-gray-700 mb-4">Work Information</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">Status</p>
-                            <?php
-                            $status = strtolower($pickup['status_name']);
-                            switch ($status) {
-                                case 'active':
-                                    $statusClass = 'bg-green-100 text-green-800';
-                                    break;
-                                case 'inactive':
-                                    $statusClass = 'bg-red-100 text-red-800';
-                                    break;
-                                default:
-                                    $statusClass = 'bg-gray-100 text-gray-800'; // fallback
-                            }
-                            ?>
-                            <span id="status"
-                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
-                                <?= htmlspecialchars($pickup['status_name']) ?>
-                            </span>
-                        </div>
-                        <div>
                             <p class="text-sm font-medium text-gray-500">Assigned Vehicle</p>
-                            <p id="assignedVehicle" class="text-gray-900 font-medium">
-                                <?= htmlspecialchars($pickup['vehicle_name']) ?></p>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Assigned Vehicle</p>
-                            <p id="assignedVehicle" class="text-gray-900 font-medium">
-                                <?= htmlspecialchars($pickup['vehicle_name']) ?></p>
+                            <div class="text-gray-900 font-medium">
+                                <p><strong>Type:</strong> <?= htmlspecialchars($pickup['make']) ?></p>
+                                <p><strong>Color:</strong> <?= htmlspecialchars($pickup['color']) ?></p>
+                                <p><strong>Plate:</strong> <?= htmlspecialchars($pickup['plate_number']) ?></p>
+                            </div>
                         </div>
                     </div>
                 </div>

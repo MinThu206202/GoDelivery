@@ -16,6 +16,7 @@ class Agentcontroller extends Controller
     $this->model('NormalUser');
     $this->model('PremiumUser');
     $this->model('Delivery_status_Model');
+    $this->model('VehicleModel');
     $this->db = new Database();
   }
 
@@ -780,7 +781,9 @@ class Agentcontroller extends Controller
       'email'          => $_POST['email'] ?? '',
       'password'       => $_POST['password'] ?? '',
       'vehicle_id'     => $_POST['assignedVehicle'] ?? null,
-      'vehicle_number' => $_POST['vehicleNumber'] ?? null
+      'vehicle_number' => $_POST['vehicleNumber'] ?? null,
+      'vehicleMake'   => $_POST['vehicleMake'] ?? '',
+      'vehicleColor'   => $_POST['vehicleColor'] ?? ''
     ]);
 
     // Basic validation
@@ -811,32 +814,43 @@ class Agentcontroller extends Controller
     $user = $this->db->getById('user_full_info', $userinfo['id']);
     $data['accesscode'] = $this->getTownshipShortCode($user['township_name']) . '-PGA-' . str_pad(rand(0, 999999), 4, '0', STR_PAD_LEFT);
 
-    // Prepare user object
-    $user = new UserModel();
-    $user->name             = $data['name'];
-    $user->access_code       = $data['accesscode'];
-    $user->phone            = $data['phone'];
-    $user->email            = $data['email'] ?: null;
-    $user->address          = $userinfo['address'] ?? null;
-    $user->city_id          = $userinfo['city_id'] ?? null;
-    $user->region_id        = $userinfo['region_id'] ?? null;
-    $user->township_id      = $userinfo['township_id'] ?? null;
-    $user->ward_id          = null;
-    $user->password         = $data['password'];
-    $user->otp_code         = null;
-    $user->otp_expiry       = null;
-    $user->security_code    = $data['security_code'];
-    $user->status_id        = 3; // Active
-    $user->role_id          = 4; // Pickup Agent
-    $user->is_login         = 0;
-    $user->created_at       = date('Y-m-d H:i:s');
-    $user->user_type_id     = null;
-    $user->vehicle_id       = $data['vehicle_id'];
-    $user->vehicle_number   = $data['vehicle_number'];
-    $user->created_by_agent = $userinfo['id'] ?? null;
 
-    // Insert user
-    $this->db->create('users', $user->toArray());
+    // Step 1: Insert vehicle
+    $vehicle = new VehicleModel();
+    $vehicle->vehicle_type_id = $data['vehicle_id'];
+    $vehicle->plate_number    = $data['vehicle_number'];
+    $vehicle->make            = $data['vehicleMake'];
+    $vehicle->color           = $data['vehicleColor'];
+
+    $vehicle_id = $this->db->create('vehicles', $vehicle->toArray());
+
+    // Step 2: Insert user and link with vehicle
+    if ($vehicle_id) {
+      $user = new UserModel();
+      $user->name             = $data['name'];
+      $user->access_code      = $data['accesscode'];
+      $user->phone            = $data['phone'];
+      $user->email            = $data['email'] ?: null;
+      $user->address          = $userinfo['address'] ?? null;
+      $user->city_id          = $userinfo['city_id'] ?? null;
+      $user->region_id        = $userinfo['region_id'] ?? null;
+      $user->township_id      = $userinfo['township_id'] ?? null;
+      $user->ward_id          = null;
+      $user->password         = $data['password'];
+      $user->otp_code         = null;
+      $user->otp_expiry       = null;
+      $user->security_code    = $data['security_code'];
+      $user->status_id        = 3; // Active
+      $user->role_id          = 4; // Pickup Agent
+      $user->is_login         = 0;
+      $user->created_at       = date('Y-m-d H:i:s');
+      $user->user_type_id     = null;
+      $user->vehicle_id       = $vehicle_id; // ✅ link vehicle here
+      $user->created_by_agent = $userinfo['id'] ?? null;
+
+      $this->db->create('users', $user->toArray());
+    }
+
 
     redirect('agent/pickupagentlist');
   }
@@ -869,6 +883,37 @@ class Agentcontroller extends Controller
     redirect('agent/pickupagentdetail?access_code=' . $access_code);
   }
 
+  public function pickupupdate()
+  {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $status = $_POST['status'] ?? null;
+      $pickup_agent = $_POST['pickup_agent'] ?? null;
+      $pickup_id = $_POST['id'] ?? null;
+      $pickup_code = $_POST['pickup_code'];
+
+
+      $result = $this->db->update('pickup_requests', $pickup_id, ['pickup_agent_id' => $pickup_agent, 'status_id' => $status]);
+
+      redirect('agent/action?request_code=' . $pickup_code);
+      return;
+    }
+  }
+
+  public function pickupverify()
+  {
+    $pickup_id = $_GET['id'];
+    $pickup_code = $_GET['request_code'];
+    $payment_status = $_GET['payment_status'];
+
+    if ($payment_status == 'Sender Pay') {
+      $status_id = 10;
+    } else {
+      $status_id = 8;
+    }
+    $result = $this->db->update('pickup_requests', $pickup_id, ['status_id' => $status_id]);
+    redirect('agent/action?request_code=' . $pickup_code);
+    return;
+  }
 
 
   public function logout()
