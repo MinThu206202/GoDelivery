@@ -5,9 +5,11 @@ ini_set('display_errors', 1);
 // Placeholder for PHP include. In a real environment, you would use this.
 require_once APPROOT . '/views/inc/nav.php';
 
+// Mock data for demonstration purposes. In a live application, this would come from a database.
 $payment = $data['payment'];
 $pickupagent = $data['pickup_agent'];
 $data = $data['code'];
+
 ?>
 
 <style>
@@ -154,17 +156,6 @@ $data = $data['code'];
                 </div>
             </div>
 
-            <!-- Parcel Details Section -->
-            <div class="pb-6 border-b border-gray-200">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Parcel Details</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-gray-600">
-                    <p><strong>Weight:</strong> <?= htmlspecialchars($data['weight'] ?? 'N/A') ?></p>
-                    <p><strong>Quantity:</strong> <?= htmlspecialchars($data['quantity'] ?? 'N/A') ?></p>
-                    <p><strong>Parcel Type:</strong> <?= htmlspecialchars($data['parcel_type'] ?? 'N/A') ?></p>
-                    <p><strong>Delivery Type:</strong> <?= htmlspecialchars($data['delivery_type_name'] ?? 'N/A') ?></p>
-                </div>
-            </div>
-
             <!-- Agent Information Section -->
             <?php if ($data['status'] !== 'pending' && $data['status'] !== 'rejected'): ?>
                 <div class="pb-6 border-b border-gray-200">
@@ -174,27 +165,18 @@ $data = $data['code'];
                         <p><strong>Phone:</strong> <?= htmlspecialchars($pickupagent['phone'] ?? 'N/A') ?></p>
                         <p><strong>Vehicle Type:</strong>
                             <?= htmlspecialchars($pickupagent['vehicle_type_name'] ?? 'N/A') ?></p>
-                        <p><strong>Vehicle Make:</strong>
-                            <?= htmlspecialchars($pickupagent['make'] ?? 'N/A') ?>(<?= htmlspecialchars($pickupagent['color'] ?? 'N/A') ?>)
-                        </p>
+                        <p><strong>Vehicle Make:</strong> <?= htmlspecialchars($pickupagent['make'] ?? 'N/A') ?></p>
                     </div>
                 </div>
             <?php endif; ?>
 
             <!-- User send ss and payment -->
-            <?php if ($data['status'] === 'waiting_for_receipt' || $data['status'] === 'payment_reject'): ?>
+            <?php if ($data['status'] === 'waiting_for_receipt'): ?>
                 <form action="<?= URLROOT; ?>/pickupcontroller/submitpayment" method="POST" enctype="multipart/form-data">
                     <div class="pb-6 border-b border-gray-200">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-6">Payment Information</h3>
                         <input type="hidden" name="id" value="<?= htmlspecialchars($data['id'] ?? '') ?>">
                         <!-- Row 1: Payment Type & Amount -->
-                        <?php if ($data['status'] === 'payment_reject'): ?>
-
-                            <p class="text-red-600 font-semibold p-4 border border-red-200 rounded bg-red-50">
-                                Please input the correct payment amount. You rejected the previous payment.
-                            </p>
-                        <?php endif; ?>
-
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
                                 <label class="block font-medium text-gray-700">Payment Type</label>
@@ -243,19 +225,18 @@ $data = $data['code'];
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div class="relative">
                                 <label class="block font-medium text-gray-700">Payment Number</label>
-                                <div class="relative mt-1">
-                                    <input type="text" id="paymentNumber" value="09772528282"
-                                        class="block w-full border border-gray-300 rounded-lg p-2 pr-10 bg-gray-100 text-left tracking-wider"
-                                        readonly>
-                                    <button type="button" onclick="copyPaymentNumber()"
-                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800 transition-colors duration-200">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                                        </svg>
-                                    </button>
-                                </div>
+                                <input type="text" id="paymentNumber"
+                                    class="mt-1 block w-full border border-gray-300 rounded-lg p-2 pr-12 text-right tracking-wider bg-gray-100"
+                                    readonly>
+                                <!-- Copy Icon -->
+                                <button type="button" onclick="copyPaymentNumber()"
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800 transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M8 16h8M8 12h8M8 8h8M4 6h16M4 18h16" />
+                                    </svg>
+                                </button>
                             </div>
                             <div>
                                 <label class="block font-medium text-gray-700">Account Holder</label>
@@ -268,19 +249,18 @@ $data = $data['code'];
                         <div class="mb-6">
                             <label class="block font-medium text-gray-700">QR Image</label>
                             <img id="paymentImage"
-                                class="mt-2 w-40 h-auto rounded-lg border border-gray-300 hidden cursor-pointer"
-                                onclick="openImageModal()">
-
-                            <!-- Save Button -->
-                            <button type="button" id="saveImageBtn"
-                                class="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors duration-200 hidden">
-                                Save
-                            </button>
-
+                                class="mt-2 w-full max-w-xs h-auto rounded-lg border border-gray-300 hidden">
                             <input type="file" name="payment_image" accept="image/*"
                                 class="mt-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors duration-200">
                         </div>
 
+                        <!-- Submit Button -->
+                        <div class="flex justify-end">
+                            <button type="submit" class="btn-primary px-8 py-3 rounded-full">
+                                Submit Payment
+                            </button>
+                        </div>
+                    </div>
                 </form>
             <?php endif; ?>
 
@@ -365,16 +345,6 @@ $data = $data['code'];
     </div>
 </footer>
 
-<div id="imageModal"
-    class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-50">
-    <div class="relative max-w-[90%] max-h-[90%]">
-        <!-- Close Button -->
-        <button onclick="closeImageModal()"
-            class="absolute top-2 right-2 text-white text-3xl font-bold hover:text-red-500">&times;</button>
-        <img id="modalImage" src="" class="w-full h-auto max-h-[90vh] rounded-lg shadow-2xl">
-    </div>
-</div>
-
 <script>
     const methodSelect = document.getElementById('paymentMethodSelect');
     const paymentId = document.getElementById('paymentId');
@@ -382,11 +352,7 @@ $data = $data['code'];
     const paymentNumber = document.getElementById('paymentNumber');
     const accountHolder = document.getElementById('accountHolder');
     const paymentImage = document.getElementById('paymentImage');
-    const saveBtn = document.getElementById('saveImageBtn'); // Save button
-    const modal = document.getElementById('imageModal');
-    const modalImage = document.getElementById('modalImage');
 
-    // Dropdown change
     methodSelect.addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
         const img = selectedOption.dataset.image;
@@ -400,11 +366,9 @@ $data = $data['code'];
             if (img) {
                 paymentImage.src = '/Delivery/' + img;
                 paymentImage.classList.remove('hidden');
-                saveBtn.classList.remove('hidden'); // Show Save button
             } else {
                 paymentImage.src = '';
                 paymentImage.classList.add('hidden');
-                saveBtn.classList.add('hidden'); // Hide Save button
             }
         } else {
             paymentId.value = '';
@@ -413,54 +377,33 @@ $data = $data['code'];
             accountHolder.value = '';
             paymentImage.src = '';
             paymentImage.classList.add('hidden');
-            saveBtn.classList.add('hidden'); // Hide Save button
         }
     });
 
-    // Copy number function
-    // function copyPaymentNumber() {
-    //     const copyText = document.getElementById("paymentNumber");
-    //     navigator.clipboard.writeText(copyText.value);
-    //     // no alert box shown
-    // }
-
-    function showMessage(text, bg) {
-        const message = document.createElement('div');
-        message.textContent = text;
-        message.style.cssText =
-            `position:fixed; bottom:20px; right:20px; background-color:${bg}; color:white; padding:10px 20px; border-radius:5px; z-index:1000;`;
-        document.body.appendChild(message);
-        setTimeout(() => document.body.removeChild(message), 2000);
+    function copyPaymentNumber() {
+        const input = document.getElementById('paymentNumber');
+        navigator.clipboard.writeText(input.value)
+            .then(() => {
+                const message = document.createElement('div');
+                message.textContent = 'Copied!';
+                message.style.cssText =
+                    'position:fixed; bottom:20px; right:20px; background-color:#1F265B; color:white; padding:10px 20px; border-radius:5px; z-index:1000;';
+                document.body.appendChild(message);
+                setTimeout(() => {
+                    document.body.removeChild(message);
+                }, 2000);
+            })
+            .catch(err => {
+                const message = document.createElement('div');
+                message.textContent = 'Failed to copy!';
+                message.style.cssText =
+                    'position:fixed; bottom:20px; right:20px; background-color:red; color:white; padding:10px 20px; border-radius:5px; z-index:1000;';
+                document.body.appendChild(message);
+                setTimeout(() => {
+                    document.body.removeChild(message);
+                }, 2000);
+            });
     }
-
-    // Modal functions
-    function openImageModal() {
-        if (paymentImage.src) {
-            modalImage.src = paymentImage.src;
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.classList.add('opacity-100');
-        }
-    }
-
-    function closeImageModal() {
-        modal.classList.add('opacity-0', 'pointer-events-none');
-        modal.classList.remove('opacity-100');
-    }
-
-    // Save button download
-    saveBtn.addEventListener('click', function() {
-        if (!paymentImage.src || paymentImage.classList.contains('hidden')) {
-            return alert('No image to save!');
-        }
-
-        const link = document.createElement('a');
-        link.href = paymentImage.src;
-        const parts = paymentImage.src.split('/');
-        link.download = parts[parts.length - 1];
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    });
 </script>
 </body>
 

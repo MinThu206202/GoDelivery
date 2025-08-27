@@ -100,6 +100,7 @@ class Voucher_helper
 
     public function calculateArrivalTime($routeDurationInHours)
     {
+        date_default_timezone_set('Asia/Yangon');
         $durationInSeconds = (float)$routeDurationInHours * 3600; // 1 hour = 3600 seconds
         return date("Y-m-d H:i:s", time() + $durationInSeconds);
     }

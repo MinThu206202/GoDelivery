@@ -100,24 +100,6 @@ $pickup = $data['pickupagent'];
 
         <!-- Agent Details Content -->
         <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
-            <?php if (isset($_SESSION['flash_message'])):
-                $flash = $_SESSION['flash_message'];
-                unset($_SESSION['flash_message']);
-            ?>
-                <div id="flashMessage" class="mx-auto mb-6 max-w-lg text-center 
-                px-6 py-3 rounded shadow-md text-white font-medium
-                <?= $flash['type'] === 'success' ? 'bg-green-500' : 'bg-red-500' ?>">
-                    <?= htmlspecialchars($flash['message']) ?>
-                </div>
-
-                <script>
-                    setTimeout(() => {
-                        const flash = document.getElementById('flashMessage');
-                        if (flash) flash.style.display = 'none';
-                    }, 4000); // Hide after 4 seconds
-                </script>
-            <?php endif; ?>
-
             <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
                 <div class="flex justify-between items-center mb-6">
                     <h2 id="agentNameHeader" class="text-2xl font-semibold text-gray-800">

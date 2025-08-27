@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoDelivery - Your Trusted Partner</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-box-shadow {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .tab-button.active {
+            border-bottom-width: 2px;
+            border-color: #1F265B;
+            color: #1F265B;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="#" class="text-3xl font-extrabold text-[#1F265B] tracking-tight">Go<span
+                    class="text-gray-500">Delivery</span></a>
+            <ul class="hidden md:flex space-x-8">
+                <li><a href="#"
+                        class="text-gray-600 hover:text-[#1F265B] transition-colors duration-200 font-medium">Home</a>
+                </li>
+                <li><a href="#"
+                        class="text-gray-600 hover:text-[#1F265B] transition-colors duration-200 font-medium">Services</a>
+                </li>
+                <li><a href="#"
+                        class="text-gray-600 hover:text-[#1F265B] transition-colors duration-200 font-medium">Tracking</a>
+                </li>
+                <li><a href="#"
+                        class="text-gray-600 hover:text-[#1F265B] transition-colors duration-200 font-medium">Contact</a>
+                </li>
+            </ul>
+            <button
+                class="bg-[#1F265B] text-white px-6 py-2 rounded-full font-semibold hover:bg-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1F265B] focus:ring-offset-2">Sign
+                In</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-12 bg-white">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div class="md:w-1/2 text-center md:text-left">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-[#1F265B] leading-tight mb-4">
+                    Fast & Reliable Deliveries <br> Right at Your Doorstep
+                </h1>
+                <p class="text-lg text-gray-600 leading-relaxed mb-8 max-w-lg mx-auto md:mx-0">
+                    Real-time tracking, flexible payments, and nationwide coverage ensure your packages arrive on time,
+                    every time.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+                    <button
+                        class="bg-[#1F265B] text-white px-8 py-3 rounded-full font-bold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#1F265B] focus:ring-offset-2">
+                        Track Parcel
+                    </button>
+                    <a href="#"
+                        class="text-[#1F265B] font-semibold hover:text-gray-800 transition-colors duration-200 flex items-center gap-2">
+                        Learn More
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 relative mt-12 md:mt-0">
+                <img src="https://placehold.co/600x400/E5E7EB/4B5563?text=Hero+Illustration" alt="Delivery Illustration"
+                    class="w-full h-auto rounded-xl shadow-2xl transform transition-transform duration-500 hover:scale-105">
+            </div>
+        </div>
+    </section>
+
+    <!-- Search/Tracking Section -->
+    <section class="py-10 bg-white shadow-md -mt-12 relative z-20 rounded-2xl mx-auto max-w-5xl search-box-shadow">
+        <div class="container mx-auto px-4">
+            <div class="flex mb-6 border-b border-gray-200">
+                <button id="tab-tracking"
+                    class="tab-button active text-lg font-semibold pb-4 mr-8 focus:outline-none">Tracking</button>
+                <button id="tab-calculator"
+                    class="tab-button text-gray-500 hover:text-gray-800 text-lg font-semibold pb-4 transition-colors focus:outline-none">Price
+                    Calculator</button>
+            </div>
+
+            <!-- Tracking Form -->
+            <div id="form-tracking" class="tab-content">
+                <form action="#" method="POST" class="flex flex-col md:flex-row gap-4">
+                    <input type="text" name="code" placeholder="Enter your Tracking Number"
+                        class="flex-1 p-4 border border-gray-300 rounded-xl focus:border-[#1F265B] outline-none transition-all focus:ring-2 focus:ring-[#1F265B]">
+                    <button
+                        class="bg-[#1F265B] text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#1F265B] focus:ring-offset-2">
+                        Search
+                    </button>
+                </form>
+            </div>
+
+            <!-- Price Calculator Form -->
+            <div id="form-calculator" class="tab-content hidden">
+                <form action="#" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="Package Weight (kg)"
+                        class="p-4 border border-gray-300 rounded-xl focus:border-[#1F265B] outline-none transition-all focus:ring-2 focus:ring-[#1F265B]">
+                    <input type="text" placeholder="From Address"
+                        class="p-4 border border-gray-300 rounded-xl focus:border-[#1F265B] outline-none transition-all focus:ring-2 focus:ring-[#1F265B]">
+                    <input type="text" placeholder="To Address"
+                        class="p-4 border border-gray-300 rounded-xl focus:border-[#1F265B] outline-none transition-all focus:ring-2 focus:ring-[#1F265B]">
+                    <button
+                        class="bg-[#1F265B] text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#1F265B] focus:ring-offset-2 col-span-1 md:col-span-2">
+                        Calculate Price
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services/Features Grid -->
+    <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-[#1F265B] mb-4">Our Core Services</h2>
+            <p class="text-gray-600 mb-12 max-w-2xl mx-auto">
+                GoDelivery provides a seamless experience from pickup to delivery with a focus on speed, security, and
+                convenience.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1: Fast Delivery -->
+                <div
+                    class="bg-white rounded-xl shadow-lg p-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                    <div
+                        class="flex items-center justify-center w-16 h-16 bg-gray-200 text-[#1F265B] rounded-full mb-6 mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Fast Delivery</h3>
+                    <p class="text-gray-600">
+                        We prioritize speed without compromising on the safety of your parcels.
+                    </p>
+                </div>
+
+                <!-- Service 2: Real-Time Tracking -->
+                <div
+                    class="bg-white rounded-xl shadow-lg p-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                    <div
+                        class="flex items-center justify-center w-16 h-16 bg-gray-200 text-[#1F265B] rounded-full mb-6 mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Real-Time Tracking</h3>
+                    <p class="text-gray-600">
+                        Monitor your package's journey from our warehouse to your doorstep.
+                    </p>
+                </div>
+
+                <!-- Service 3: Cash & Online Payments -->
+                <div
+                    class="bg-white rounded-xl shadow-lg p-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                    <div
+                        class="flex items-center justify-center w-16 h-16 bg-gray-200 text-[#1F265B] rounded-full mb-6 mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Flexible Payments</h3>
+                    <p class="text-gray-600">
+                        Pay with ease using cash on delivery or a variety of online payment methods.
+                    </p>
+                </div>
+
+                <!-- Service 4: Secure Handling -->
+                <div
+                    class="bg-white rounded-xl shadow-lg p-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                    <div
+                        class="flex items-center justify-center w-16 h-16 bg-gray-200 text-[#1F265B] rounded-full mb-6 mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Secure Handling</h3>
+                    <p class="text-gray-600">
+                        Your items are handled with the utmost care, ensuring they arrive in perfect condition.
+                    </p>
+                </div>
+
+                <!-- Service 5: Nationwide Coverage -->
+                <div
+                    class="bg-white rounded-xl shadow-lg p-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                    <div
+                        class="flex items-center justify-center w-16 h-16 bg-gray-200 text-[#1F265B] rounded-full mb-6 mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Nationwide Coverage</h3>
+                    <p class="text-gray-600">
+                        We deliver to every corner of the country, no matter where you are.
+                    </p>
+                </div>
+
+                <!-- Service 6: 24/7 Customer Support -->
+                <div
+                    class="bg-white rounded-xl shadow-lg p-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                    <div
+                        class="flex items-center justify-center w-16 h-16 bg-gray-200 text-[#1F265B] rounded-full mb-6 mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">24/7 Customer Support</h3>
+                    <p class="text-gray-600">
+                        Our dedicated team is always ready to assist you with any inquiries or issues.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials/Reviews Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-[#1F265B] mb-4">What Our Customers Say</h2>
+            <p class="text-gray-600 mb-12 max-w-2xl mx-auto">
+                Hear from our satisfied clients about their experience with GoDelivery.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-gray-100 rounded-xl p-8 shadow-md">
+                    <p class="text-gray-700 italic mb-4">"GoDelivery provides the fastest service I've ever experienced.
+                        My package arrived a day earlier than expected!"</p>
+                    <div class="flex items-center justify-center">
+                        <img src="https://placehold.co/50x50/E5E7EB/4B5563?text=JR" alt="John Doe"
+                            class="rounded-full mr-4">
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-900">John R.</p>
+                            <p class="text-sm text-gray-500">Small Business Owner</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-gray-100 rounded-xl p-8 shadow-md">
+                    <p class="text-gray-700 italic mb-4">"The real-time tracking is a game-changer. I knew exactly where
+                        my delivery was at all times. Highly recommend!"</p>
+                    <div class="flex items-center justify-center">
+                        <img src="https://placehold.co/50x50/E5E7EB/4B5563?text=MJ" alt="Jane Smith"
+                            class="rounded-full mr-4">
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-900">Mary J.</p>
+                            <p class="text-sm text-gray-500">Online Shopper</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-gray-100 rounded-xl p-8 shadow-md">
+                    <p class="text-gray-700 italic mb-4">"Their customer support is fantastic. They were quick to help
+                        when I had a question about my package."</p>
+                    <div class="flex items-center justify-center">
+                        <img src="https://placehold.co/50x50/E5E7EB/4B5563?text=SA" alt="Sam Wilson"
+                            class="rounded-full mr-4">
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-900">Sam A.</p>
+                            <p class="text-sm text-gray-500">Freelancer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#1F265B] text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Company Info -->
+                <div>
+                    <h2 class="text-3xl font-extrabold mb-4 text-white">Go<span class="text-gray-300">Delivery</span>
+                    </h2>
+                    <p class="text-gray-400 leading-relaxed max-w-sm">
+                        123 Main Street, City, State 12345<br>
+                        Email: contact@godelivery.com<br>
+                        Phone: +1 (555) 123-4567
+                    </p>
+                    <div class="mt-6 flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="currentColor" class="w-6 h-6">
+                                <path
+                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-3 7h-1.924c-.615 0-1.076.252-1.076.996v1.498h3l-.333 2h-2.667v8h-3v-8h-2v-2h2v-2.19c0-2.099 1.488-3.81 3.829-3.81h2.171v3z" />
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="currentColor" class="w-6 h-6">
+                                <path
+                                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.799-1.574 2.16-2.723-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.111 0-5.632 2.521-5.632 5.631 0 .444.05.875.137 1.292-4.68-2.37-8.84-4.978-11.62-9.284-.447.76-.709 1.637-.709 2.583 0 1.956.995 3.689 2.504 4.708-.925-.029-1.791-.282-2.544-.733v.072c0 2.721 1.935 4.975 4.5 5.514-.471.129-.96.195-1.465.195-.355 0-.701-.034-1.037-.099.713 2.238 2.795 3.864 5.265 3.918-1.921 1.506-4.321 2.407-6.91 2.407-.45 0-.895-.027-1.334-.079 2.484 1.59 5.433 2.523 8.591 2.523 10.303 0 15.01-8.52 15.01-15.891 0-.246-.005-.489-.014-.731.996-.719 1.868-1.611 2.559-2.628z" />
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="currentColor" class="w-6 h-6">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.772 1.673 4.92 4.92.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.673 4.772-4.92 4.92-1.265.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.772-1.673-4.92-4.92-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.673-4.772 4.92-4.92 1.265-.058 1.645-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">About
+                                Us</a></li>
+                        <li><a href="#"
+                                class="text-gray-400 hover:text-white transition-colors duration-200">Services</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">FAQs</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Privacy
+                                Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Footer Image -->
+                <div class="md:w-full relative mt-12 md:mt-0">
+                    <img src="https://placehold.co/600x400/E5E7EB/4B5563?text=Footer+Illustration"
+                        alt="Delivery Illustration" class="w-full h-auto rounded-xl shadow-2xl">
+                </div>
+            </div>
+            <div class="mt-12 text-center text-gray-500">
+                <p>&copy; 2024 GoDelivery. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const trackingTab = document.getElementById('tab-tracking');
+            const calculatorTab = document.getElementById('tab-calculator');
+            const trackingForm = document.getElementById('form-tracking');
+            const calculatorForm = document.getElementById('form-calculator');
+
+            // Event listener for the Tracking tab
+            trackingTab.addEventListener('click', () => {
+                // Remove active state from all tabs
+                trackingTab.classList.add('active');
+                calculatorTab.classList.remove('active');
+
+                // Show the tracking form and hide the calculator form
+                trackingForm.classList.remove('hidden');
+                calculatorForm.classList.add('hidden');
+            });
+
+            // Event listener for the Calculator tab
+            calculatorTab.addEventListener('click', () => {
+                // Remove active state from all tabs
+                calculatorTab.classList.add('active');
+                trackingTab.classList.remove('active');
+
+                // Show the calculator form and hide the tracking form
+                calculatorForm.classList.remove('hidden');
+                trackingForm.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+
+</html>

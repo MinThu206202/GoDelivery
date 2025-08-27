@@ -165,9 +165,9 @@ $currentRoute = $_SERVER['REQUEST_URI'];
             </a>
 
             <!-- Pickup Request -->
-            <a href="<?= URLROOT; ?>/agent/pickup"
+            <a href="<?= URLROOT; ?>/agent/requestpickup"
                 class="flex items-center px-4 py-3 rounded-lg transition duration-200
-   <?= strpos($currentRoute, '/agent/pickup') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
+   <?= strpos($currentRoute, '/agent/requestpickup') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
 
                 <!-- Pickup Icon -->
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -177,6 +177,23 @@ $currentRoute = $_SERVER['REQUEST_URI'];
                 </svg>
                 Pickup Request
             </a>
+
+
+            <a href="<?= URLROOT; ?>/agent/paymentlist"
+                class="flex items-center px-4 py-3 rounded-lg transition duration-200
+   <?= strpos($currentRoute, '/agent/paymentlist') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
+
+                <!-- Cash / Banknote Icon -->
+                <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <rect x="2" y="6" width="20" height="12" rx="2" ry="2" stroke-width="2" />
+                    <circle cx="12" cy="12" r="3" stroke-width="2" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h.01M18 12h.01" />
+                </svg>
+
+                Payment List
+            </a>
+
 
 
             <!-- Logout Link -->

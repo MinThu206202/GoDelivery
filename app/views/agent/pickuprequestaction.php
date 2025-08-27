@@ -298,6 +298,7 @@ $route = $data['route'];
                             class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 shadow-md">
                             Back to Requests
                         </a>
+
                         <?php
                         // statuses where the Edit button should NOT be shown
                         $blockedStatuses = ['accepted', 'collected', 'voucher_created', 'rejected', 'agent_checked'];
@@ -309,8 +310,14 @@ $route = $data['route'];
                             </a>
                         <?php endif; ?>
 
-
+                        <?php if ($pickup['status'] === 'collected'): ?>
+                            <a href="<?php echo URLROOT; ?>/agentcontroller/create_voucher_pickup?request_code=<?= urlencode($pickup['request_code']); ?>"
+                                class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md">
+                                Create Voucher
+                            </a>
+                        <?php endif; ?>
                     </div>
+
 
                 </div>
             </div>

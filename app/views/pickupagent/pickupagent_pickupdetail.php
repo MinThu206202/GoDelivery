@@ -162,6 +162,15 @@ $pickup = $data['pickupdetial'];
                             </p>
                         </div>
                     </div>
+
+                    <div class="grid sm:grid-cols-2 gap-y-4 gap-x-8">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Total Amount</p>
+                            <p class="text-lg font-semibold">
+                                <?= htmlspecialchars(ucwords(str_replace('_', ' ', $pickup['Amount'] ?? 'N/A'))) ?>
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -190,8 +199,16 @@ $pickup = $data['pickupdetial'];
                         </a>
                     <?php endif; ?>
 
+                    <?php if ($pickup['status'] === 'awaiting_cash'): ?>
+                        <a href="<?= URLROOT; ?>/pickupagentcontroller/collectcash?id=<?= htmlspecialchars($pickup['id']); ?>"
+                            class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 transition-colors">
+                            <i class="fas fa-money-bill-wave mr-2"></i> Collect Cash
+                        </a>
+                    <?php endif; ?>
+
+
                     <!-- Mark as Complete Button -->
-                    <?php if ($pickup['status'] === 'pickup_verified'): ?>
+                    <?php if ($pickup['status'] === 'pickup_verified'  || $pickup['status'] === 'voucher_created'): ?>
                         <a href="<?= URLROOT; ?>/pickupagentcontroller/completepickup?id=<?= htmlspecialchars($pickup['id']); ?>"
                             class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors">
                             <i class="fas fa-check mr-2"></i> Complete Pickup
