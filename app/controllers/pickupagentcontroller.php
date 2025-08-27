@@ -142,4 +142,12 @@ class pickupagentcontroller extends Controller
         redirect('pickupagentcontroller/mypick');
         return;
     }
+
+    public function collectcash()
+    {
+        $id = $_GET['id'];
+        $this->db->update('pickup_requests', $id, ['status_id' => 16]);
+        redirect('pickupagentcontroller/mypick');
+        return;
+    }
 }

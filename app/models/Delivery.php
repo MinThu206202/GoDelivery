@@ -1,6 +1,7 @@
-<?php 
+<?php
 
-class Delivery{
+class Delivery
+{
     private $sender_agent_id;
     private $receiver_agent_id;
     private $sender_customer_id;
@@ -187,11 +188,13 @@ class Delivery{
         return $this->product_type;
     }
 
-    public function setTrackingnumber($tracking_number){
+    public function setTrackingnumber($tracking_number)
+    {
         $this->tracking_number = $tracking_number;
     }
 
-    public function getTrackingnumber(){
+    public function getTrackingnumber()
+    {
         return $this->tracking_number;
     }
     public function setDurationtime($duration)
@@ -245,8 +248,4 @@ class Delivery{
             "piece_count" => $this->getPiececount()
         ];
     }
-
 }
-
-
-?>

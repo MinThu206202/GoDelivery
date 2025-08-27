@@ -203,7 +203,14 @@ class Pickupcontroller extends Controller
     public function detail()
     {
         $request_code = $_GET['request_code'];
-        $data = $this->db->columnFilter('pickup_requests_view', 'request_code', $request_code);
+        $payment = $this->db->readAll('payment_methods_view');
+        $code = $this->db->columnFilter('pickup_requests_view', 'request_code', $request_code);
+        $pickup_agent = $this->db->columnFilter('user_full_info', 'id', $code['pickup_agent_id']);
+        $data = [
+            'pickup_agent' => $pickup_agent,
+            'payment' => $payment,
+            'code' => $code,
+        ];
         $this->view('user/pickupdetail', $data);
     }
 
@@ -234,5 +241,64 @@ class Pickupcontroller extends Controller
         $this->db->update('pickup_requests', $id, ['status_id' => 12]);
         redirect('pages/pickuphistory');
         return;
+    }
+
+    public function submitpayment()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
+
+        $id = $_POST['id'] ?? null;
+        $payment_method_id = $_POST['payment_method_id'] ?? null;
+        $payment_image = null;
+
+        if (!$id || !$payment_method_id) {
+            throw new Exception("Missing required fields.");
+        }
+
+        // --- Handle file upload if exists ---
+        if (!empty($_FILES['payment_image']['name'])) {
+            $file = $_FILES['payment_image'];
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/Delivery/public/uploads/";
+
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+            if (!is_writable($uploadDir)) throw new Exception("Upload folder not writable.");
+
+            // Validate size (5MB max)
+            if ($file['size'] > 5 * 1024 * 1024) throw new Exception("File too large. Max 5MB.");
+
+            // Validate MIME type
+            $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/avif'];
+            $mime = mime_content_type($file['tmp_name']);
+            if (!in_array($mime, $allowed)) throw new Exception("Invalid file type.");
+
+            // Generate safe filename
+            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $base = preg_replace("/[^A-Za-z0-9_\-]/", '', pathinfo($file['name'], PATHINFO_FILENAME));
+            $base = substr($base, 0, 50);
+            $newName = uniqid('payment_', true) . '_' . $base . '.' . $ext;
+
+            if (!move_uploaded_file($file['tmp_name'], $uploadDir . $newName)) {
+                throw new Exception("Upload failed.");
+            }
+
+            $payment_image = "public/uploads/" . $newName;
+        }
+
+        // --- Update DB ---
+        date_default_timezone_set('Asia/Yangon');
+
+        $updateData = [
+            'status_id' => 13,
+            'updated_at' => date('Y-m-d H:i:s'), // current timestamp
+            'payment_method_id' => $payment_method_id,
+            'method_image' => $payment_image
+        ];
+
+
+        if ($this->db->update('pickup_requests', $id, $updateData)) {
+            redirect('pages/pickuphistory');
+        } else {
+            throw new Exception("Failed to update payment info.");
+        }
     }
 }

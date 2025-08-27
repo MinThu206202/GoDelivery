@@ -17,6 +17,7 @@ class Agentcontroller extends Controller
     $this->model('PremiumUser');
     $this->model('Delivery_status_Model');
     $this->model('VehicleModel');
+    $this->model('paymentModel');
     $this->db = new Database();
   }
 
@@ -905,13 +906,198 @@ class Agentcontroller extends Controller
     $pickup_code = $_GET['request_code'];
     $payment_status = $_GET['payment_status'];
 
+    $fullinfo = $this->db->columnFilter('pickup_requests', 'request_code', $pickup_code);
+
+    $route = $this->db->checkroute('route', $fullinfo['sender_township_id'], $fullinfo['receiver_township_id']);
+    $totalPrice = (float)$fullinfo['weight'] * (float) $route['price'];
+
     if ($payment_status == 'Sender Pay') {
       $status_id = 10;
     } else {
       $status_id = 8;
     }
-    $result = $this->db->update('pickup_requests', $pickup_id, ['status_id' => $status_id]);
+    $result = $this->db->update('pickup_requests', $pickup_id, ['status_id' => $status_id, 'amount' => $totalPrice]);
     redirect('agent/action?request_code=' . $pickup_code);
+    return;
+  }
+
+  public function addpayment()
+  {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      try {
+        // --- Get inputs ---
+        $payment_type   = $_POST['payment_type'] ?? '';
+        $payment_name   = $_POST['payment_name'] ?? '';
+        $payment_holder = $_POST['payment_holder']  ?? '';
+        $payment_number = $_POST['payment_number'] ?? '';
+
+        // --- Default image path (none if no upload) ---
+        $payment_image = null;
+
+        // --- Handle file upload ---
+        if (isset($_FILES['payment_image']) && $_FILES['payment_image']['error'] !== UPLOAD_ERR_NO_FILE) {
+          $file = $_FILES['payment_image'];
+
+          // Upload directory
+          $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/Delivery/public/uploads/";
+
+          // Ensure folder exists
+          if (!is_dir($uploadDir)) {
+            if (!mkdir($uploadDir, 0755, true)) {
+              throw new Exception("Failed to create upload folder: " . $uploadDir);
+            }
+          }
+
+          // Check writable
+          if (!is_writable($uploadDir)) {
+            throw new Exception("Upload folder is not writable: " . $uploadDir);
+          }
+
+          // Validate file size (max 5MB)
+          $maxFileSize = 5 * 1024 * 1024; // 5MB
+          if ($file['size'] > $maxFileSize) {
+            throw new Exception("File is too large. Max 5MB.");
+          }
+
+          // Validate MIME type
+          $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/avif'];
+          $finfo = finfo_open(FILEINFO_MIME_TYPE);
+          $mimeType = finfo_file($finfo, $file['tmp_name']);
+          finfo_close($finfo);
+
+          if (!in_array($mimeType, $allowedMimeTypes)) {
+            throw new Exception("Invalid file type. Only JPG, PNG, AVIF, GIF allowed.");
+          }
+
+          // Sanitize and create unique filename
+          $originalName  = pathinfo($file['name'], PATHINFO_FILENAME);
+          $extension     = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+          $sanitizedBase = preg_replace("/[^A-Za-z0-9_\-]/", '', $originalName);
+          $sanitizedBase = substr($sanitizedBase, 0, 50);
+          $newFileName   = uniqid('payment_', true) . '_' . $sanitizedBase . '.' . $extension;
+
+          $targetPath = $uploadDir . $newFileName;
+
+          // Move uploaded file
+          if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            throw new Exception("Failed to move uploaded file.");
+          }
+
+          // Save path relative to project
+          $payment_image = 'public/uploads/' . $newFileName;
+        }
+
+        // --- Insert payment record into DB ---
+        $payment = new paymentModel();
+        $payment->payment_type_id = $payment_type;
+        $payment->method_name = $payment_name;
+        $payment->method_image = $payment_image;
+        $payment->method_number = $payment_number;
+        $payment->account_holder = $payment_holder;
+        $this->db->create('payment_methods', $payment->toArray());
+
+        session_start();
+        $_SESSION['flash_message'] = [
+          'type'    => 'success',
+          'message' => 'Payment added successfully!'
+        ];
+
+        redirect('agent/paymenttype');
+      } catch (Exception $e) {
+        die("Error: " . $e->getMessage());
+      }
+    }
+  }
+
+  public function confirmpayment()
+  {
+    $code = $_GET['request_code'];
+    $id = $_GET['id'];
+    $status = $_GET['status'];
+
+    if ($status == 'accepted') {
+      $status_id = 7;
+      $message = "Payment with Request Code $code has been accepted successfully.";
+      $type = "success";
+    } else {
+      $status_id = 14;
+      $message = "Payment with Request Code $code has been rejected.";
+      $type = "error";
+    }
+
+    // Update database
+    $this->db->update('pickup_requests', $id, ['status_id' => $status_id]);
+
+    // Set flash message in session
+    session_start();
+    $_SESSION['flash_message'] = [
+      'message' => $message,
+      'type' => $type
+    ];
+
+    // Redirect back to payment list
+    redirect('agent/paymentlist');
+  }
+
+  public function create_voucher_pickup()
+  {
+    require_once APPROOT . '/helpers/Voucher_helper.php';
+
+    $request_code = $_GET['request_code'];
+    $fullinfo = $this->db->columnFilter('pickup_requests', 'request_code', $request_code);
+    // var_dump($fullinfo);
+    // die();
+
+    $helper = new Voucher_helper();
+    $tracking_code = $helper->generateTrackingNumber($fullinfo['sender_city_id'], $fullinfo['receiver_city_id']);
+
+    $route = $this->db->checkroute('route', $fullinfo['sender_township_id'], $fullinfo['receiver_township_id']);
+    $arrivalTime = $helper->calculateArrivalTime($route['time']);
+
+
+
+    $user = new UserModel();
+    $user->name = $fullinfo['receiver_name'];
+    $user->phone = $fullinfo['receiver_phone'];
+    $user->email = $fullinfo['receiver_email'];
+    $user->region_id = $fullinfo['receiver_region_id'];
+    $user->township_id = $fullinfo['receiver_township_id'];
+    $user->city_id = $fullinfo['receiver_city_id'];
+    $user->role_id = 3;
+    $result = $this->db->create('users', $user->toArray());
+
+    $checkadmin = $this->db->checkadmin('users', 'township_id', $fullinfo['receiver_township_id']);
+    // var_dump($checkadmin);
+    // die();
+
+
+    $deli = new Delivery();
+    $deli->setSenderagentid($fullinfo['agent_id']);
+    $deli->setReceiveragentid($checkadmin['id']);
+    $deli->setSendCustomerid($fullinfo['sender_id']);
+    $deli->setReceiveCustomerid($result);
+    $deli->setWeight($fullinfo['weight']);
+    $deli->setAmount($fullinfo['amount']);
+    $deli->setDeliverystatusid(1);
+    $deli->setPaymentstatusid($fullinfo['payment_status_id']);
+    date_default_timezone_set('Asia/Yangon');
+    $deli->setcreatedat(date('Y-m-d H:i:s'));
+    $deli->setUpdated_at(null);
+    $deli->setProducttype($fullinfo['parcel_type_id']);
+    $deli->setTrackingnumber($tracking_code);
+    $deli->setDurationtime($arrivalTime);
+    $deli->setFromtownshipid($fullinfo['sender_township_id']);
+    $deli->setTotownshipid($fullinfo['receiver_township_id']);
+    $deli->setFromregionid($fullinfo['sender_region_id']);
+    $deli->setToregionid($fullinfo['receiver_region_id']);
+    $deli->setFromcityid($fullinfo['sender_city_id']);
+    $deli->setTocityid($fullinfo['receiver_city_id']);
+    $deli->setDeliveryTypeId($fullinfo['delivery_type_id']);
+    $deli->setPiececount($fullinfo['quantity']);
+    $deliresult = $this->db->create('deliveries', $deli->toArray());
+
+    $this->db->update('pickup_requests', $fullinfo['id'], ['status_id' => 15]);
+    redirect('agent/action?request_code=' . $fullinfo['request_code']);
     return;
   }
 

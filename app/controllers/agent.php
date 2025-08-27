@@ -128,7 +128,7 @@ class Agent extends Controller
         $this->view('agent/result');
     }
 
-    public function pickup()
+    public function requestpickup()
     {
         $allpickup = $this->db->readAll('pickup_requests_view');
 
@@ -214,5 +214,35 @@ class Agent extends Controller
             'pickupagent' => $pickupagent,
         ];
         $this->view('agent/pickupagentdetail', $data);
+    }
+
+    public function paymentlist()
+    {
+        // Read all pickup requests from the view
+        $allPayments = $this->db->readAll('pickup_requests_view');
+
+        // Filter only where payment_method is not null/empty
+        $payment = array_filter($allPayments, function ($row) {
+            $method = $row['payment_method'] ?? '';
+            return !empty($method); // ✅ only include if payment_method has a value
+        });
+
+        // Pass to view
+        $data = [
+            'payment' => $payment,
+        ];
+
+        $this->view('agent/paymentlist', $data);
+    }
+
+
+
+    public function paymenttype()
+    {
+        $allmethod = $this->db->readAll('payment_methods_view');
+        $data = [
+            'allmethod' => $allmethod,
+        ];
+        $this->view('agent/paymenttype', $data);
     }
 }
