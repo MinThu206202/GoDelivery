@@ -109,17 +109,31 @@ require_once APPROOT . '/views/inc/nav.php'
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <?php
+
                                                                 $statusColors = [
-                                                                    'pending' => 'bg-yellow-100 text-yellow-800',
-                                                                    'accepted' => 'bg-blue-100 text-blue-800',
-                                                                    'collected' => 'bg-orange-100 text-orange-800',
-                                                                    'voucher_created' => 'bg-purple-100 text-purple-800',
-                                                                    'delivered' => 'bg-green-100 text-green-800'
+                                                                    'pending' => 'bg-yellow-500',
+                                                                    'pickup_verification_pending' => 'bg-orange-500',
+                                                                    'pickup_verified' => 'bg-blue-500',
+                                                                    'accepted' => 'bg-indigo-500',
+                                                                    'on_the_way' => 'bg-sky-500',
+                                                                    'collected' => 'bg-orange-600',
+                                                                    'awaiting_cash' => 'bg-amber-500',
+                                                                    'cash_collected' => 'bg-lime-600',
+                                                                    'waiting_for_receipt' => 'bg-pink-500',
+                                                                    'receipt_submitted' => 'bg-cyan-500',
+                                                                    'payment_pending' => 'bg-amber-600',
+                                                                    'payment_success' => 'bg-green-600',
+                                                                    'payment_reject' => 'bg-red-600',
+                                                                    'voucher_created' => 'bg-purple-600',
+                                                                    'delivered' => 'bg-green-500',
+                                                                    'rejected' => 'bg-red-500',
+                                                                    'cancelled' => 'bg-gray-600',
                                                                 ];
+
                                     ?>
 
                                     <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusColors[$pickup['status']] ?? '' ?>">
+                                        class="px-3 py-1.5 inline-flex text-sm leading-5 font-bold text-white rounded-full shadow-lg <?= $statusColors[$pickup['status']] ?? '' ?>">
                                         <?= ucfirst(str_replace('_', ' ', $pickup['status'])) ?>
                                     </span>
 

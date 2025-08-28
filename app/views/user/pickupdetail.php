@@ -102,29 +102,34 @@ $data = $data['code'];
                     <div class="space-y-2">
                         <strong class="text-lg font-bold text-gray-900">Status:</strong>
                         <?php
-                        $statusClass = '';
-                        switch (strtolower($data['status'])) {
-                            case 'pending':
-                                $statusClass = 'bg-yellow-200 text-yellow-800';
-                                break;
-                            case 'rejected':
-                                $statusClass = 'bg-red-200 text-red-800';
-                                break;
-                            case 'waiting_for_receipt':
-                                $statusClass = 'bg-blue-200 text-blue-800';
-                                break;
-                            case 'payment_pending':
-                                $statusClass = 'bg-purple-200 text-purple-800';
-                                break;
-                            default:
-                                $statusClass = 'bg-green-200 text-green-800';
-                                break;
-                        }
+                        $statusColors = [
+                            'pending' => 'bg-yellow-500',
+                            'pickup_verification_pending' => 'bg-orange-500',
+                            'pickup_verified' => 'bg-blue-500',
+                            'accepted' => 'bg-indigo-500',
+                            'on_the_way' => 'bg-sky-500',
+                            'collected' => 'bg-orange-600',
+                            'awaiting_cash' => 'bg-amber-500',
+                            'cash_collected' => 'bg-lime-600',
+                            'waiting_for_receipt' => 'bg-pink-500',
+                            'receipt_submitted' => 'bg-cyan-500',
+                            'payment_pending' => 'bg-amber-600',
+                            'payment_success' => 'bg-green-600',
+                            'payment_reject' => 'bg-red-600',
+                            'voucher_created' => 'bg-purple-600',
+                            'delivered' => 'bg-green-500',
+                            'rejected' => 'bg-red-500',
+                            'cancelled' => 'bg-gray-600',
+                        ];
+
+                        $statusKey = strtolower(str_replace(' ', '_', $data['status']));
+                        $statusClass = $statusColors[$statusKey] ?? 'bg-gray-400'; // fallback color
                         ?>
                         <div
-                            class="px-3 py-1 inline-flex text-sm leading-5 font-bold rounded-full <?= $statusClass ?> break-words capitalize">
-                            <?= htmlspecialchars(str_replace('_', ' ', $data['status'])) ?>
+                            class="px-4 py-2 inline-flex text-sm leading-5 font-bold rounded-full shadow-md text-white <?= $statusClass ?> break-words capitalize">
+                            <?= htmlspecialchars(str_replace('_', ' ', $statusKey)) ?>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -279,6 +284,13 @@ $data = $data['code'];
 
                             <input type="file" name="payment_image" accept="image/*"
                                 class="mt-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors duration-200">
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="px-6 py-3 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors">
+                                Submit Payment
+                            </button>
                         </div>
 
                 </form>
