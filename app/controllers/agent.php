@@ -75,8 +75,6 @@ class Agent extends Controller
         }
     }
 
-
-
     public function voucher()
     {
         $getregion = $this->db->readAll('regions');
@@ -153,17 +151,20 @@ class Agent extends Controller
 
     public function action()
     {
+        require_once APPROOT . '/helpers/Voucher_helper.php';
+
         $request_code = $_GET['request_code'];
         $allrequestdata = $this->db->columnFilter('pickup_requests_view', 'request_code', $request_code);
-        $checkadmin = $this->db->columnFilter('user_full_info', 'id', $allrequestdata['agent_id']);
+        // $checkadmin = $this->db->columnFilter('view_available_locations', 'agent_id', $allrequestdata['agent_id']);
         $checklocation = $this->db->columnFilter('view_available_locations', 'township_name', $allrequestdata['receiver_township']);
         $checkroute = $this->db->checkroutename('route_full_info', $allrequestdata['sender_township'], $allrequestdata['receiver_township']);
+
         $data = [
             'pickup' => $allrequestdata,
-            'admin' => $checkadmin,
             'location' => $checklocation,
             'route' => $checkroute,
         ];
+        // var_dump($checkadmin);
         // var_dump($checklocation);
         // var_dump($checkroute);
         // die();
@@ -174,13 +175,17 @@ class Agent extends Controller
     {
         $request_code = $_GET['request_code'];
         $allrequestdata = $this->db->columnFilter('pickup_requests_view', 'request_code', $request_code);
-        $checkadmin = $this->db->columnFilter('user_full_info', 'id', $allrequestdata['agent_id']);
+        // $checkadmin = $this->db->columnFilter('user_full_info', 'id', $allrequestdata['agent_id']);
         $checklocation = $this->db->columnFilter('view_available_locations', 'township_name', $allrequestdata['receiver_township']);
         $checkroute = $this->db->checkroutename('route_full_info', $allrequestdata['sender_township'], $allrequestdata['receiver_township']);
         $availablepickupagent = $this->db->columnFilterAll('users', 'created_by_agent', $this->agent['id']);
+
+        // Keep only active users
+        $availablepickupagent = array_filter($availablepickupagent, function ($agent) {
+            return isset($agent['status_id']) && $agent['status_id'] === 1;
+        });
         $data = [
             'pickup' => $allrequestdata,
-            'admin' => $checkadmin,
             'location' => $checklocation,
             'route' => $checkroute,
             'availableAgents' => $availablepickupagent,
@@ -234,8 +239,6 @@ class Agent extends Controller
 
         $this->view('agent/paymentlist', $data);
     }
-
-
 
     public function paymenttype()
     {

@@ -115,9 +115,15 @@ class pickupagentcontroller extends Controller
     {
         $id = $_GET['id'];
         $request_code = $this->db->getById('pickup_requests', $id);
+        $route = $this->db->checkroute('route', $request_code['sender_township_id'], $request_code['receiver_township_id']);
+
+        $totalPrice = (float)$request_code['weight'] * (float) $route['price'];
 
 
-        $result =  $this->db->update('pickup_requests', $id, ['status_id' => 9]);
+
+        $result =  $this->db->update('pickup_requests', $id, ['status_id' => 9, 'amount' => $totalPrice]);
+        // var_dump($result);
+        // die();
         if ($result) {
             $_SESSION['flash_message'] = [
                 'type' => 'success',
@@ -138,8 +144,27 @@ class pickupagentcontroller extends Controller
     public function completepickup()
     {
         $id = $_GET['id'];
+        $request_code = $_GET['request_code'] ?? null;
         $this->db->update('pickup_requests', $id, ['status_id' => 3]);
-        redirect('pickupagentcontroller/mypick');
+        redirect('pickupagentcontroller/pickupdetail?request_code=' . $request_code);
+        return;
+    }
+
+    public function arrived()
+    {
+        $id = $_GET['id'];
+        $request_code = $_GET['request_code'] ?? null;
+        $this->db->update('pickup_requests', $id, ['status_id' => 17]);
+        redirect('pickupagentcontroller/pickupdetail?request_code=' . $request_code);
+        return;
+    }
+
+    public function pickupfail()
+    {
+        $id = $_GET['id'];
+        $request_code = $_GET['request_code'] ?? null;
+        $this->db->update('pickup_requests', $id, ['status_id' => 19]);
+        redirect('pickupagentcontroller/pickupdetail?request_code=' . $request_code);
         return;
     }
 

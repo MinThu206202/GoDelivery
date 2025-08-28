@@ -908,15 +908,12 @@ class Agentcontroller extends Controller
 
     $fullinfo = $this->db->columnFilter('pickup_requests', 'request_code', $pickup_code);
 
-    $route = $this->db->checkroute('route', $fullinfo['sender_township_id'], $fullinfo['receiver_township_id']);
-    $totalPrice = (float)$fullinfo['weight'] * (float) $route['price'];
-
     if ($payment_status == 'Sender Pay') {
       $status_id = 10;
     } else {
       $status_id = 8;
     }
-    $result = $this->db->update('pickup_requests', $pickup_id, ['status_id' => $status_id, 'amount' => $totalPrice]);
+    $result = $this->db->update('pickup_requests', $pickup_id, ['status_id' => $status_id]);
     redirect('agent/action?request_code=' . $pickup_code);
     return;
   }
@@ -1045,16 +1042,13 @@ class Agentcontroller extends Controller
 
     $request_code = $_GET['request_code'];
     $fullinfo = $this->db->columnFilter('pickup_requests', 'request_code', $request_code);
-    // var_dump($fullinfo);
-    // die();
+
 
     $helper = new Voucher_helper();
     $tracking_code = $helper->generateTrackingNumber($fullinfo['sender_city_id'], $fullinfo['receiver_city_id']);
 
     $route = $this->db->checkroute('route', $fullinfo['sender_township_id'], $fullinfo['receiver_township_id']);
     $arrivalTime = $helper->calculateArrivalTime($route['time']);
-
-
 
     $user = new UserModel();
     $user->name = $fullinfo['receiver_name'];
@@ -1067,9 +1061,6 @@ class Agentcontroller extends Controller
     $result = $this->db->create('users', $user->toArray());
 
     $checkadmin = $this->db->checkadmin('users', 'township_id', $fullinfo['receiver_township_id']);
-    // var_dump($checkadmin);
-    // die();
-
 
     $deli = new Delivery();
     $deli->setSenderagentid($fullinfo['agent_id']);

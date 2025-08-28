@@ -160,7 +160,8 @@ class Pickupcontroller extends Controller
         // ✅ Find available agent
         $checkagent = $this->db->columnFilter('available_location', 'township_id', $pickup_township);
 
-        if (!$checkagent) {
+
+        if (!$checkagent || $checkagent['agent_id'] === null) {
             setMessage('error', "We cannot pickup your address");
             redirect('pages/pickup');
             return;

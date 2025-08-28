@@ -1,6 +1,5 @@
 <?php require_once APPROOT . '/views/inc/agentsidebar.php';
 $pickup = $data['pickup'];
-$admin = $data['admin'];
 $location = $data['location'];
 $route = $data['route'];
 $availableAgents = $data['availableAgents'];
@@ -79,45 +78,42 @@ $availableAgents = $data['availableAgents'];
                             <h2 class="text-2xl font-bold text-gray-800">Request:
                                 <?= htmlspecialchars($pickup['request_code']) ?></h2>
                             <?php
-                            switch ($pickup['status']) {
-                                case 'pending':
-                                    $status_class = 'bg-yellow-100 text-yellow-800';
-                                    break;
-                                case 'accepted':
-                                    $status_class = 'bg-blue-100 text-blue-800';
-                                    break;
-                                case 'collected':
-                                    $status_class = 'bg-purple-100 text-purple-800';
-                                    break;
-                                case 'voucher_created':
-                                    $status_class = 'bg-indigo-100 text-indigo-800';
-                                    break;
-                                case 'delivered':
-                                    $status_class = 'bg-green-100 text-green-800';
-                                    break;
-                                case 'arrived_office':
-                                    $status_class = 'bg-teal-100 text-teal-800';
-                                    break;
-                                case 'rejected':
-                                    $status_class = 'bg-red-100 text-red-800';
-                                    break;
-                                case 'agent_checked':
-                                    $status_class = 'bg-pink-100 text-pink-800';
-                                    break;
-                                case 'awaiting_payment':
-                                    $status_class = 'bg-orange-100 text-orange-800';
-                                    break;
-                                case 'payment_success':
-                                    $status_class = 'bg-emerald-100 text-emerald-800';
-                                    break;
-                                default:
-                                    $status_class = 'bg-gray-100 text-gray-800';
-                            }
+                            $status = strtolower($pickup['status'] ?? 'default');
+
+                            $statusClasses = [
+                                'pending'                     => 'bg-yellow-500',
+                                'accepted'                    => 'bg-indigo-500',
+                                'collected'                   => 'bg-orange-600',
+                                'voucher_created'             => 'bg-purple-600',
+                                'delivered'                   => 'bg-green-500',
+                                'arrived_office'              => 'bg-teal-500',
+                                'rejected'                    => 'bg-red-500',
+                                'agent_checked'               => 'bg-pink-500',
+                                'awaiting_payment'            => 'bg-orange-500',
+                                'payment_success'             => 'bg-emerald-600',
+                                'awaiting_cash'               => 'bg-amber-500',
+                                'cash_collected'              => 'bg-lime-600',
+                                'pickup_verification_pending' => 'bg-orange-500',
+                                'pickup_verified'             => 'bg-blue-500',
+                                'on_the_way'                  => 'bg-sky-500',
+                                'waiting_for_receipt'         => 'bg-pink-500',
+                                'receipt_submitted'           => 'bg-cyan-500',
+                                'payment_pending'             => 'bg-amber-600',
+                                'payment_reject'              => 'bg-red-600',
+                                'cancelled'                   => 'bg-gray-600',
+                                'arrived_at_user'             => 'bg-green-600',
+                                'pickup_failed'               => 'bg-red-600',
+                                'default'                     => 'bg-gray-400'
+                            ];
+
+                            $status_class = $statusClasses[$status] ?? $statusClasses['default'];
                             ?>
 
-                            <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full <?= $status_class ?>">
-                                <?= ucfirst(htmlspecialchars($pickup['status'])) ?>
+                            <span
+                                class="px-4 py-2 inline-flex text-sm font-bold rounded-full shadow-md text-white capitalize <?= $status_class ?>">
+                                <?= htmlspecialchars(str_replace('_', ' ', $status)) ?>
                             </span>
+
                         </div>
                     </div>
 
@@ -198,6 +194,7 @@ $availableAgents = $data['availableAgents'];
                         <div class="space-y-6 pt-6 border-t border-gray-200">
                             <h3 class="text-xl font-semibold text-gray-700 border-b pb-2">Status & Location</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+
                                 <!-- Receiver Agent Status -->
                                 <div class="space-y-4">
                                     <div>
@@ -211,11 +208,15 @@ $availableAgents = $data['availableAgents'];
                                             </svg>
                                             Receiver Agent
                                         </label>
+                                        <?php
+                                        $agentName = $location['agent_name'] ?? null;
+                                        $displayAgent = $agentName ? htmlspecialchars($agentName) : 'Agent is not yet';
+                                        ?>
                                         <input type="text" id="receiver_agent_name" name="receiver_agent_name"
-                                            value="<?= htmlspecialchars($admin['name']) ?>"
-                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-gray-100 cursor-not-allowed"
-                                            readonly>
+                                            value="<?= $displayAgent ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 
+                   focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-gray-100 cursor-not-allowed" readonly>
                                     </div>
+
                                     <div>
                                         <label for="receiver_agent_status"
                                             class="flex items-center text-sm font-medium text-gray-500">
@@ -227,12 +228,29 @@ $availableAgents = $data['availableAgents'];
                                             </svg>
                                             Receiver Agent Status
                                         </label>
+                                        <?php
+                                        if (!$agentName) {
+                                            // If agent name is NULL → force Pending
+                                            $statusLabel = "Pending";
+                                            $agent_status_class = 'bg-yellow-100 text-yellow-800';
+                                        } else {
+                                            $status = strtolower($location['status_location_name'] ?? 'inactive');
+                                            $statusLabel = ucfirst($status);
+                                            $agent_status_class = match ($status) {
+                                                'active' => 'bg-green-100 text-green-800',
+                                                'inactive' => 'bg-gray-200 text-gray-800',
+                                                'pending' => 'bg-yellow-100 text-yellow-800',
+                                                default => 'bg-blue-100 text-blue-800',
+                                            };
+                                        }
+                                        ?>
                                         <span
-                                            class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full status-<?= strtolower(str_replace(' ', '-', htmlspecialchars($admin['status_name']))) ?>">
-                                            <?= ucfirst(htmlspecialchars($admin['status_name'])) ?>
+                                            class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full <?= $agent_status_class ?>">
+                                            <?= htmlspecialchars($statusLabel) ?>
                                         </span>
                                     </div>
                                 </div>
+
 
                                 <!-- Route Status -->
                                 <div class="space-y-4">
@@ -246,8 +264,10 @@ $availableAgents = $data['availableAgents'];
                                             Route Name
                                         </label>
                                         <input type="text" id="route_name" name="route_name"
-                                            value="<?= htmlspecialchars($route['from_township'] . ' → ' . $route['to_township']) ?>"
-                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-gray-100 cursor-not-allowed"
+                                            value="<?= empty($route['from_township']) || empty($route['to_township'])
+                                                        ? 'Route not available'
+                                                        : htmlspecialchars($route['from_township'] . ' → ' . $route['to_township']) ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 
+                               focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-gray-100 cursor-not-allowed"
                                             readonly>
                                     </div>
                                     <div>
@@ -261,9 +281,19 @@ $availableAgents = $data['availableAgents'];
                                             </svg>
                                             Route Status
                                         </label>
+                                        <?php
+                                        $route_status = empty($route['from_township']) || empty($route['to_township'])
+                                            ? 'pending' : strtolower($route['status'] ?? 'pending');
+                                        $route_status_class = match ($route_status) {
+                                            'pending' => 'bg-yellow-100 text-yellow-800',
+                                            'active' => 'bg-green-100 text-green-800',
+                                            'inactive' => 'bg-gray-200 text-gray-800',
+                                            default => 'bg-blue-100 text-blue-800',
+                                        };
+                                        ?>
                                         <span
-                                            class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full status-<?= strtolower(str_replace(' ', '-', htmlspecialchars($route['status']))) ?>">
-                                            <?= ucfirst(htmlspecialchars($route['status'])) ?>
+                                            class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full <?= $route_status_class ?>">
+                                            <?= ucfirst(htmlspecialchars($route_status)) ?>
                                         </span>
                                     </div>
                                 </div>
@@ -279,11 +309,11 @@ $availableAgents = $data['availableAgents'];
                                                     d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
                                                     clip-rule="evenodd" />
                                             </svg>
-                                            Current Location
+                                            Receiver Location
                                         </label>
                                         <input type="text" id="location_name" name="location_name"
-                                            value="<?= htmlspecialchars($location['township_name']) ?>"
-                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-gray-100 cursor-not-allowed"
+                                            value="<?= htmlspecialchars($location['township_name'] ?? 'N/A') ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 
+                               focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-gray-100 cursor-not-allowed"
                                             readonly>
                                     </div>
                                     <div>
@@ -297,17 +327,29 @@ $availableAgents = $data['availableAgents'];
                                             </svg>
                                             Location Status
                                         </label>
+                                        <?php
+                                        $loc_status = strtolower($location['status_location_name'] ?? 'inactive');
+                                        $loc_status_class = match ($loc_status) {
+                                            'pending' => 'bg-yellow-100 text-yellow-800',
+                                            'active' => 'bg-green-100 text-green-800',
+                                            'inactive' => 'bg-gray-200 text-gray-800',
+                                            'delivered' => 'bg-blue-100 text-blue-800',
+                                            default => 'bg-gray-100 text-gray-600',
+                                        };
+                                        ?>
                                         <span
-                                            class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full status-<?= strtolower(str_replace(' ', '-', htmlspecialchars($location['status_location_name']))) ?>">
-                                            <?= ucfirst(htmlspecialchars($location['status_location_name'])) ?>
+                                            class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full <?= $loc_status_class ?>">
+                                            <?= ucfirst(htmlspecialchars($location['status_location_name'] ?? 'Inactive')) ?>
                                         </span>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($pickup['status'] === 'Pickup Verification Pending'): ?>
+
+                    <?php if ($pickup['status'] === 'pickup_verification_pending'): ?>
 
                         <div class="space-y-6 pt-6 border-t border-gray-200">
                             <h3 class="text-xl font-semibold text-gray-700 border-b pb-2">Pickup Information</h3>
@@ -529,7 +571,7 @@ $availableAgents = $data['availableAgents'];
                         <?php endif; ?>
                 </form>
 
-                <?php if ($pickup['status'] === 'Pickup Verification Pending' || $pickup['status'] === 'Awaiting cash'): ?>
+                <?php if ($pickup['status'] === 'pickup_verification_pending' || $pickup['status'] === 'Awaiting cash'): ?>
                     <a href="<?php echo URLROOT; ?>/agentcontroller/pickupverify
 ?id=<?php echo urlencode($pickup['id']); ?>
 &request_code=<?php echo urlencode($pickup['request_code']); ?>

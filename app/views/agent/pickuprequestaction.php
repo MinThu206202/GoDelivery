@@ -1,6 +1,6 @@
 <?php require_once APPROOT . '/views/inc/agentsidebar.php';
 $pickup = $data['pickup'];
-$admin = $data['admin'];
+// $admin = $data['admin'];
 $location = $data['location'];
 $route = $data['route'];
 ?>
@@ -58,50 +58,43 @@ $route = $data['route'];
                         <h2 class="text-2xl font-bold text-gray-800">Request:
                             <?= htmlspecialchars($pickup['request_code']) ?></h2>
                         <?php
-                        $status = $pickup['status'] ?? 'N/A';
+                        $status = strtolower($pickup['status'] ?? 'default');
 
+                        $statusClasses = [
+                            'pending'                     => 'bg-yellow-500',
+                            'accepted'                    => 'bg-indigo-500',
+                            'collected'                   => 'bg-orange-600',
+                            'voucher_created'             => 'bg-purple-600',
+                            'delivered'                   => 'bg-green-500',
+                            'arrived_office'              => 'bg-teal-500',
+                            'rejected'                    => 'bg-red-500',
+                            'agent_checked'               => 'bg-pink-500',
+                            'awaiting_payment'            => 'bg-orange-500',
+                            'payment_success'             => 'bg-emerald-600',
+                            'awaiting_cash'               => 'bg-amber-500',
+                            'cash_collected'              => 'bg-lime-600',
+                            'pickup_verification_pending' => 'bg-orange-500',
+                            'pickup_verified'             => 'bg-blue-500',
+                            'on_the_way'                  => 'bg-sky-500',
+                            'waiting_for_receipt'         => 'bg-pink-500',
+                            'receipt_submitted'           => 'bg-cyan-500',
+                            'payment_pending'             => 'bg-amber-600',
+                            'payment_reject'              => 'bg-red-600',
+                            'arrived_at_user'             => 'bg-green-600',
+                            'pickup_failed'               => 'bg-red-600',
+                            'cancelled'                   => 'bg-gray-600',
+                            'default'                     => 'bg-gray-400'
+                        ];
 
-                        switch ($status) {
-                            case 'pending':
-                                $status_class = 'bg-yellow-100 text-yellow-800';
-                                break;
-                            case 'accepted':
-                                $status_class = 'bg-blue-100 text-blue-800';
-                                break;
-                            case 'collected':
-                                $status_class = 'bg-purple-100 text-purple-800';
-                                break;
-                            case 'voucher_created':
-                                $status_class = 'bg-indigo-100 text-indigo-800';
-                                break;
-                            case 'delivered':
-                                $status_class = 'bg-green-100 text-green-800';
-                                break;
-                            case 'arrived_office':
-                                $status_class = 'bg-teal-100 text-teal-800';
-                                break;
-                            case 'rejected':
-                                $status_class = 'bg-red-100 text-red-800';
-                                break;
-                            case 'agent_checked':
-                                $status_class = 'bg-pink-100 text-pink-800';
-                                break;
-                            case 'awaiting_payment':
-                                $status_class = 'bg-orange-100 text-orange-800';
-                                break;
-                            case 'payment_success':
-                                $status_class = 'bg-emerald-100 text-emerald-800';
-                                break;
-                            default:
-                                $status_class = 'bg-gray-100 text-gray-800';
-                        }
-
-
+                        $status_class = $statusClasses[$status] ?? $statusClasses['default'];
                         ?>
 
-                        <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full <?= $status_class ?>">
-                            <?= ucfirst(htmlspecialchars($status)) ?>
+                        <span
+                            class="px-3 py-1 inline-flex text-sm font-bold rounded-full shadow-md text-white capitalize <?= $status_class ?>  whitespace-nowrap leading-tight"
+                            title="<?= htmlspecialchars(str_replace('_', ' ', $status)) ?>">
+                            <?= htmlspecialchars(str_replace('_', ' ', $status)) ?>
                         </span>
+
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
@@ -235,73 +228,140 @@ $route = $data['route'];
                     <div class="space-y-4 pt-6 border-t border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-700 border-b pb-2">Agent & Route Details</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+
+                            <!-- Receiver Agent Name + Badge Side by Side -->
                             <div>
                                 <p class="text-sm font-medium text-gray-500">Receiver Agent Name</p>
-                                <p class="mt-1 text-base font-semibold text-gray-900">
-                                    <?= htmlspecialchars($admin['name']) ?></p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Receiver Township</p>
-                                <p class="mt-1 text-base font-semibold text-gray-900">
-                                    <?= htmlspecialchars($location['township_name']) ?></p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Township Status</p>
-                                <?php
-                                $status = strtolower($location['status_location_name'] ?? '');
-                                switch ($status) {
-                                    case 'active':
-                                        $route_status_class = 'bg-green-100 text-green-800';
-                                        break;
-                                    case 'pending':
-                                        $route_status_class = 'bg-yellow-100 text-yellow-800';
-                                        break;
-                                    default:
-                                        $route_status_class = 'bg-red-100 text-red-800';
-                                        break;
-                                }
-                                ?>
-                                <span
-                                    class="mt-1 text-sm font-semibold px-2 py-1 rounded-full <?= $route_status_class ?>">
-                                    <?= ucfirst(htmlspecialchars($location['status_location_name'])) ?>
-                                </span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <?php
+                                    if (empty($location['agent_name'])) {
+                                        // If agent_name is NULL or empty
+                                        $agentName = "Agent Not Yet";
+                                        $agentStatus = "Pending";
+                                        $statusClass = "bg-yellow-100 text-yellow-800";
+                                    } else {
+                                        $agentName = htmlspecialchars($location['agent_name']);
+                                        $agentStatus = ucfirst(htmlspecialchars($location['agent_status_name'] ?? 'N/A'));
+
+                                        // Status color
+                                        switch (strtolower($location['agent_status_name'] ?? '')) {
+                                            case 'active':
+                                                $statusClass = "bg-green-100 text-green-800";
+                                                break;
+                                            case 'pending':
+                                                $statusClass = "bg-yellow-100 text-yellow-800";
+                                                break;
+                                            case 'inactive':   // 👈 Added this
+                                                $statusClass = "bg-gray-200 text-gray-800";
+                                                break;
+                                            default:
+                                                $statusClass = "bg-red-100 text-red-800";
+                                                break;
+                                        }
+                                    }
+                                    ?>
+                                    <p class="text-base font-semibold text-gray-900"><?= $agentName ?></p>
+                                    <span class="text-sm font-semibold px-2 py-1 rounded-full <?= $statusClass ?>">
+                                        <?= $agentStatus ?>
+                                    </span>
+                                </div>
                             </div>
 
+
+                            <!-- Receiver Township -->
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Receiver Township</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <p class="text-base font-semibold text-gray-900">
+                                        <?= htmlspecialchars($location['township_name'] ?? 'N/A') ?>
+                                    </p>
+                                    <?php
+                                    $status = strtolower($location['status_location_name'] ?? '');
+                                    switch ($status) {
+                                        case 'active':
+                                            $route_status_class = "bg-green-100 text-green-800";
+                                            break;
+                                        case 'pending':
+                                            $route_status_class = "bg-yellow-100 text-yellow-800";
+                                            break;
+                                        case 'inactive':
+                                            $route_status_class = "bg-gray-200 text-gray-800";
+                                            break;
+                                        default:
+                                            $route_status_class = "bg-red-100 text-red-800";
+                                            break;
+                                    }
+                                    ?>
+                                    <span
+                                        class="text-sm font-semibold px-2 py-1 rounded-full <?= $route_status_class ?>">
+                                        <?= ucfirst(htmlspecialchars($location['status_location_name'] ?? 'N/A')) ?>
+                                    </span>
+                                </div>
+                            </div>
+
+
+                            <!-- Township Status -->
                             <div>
                                 <p class="text-sm font-medium text-gray-500">Route Status</p>
-                                <?php
-                                $status = strtolower($route['status'] ?? '');
-                                switch ($status) {
-                                    case 'active':
-                                        $route_status_class = 'bg-green-100 text-green-800';
-                                        break;
-                                    case 'pending':
-                                        $route_status_class = 'bg-yellow-100 text-yellow-800';
-                                        break;
-                                    default:
-                                        $route_status_class = 'bg-red-100 text-red-800';
-                                        break;
-                                }
-                                ?>
-                                <span
-                                    class="mt-1 text-sm font-semibold px-2 py-1 rounded-full <?= $route_status_class ?>">
-                                    <?= ucfirst(htmlspecialchars($route['status'])) ?>
-                                </span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <?php
+                                    $from = $route['from_township'] ?? null;
+                                    $to   = $route['to_township'] ?? null;
+                                    $status = strtolower($route['status'] ?? '');
+
+                                    if (empty($from) && empty($to)) {
+                                        // Case: No route yet
+                                        $route_text = "Route Not Yet";
+                                        $status_text = "Pending";
+                                        $route_status_class = "bg-yellow-100 text-yellow-800";
+                                    } else {
+                                        // Case: Show real route
+                                        $route_text = htmlspecialchars($from) . " -> " . htmlspecialchars($to);
+                                        $status_text = ucfirst(htmlspecialchars($route['status'] ?? 'N/A'));
+
+                                        switch ($status) {
+                                            case 'active':
+                                                $route_status_class = "bg-green-100 text-green-800";
+                                                break;
+                                            case 'pending':
+                                                $route_status_class = "bg-yellow-100 text-yellow-800";
+                                                break;
+                                            case 'inactive':
+                                                $route_status_class = "bg-gray-200 text-gray-800";
+                                                break;
+                                            default:
+                                                $route_status_class = "bg-red-100 text-red-800";
+                                                break;
+                                        }
+                                    }
+                                    ?>
+                                    <p class="text-base font-semibold text-gray-900">
+                                        <?= $route_text ?>
+                                    </p>
+                                    <span
+                                        class="text-sm font-semibold px-2 py-1 rounded-full <?= $route_status_class ?>">
+                                        <?= $status_text ?>
+                                    </span>
+                                </div>
                             </div>
+
+
+
 
                         </div>
                     </div>
 
+
                     <!-- Buttons at the end -->
                     <div class="flex justify-end pt-6 border-t border-gray-200 space-x-4">
-                        <a href="javascript:history.back()"
+                        <a href=" <?php echo URLROOT; ?>/agent/requestpickup"
                             class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 shadow-md">
                             Back to Requests
                         </a>
 
                         <?php
                         // statuses where the Edit button should NOT be shown
-                        $blockedStatuses = ['accepted', 'collected', 'voucher_created', 'rejected', 'agent_checked'];
+                        $blockedStatuses = ['accepted', 'collected', 'voucher_created', 'rejected', 'agent_checked', 'cash_collected', 'payment_success'];
 
                         if (!in_array($pickup['status'], $blockedStatuses)): ?>
                             <a href="<?php echo URLROOT; ?>/agent/edit_pickup?request_code=<?= urlencode($pickup['request_code']); ?>"
@@ -310,7 +370,7 @@ $route = $data['route'];
                             </a>
                         <?php endif; ?>
 
-                        <?php if ($pickup['status'] === 'collected'): ?>
+                        <?php if ($pickup['status'] === 'collected' || $pickup['status'] === 'cash_collected'   || $pickup['status'] === 'payment_success'): ?>
                             <a href="<?php echo URLROOT; ?>/agentcontroller/create_voucher_pickup?request_code=<?= urlencode($pickup['request_code']); ?>"
                                 class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md">
                                 Create Voucher

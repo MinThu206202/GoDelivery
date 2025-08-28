@@ -51,89 +51,105 @@
         <div class="max-w-6xl mx-auto bg-white p-8 rounded-xl shadow-md">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Available Pickup Requests</h2>
             <!-- Adjusted max-height and overflow for scrollability -->
-            <div class="overflow-x-auto overflow-y-auto h-[500px]">
-                <table class="min-w-full divide-y divide-gray-200">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 table-fixed">
                     <thead class="bg-gray-50 sticky top-0">
                         <tr>
                             <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
-                                Request ID </th>
+                                class="w-28 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
+                                Request ID
+                            </th>
                             <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Customer Name</th>
+                                class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Customer Name
+                            </th>
                             <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Pickup Location</th>
+                                class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Pickup Location
+                            </th>
                             <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Contact Number</th>
+                                class="w-24 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Contact Number
+                            </th>
                             <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Requested Date & Time</th>
+                                class="w-36 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Requested Date & Time
+                            </th>
                             <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Parcel Status</th>
+                                class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Parcel Type
+                            </th>
                             <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
-                                Actions</th>
+                                class="w-36 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Parcel Status
+                            </th>
+                            <th scope="col"
+                                class="w-40 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
+                                Actions
+                            </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200 h-full">
+                    <tbody class="bg-white divide-y divide-gray-200">
                         <?php if (!empty($data['pickup_requests'])): ?>
                             <?php foreach ($data['pickup_requests'] as $res): ?>
-
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        <?= htmlspecialchars($res['request_code'] ?? '') ?>
+                                    <td class="px-4 py-2 text-sm font-medium text-gray-900">
+                                        <?= htmlspecialchars($res['request_code'] ?? '') ?></td>
+                                    <td class="px-4 py-2 text-sm text-gray-500">
+                                        <?= htmlspecialchars($res['sender_name'] ?? 'N/A') ?></td>
+                                    <td class="px-4 py-2 text-sm text-gray-500">
+                                        <?= htmlspecialchars($res['sender_city'] ?? 'N/A') ?></td>
+                                    <td class="px-4 py-2 text-sm text-gray-500">
+                                        <?= htmlspecialchars($res['sender_phone'] ?? '0.00') ?></td>
+                                    <td class="px-4 py-2 text-sm text-gray-900">
+                                        <?= htmlspecialchars($res['created_at'] ?? '0.00') ?></td>
+                                    <td class="px-4 py-2 text-sm text-gray-700 truncate"
+                                        title="<?= htmlspecialchars($res['parcel_type'] ?? 'N/A') ?>">
+                                        <?= htmlspecialchars($res['parcel_type'] ?? 'N/A') ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <?= htmlspecialchars($res['sender_name'] ?? 'N/A') ?>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <?= htmlspecialchars($res['sender_city'] ?? 'N/A') ?>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <?= htmlspecialchars($res['sender_phone'] ?? '0.00') ?>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        <?= htmlspecialchars($res['created_at'] ?? '0.00') ?>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <td class="px-4 py-2 text-sm">
                                         <?php
-                                        $status = $res['status'] ?? '';
-
-                                        // assign bg color based on status
+                                        $status = strtolower($res['status'] ?? 'default');
                                         $statusClasses = [
-                                            'pending'          => 'bg-yellow-100 text-yellow-800',
-                                            'accepted'         => 'bg-blue-100 text-blue-800',
-                                            'collected'        => 'bg-purple-100 text-purple-800',
-                                            'voucher_created'  => 'bg-indigo-100 text-indigo-800',
-                                            'delivered'        => 'bg-green-100 text-green-800',
-                                            'arrived_office'   => 'bg-teal-100 text-teal-800',
-                                            'rejected'         => 'bg-red-100 text-red-800',
-                                            'agent_checked'    => 'bg-pink-100 text-pink-800',
-                                            'awaiting_payment' => 'bg-orange-100 text-orange-800',
-                                            'payment_success'  => 'bg-emerald-100 text-emerald-800',
-                                            'default'          => 'bg-gray-100 text-gray-800'
+                                            'pending'                     => 'bg-yellow-500',
+                                            'accepted'                    => 'bg-indigo-500',
+                                            'collected'                   => 'bg-orange-600',
+                                            'voucher_created'             => 'bg-purple-600',
+                                            'delivered'                   => 'bg-green-500',
+                                            'arrived_office'              => 'bg-teal-500',
+                                            'rejected'                    => 'bg-red-500',
+                                            'agent_checked'               => 'bg-pink-500',
+                                            'awaiting_payment'            => 'bg-orange-500',
+                                            'payment_success'             => 'bg-emerald-600',
+                                            'awaiting_cash'               => 'bg-amber-500',
+                                            'cash_collected'              => 'bg-lime-600',
+                                            'pickup_verification_pending' => 'bg-orange-500',
+                                            'pickup_verified'             => 'bg-blue-500',
+                                            'on_the_way'                  => 'bg-sky-500',
+                                            'waiting_for_receipt'         => 'bg-pink-500',
+                                            'receipt_submitted'           => 'bg-cyan-500',
+                                            'payment_pending'             => 'bg-amber-600',
+                                            'payment_reject'              => 'bg-red-600',
+                                            'cancelled'                   => 'bg-gray-600',
+                                            'arrived_at_user'             => 'bg-green-600',
+                                            'pickup_failed'               => 'bg-red-600',
+                                            'default'                     => 'bg-gray-400'
                                         ];
-
-                                        $class = $statusClasses[$status] ?? 'bg-gray-100 text-gray-800';
+                                        $status_class = $statusClasses[$status] ?? $statusClasses['default'];
                                         ?>
-                                        <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full <?= $class ?>">
-                                            <?= htmlspecialchars($status) ?>
+                                        <span
+                                            class="px-3 py-1 inline-flex text-sm font-bold rounded-full shadow-md text-white capitalize <?= $status_class ?>  whitespace-nowrap leading-tight"
+                                            title="<?= htmlspecialchars(str_replace('_', ' ', $status)) ?>">
+                                            <?= htmlspecialchars(str_replace('_', ' ', $status)) ?>
                                         </span>
                                     </td>
-
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end space-x-2">
-                                        <!-- View Button -->
+                                    <td class="px-4 py-2 text-right text-sm font-medium flex space-x-2">
                                         <a href="<?= URLROOT; ?>/agent/pickup_detail?request_code=<?= htmlspecialchars($res['request_code']) ?>"
-                                            class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
+                                            class="px-3 py-1 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
                                             View
                                         </a>
-                                        <!-- Edit Button -->
                                         <a href="<?= URLROOT; ?>/agent/action?request_code=<?= htmlspecialchars($res['request_code']) ?>"
-                                            class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200">
+                                            class="px-3 py-1 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200">
                                             Actions
                                         </a>
                                     </td>
@@ -141,7 +157,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="7" class="px-6 py-8 text-center text-gray-500 text-sm">
+                                <td colspan="8" class="px-6 py-8 text-center text-gray-500 text-sm">
                                     🚚 No pickup requests available.
                                 </td>
                             </tr>
@@ -149,6 +165,8 @@
                     </tbody>
                 </table>
             </div>
+
+
         </div>
     </main>
 </div>

@@ -4,17 +4,17 @@ $pickup = $data['pickup'];
 ?>
 
 <style>
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f3f4f6;
-    }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
 
-    .status-pending {
-        background-color: #fef3c7;
-        /* yellow-100 */
-        color: #b45309;
-        /* amber-700 */
-    }
+.status-pending {
+    background-color: #fef3c7;
+    /* yellow-100 */
+    color: #b45309;
+    /* amber-700 */
+}
 </style>
 
 <body class="bg-gray-100 antialiased">
@@ -48,49 +48,42 @@ $pickup = $data['pickup'];
                         <h2 class="text-2xl font-bold text-gray-800">Request:
                             <?= htmlspecialchars($pickup['request_code']) ?></h2>
                         <?php
-                        $status = $pickup['status'] ?? 'N/A';
+                        $status = strtolower($pickup['status'] ?? 'N/A');
 
+                        $statusClasses = [
+                            'pending'                     => 'bg-yellow-500',
+                            'accepted'                    => 'bg-indigo-500',
+                            'collected'                   => 'bg-orange-600',
+                            'voucher_created'             => 'bg-purple-600',
+                            'delivered'                   => 'bg-green-500',
+                            'arrived_office'              => 'bg-teal-500',
+                            'rejected'                    => 'bg-red-500',
+                            'agent_checked'               => 'bg-pink-500',
+                            'awaiting_payment'            => 'bg-orange-500',
+                            'payment_success'             => 'bg-emerald-600',
+                            'awaiting_cash'               => 'bg-amber-500',
+                            'cash_collected'              => 'bg-lime-600',
+                            'pickup_verification_pending' => 'bg-orange-500',
+                            'pickup_verified'             => 'bg-blue-500',
+                            'on_the_way'                  => 'bg-sky-500',
+                            'waiting_for_receipt'         => 'bg-pink-500',
+                            'receipt_submitted'           => 'bg-cyan-500',
+                            'payment_pending'             => 'bg-amber-600',
+                            'payment_reject'              => 'bg-red-600',
+                            'arrived_at_user'             => 'bg-green-600',
+                            'pickup_failed'               => 'bg-red-600',
+                            'cancelled'                   => 'bg-gray-600',
+                            'default'                     => 'bg-gray-400'
+                        ];
 
-                        switch ($status) {
-                            case 'pending':
-                                $status_class = 'bg-yellow-100 text-yellow-800';
-                                break;
-                            case 'accepted':
-                                $status_class = 'bg-blue-100 text-blue-800';
-                                break;
-                            case 'collected':
-                                $status_class = 'bg-purple-100 text-purple-800';
-                                break;
-                            case 'voucher_created':
-                                $status_class = 'bg-indigo-100 text-indigo-800';
-                                break;
-                            case 'delivered':
-                                $status_class = 'bg-green-100 text-green-800';
-                                break;
-                            case 'arrived_office':
-                                $status_class = 'bg-teal-100 text-teal-800';
-                                break;
-                            case 'rejected':
-                                $status_class = 'bg-red-100 text-red-800';
-                                break;
-                            case 'agent_checked':
-                                $status_class = 'bg-pink-100 text-pink-800';
-                                break;
-                            case 'awaiting_payment':
-                                $status_class = 'bg-orange-100 text-orange-800';
-                                break;
-                            case 'payment_success':
-                                $status_class = 'bg-emerald-100 text-emerald-800';
-                                break;
-                            default:
-                                $status_class = 'bg-gray-100 text-gray-800';
-                        }
-
+                        $status_class = $statusClasses[$status] ?? $statusClasses['default'];
                         ?>
 
-                        <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full <?= $status_class ?>">
-                            <?= ucfirst(htmlspecialchars($status)) ?>
+                        <span
+                            class="px-4 py-2 inline-flex text-sm font-bold rounded-full shadow-md text-white capitalize <?= $status_class ?>">
+                            <?= htmlspecialchars(str_replace('_', ' ', $status)) ?>
                         </span>
+
 
                     </div>
 
@@ -376,7 +369,7 @@ $pickup = $data['pickup'];
 
                     <!-- Back Button at the end -->
                     <div class="flex justify-end pt-6 border-t border-gray-200">
-                        <a href="<?php echo URLROOT; ?>/agent/pickup"
+                        <a href="<?php echo URLROOT; ?>/agent/requestpickup"
                             class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 shadow-md">
                             Back to Requests
                         </a>

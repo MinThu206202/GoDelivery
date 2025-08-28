@@ -90,22 +90,43 @@ $pickup = $data['pickupdetial'];
                     <h2 class="text-3xl font-extrabold text-gray-900"><?= htmlspecialchars($pickup['request_code']) ?>
                     </h2>
                     <?php
-                    // Map statuses to Tailwind badge colors
-                    $statusColors = [
-                        'pending' => 'bg-yellow-300 text-yellow-900',       // waiting
-                        'accepted' => 'bg-blue-300 text-blue-900',         // assigned
-                        'collected' => 'bg-orange-300 text-orange-900',    // picked up
-                        'on_the_way' => 'bg-teal-300 text-teal-900',       // in transit
-                        'rejected' => 'bg-red-300 text-red-900',           // failed/rejected
-                        'awaiting_payment' => 'bg-amber-300 text-amber-900', // payment pending
-                        'payment_success' => 'bg-green-300 text-green-900'   // completed/delivered
+                    $status = strtolower($pickup['status'] ?? 'default');
+
+                    $statusClasses = [
+                        'pending'                     => 'bg-yellow-500',
+                        'accepted'                    => 'bg-indigo-500',
+                        'collected'                   => 'bg-orange-600',
+                        'voucher_created'             => 'bg-purple-600',
+                        'delivered'                   => 'bg-green-500',
+                        'arrived_office'              => 'bg-teal-500',
+                        'rejected'                    => 'bg-red-500',
+                        'agent_checked'               => 'bg-pink-500',
+                        'awaiting_payment'            => 'bg-orange-500',
+                        'payment_success'             => 'bg-emerald-600',
+                        'awaiting_cash'               => 'bg-amber-500',
+                        'cash_collected'              => 'bg-lime-600',
+                        'pickup_verification_pending' => 'bg-orange-500',
+                        'pickup_verified'             => 'bg-blue-500',
+                        'on_the_way'                  => 'bg-sky-500',
+                        'waiting_for_receipt'         => 'bg-pink-500',
+                        'receipt_submitted'           => 'bg-cyan-500',
+                        'payment_pending'             => 'bg-amber-600',
+                        'payment_reject'              => 'bg-red-600',
+                        'arrived_at_user'             => 'bg-green-600',
+                        'pickup_failed'               => 'bg-red-600',
+                        'cancelled'                   => 'bg-gray-600',
+                        'default'                     => 'bg-gray-400'
                     ];
-                    $badgeClass = $statusColors[$pickup['status']] ?? 'bg-gray-100 text-gray-700';
+
+                    $badgeClass = $statusClasses[$status] ?? $statusClasses['default'];
                     ?>
 
-                    <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full <?= $badgeClass ?>">
-                        <?= htmlspecialchars(ucwords(str_replace('_', ' ', $pickup['status']))) ?>
+                    <span
+                        class="px-3 py-1 inline-flex text-sm font-bold rounded-full shadow-md text-white capitalize <?= $badgeClass ?>  whitespace-nowrap leading-tight"
+                        title="<?= htmlspecialchars(str_replace('_', ' ', $status)) ?>">
+                        <?= htmlspecialchars(str_replace('_', ' ', $status)) ?>
                     </span>
+
                 </div>
 
                 <!-- Basic Info -->
@@ -167,7 +188,7 @@ $pickup = $data['pickupdetial'];
                         <div>
                             <p class="text-sm font-medium text-gray-500">Total Amount</p>
                             <p class="text-lg font-semibold">
-                                <?= htmlspecialchars(ucwords(str_replace('_', ' ', $pickup['Amount'] ?? 'N/A'))) ?>
+                                <?= htmlspecialchars(ucwords(str_replace('_', ' ', $pickup['amount'] ?? 'Processing'))) ?>
                             </p>
                         </div>
                     </div>
@@ -186,7 +207,7 @@ $pickup = $data['pickupdetial'];
                     </a>
 
                     <!-- Edit Button -->
-                    <?php if ($pickup['status'] === 'on_the_way'): ?>
+                    <?php if ($pickup['status'] === 'arrived_at_user'): ?>
                         <button onclick="openEditModal()"
                             class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 transition-colors">
                             <i class="fas fa-pencil-alt mr-2"></i> Edit Pickup
@@ -199,6 +220,22 @@ $pickup = $data['pickupdetial'];
                         </a>
                     <?php endif; ?>
 
+                    <!-- Arrived at User Button -->
+                    <?php if ($pickup['status'] === 'on_the_way'): ?>
+                        <!-- Arrived at User Button -->
+                        <a href="<?= URLROOT; ?>/pickupagentcontroller/arrived?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
+                            class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors">
+                            <i class="fas fa-map-marker-alt mr-2"></i> Arrived at User
+                        </a>
+
+                        <!-- Pickup Fail Button -->
+                        <a href="<?= URLROOT; ?>/pickupagentcontroller/pickupfail?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
+                            class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition-colors">
+                            <i class="fas fa-times-circle mr-2"></i> Pickup Fail
+                        </a>
+                    <?php endif; ?>
+
+
                     <?php if ($pickup['status'] === 'awaiting_cash'): ?>
                         <a href="<?= URLROOT; ?>/pickupagentcontroller/collectcash?id=<?= htmlspecialchars($pickup['id']); ?>"
                             class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 transition-colors">
@@ -209,7 +246,7 @@ $pickup = $data['pickupdetial'];
 
                     <!-- Mark as Complete Button -->
                     <?php if ($pickup['status'] === 'pickup_verified'  || $pickup['status'] === 'voucher_created'): ?>
-                        <a href="<?= URLROOT; ?>/pickupagentcontroller/completepickup?id=<?= htmlspecialchars($pickup['id']); ?>"
+                        <a href="<?= URLROOT; ?>/pickupagentcontroller/completepickup?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
                             class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors">
                             <i class="fas fa-check mr-2"></i> Complete Pickup
                         </a>
