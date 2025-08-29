@@ -6,6 +6,7 @@ class Pickupcontroller extends Controller
     public function __construct()
     {
         $this->model('pickupModel');
+        $this->model('notification');
         $this->db = new Database();
     }
 
@@ -196,6 +197,16 @@ class Pickupcontroller extends Controller
         $pickup->setCreatedAt(date('Y-m-d H:i:s'));
         $pickup->setUpdatedAt(null);
         $pickup->setStatus(1); // pending
+
+        $notificationText = "📦 New Pickup Request #$requestCode from " . $sender['name'] . " at " . $pickup_address . ". Please proceed with collection.";
+
+        $noti = new Notification();
+        $noti->setFromagentid($sender['id']);
+        $noti->setToagentid($checkagent['agent_id']);
+        $noti->setTypeid(5);
+        $noti->setTitle("New Pickup Request");
+        $noti->setMessage($notificationText);
+        $this->db->create('agent_notifications', $noti->toArray());
 
         $this->db->create('pickup_requests', $pickup->toArray());
         redirect('pages/index');

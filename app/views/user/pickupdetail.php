@@ -130,9 +130,20 @@ $data = $data['code'];
                             <?= htmlspecialchars(str_replace('_', ' ', $statusKey)) ?>
                         </div>
 
+                        <!-- Cancel Button (only show if not already cancelled/rejected/delivered) -->
+                        <?php
+                        $cancelAllowed = ['pending', 'accepted', 'on_the_way'];
+                        if (in_array($statusKey, $cancelAllowed)): ?>
+                            <a href="<?= URLROOT; ?>/pickupcontroller/cancel?id=<?= urlencode($data['id']) ?>&code=<?= urlencode($data['request_code']) ?>"
+                                class="inline-block mt-3 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow-md transition">
+                                Cancel Request
+                            </a>
+                        <?php endif; ?>
+
                     </div>
                 </div>
             </div>
+
 
             <!-- Sender and Receiver Information Section -->
             <div class="pb-6 border-b border-gray-200">

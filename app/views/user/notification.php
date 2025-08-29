@@ -1,36 +1,56 @@
-<?php require_once APPROOT . '/views/inc/nav.php' ?>
+<?php require_once APPROOT . '/views/inc/nav.php';
+$noti = $data['noti'] ?? [];
+?>
+
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: #f0f4f7;
-    }
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f4f7;
+}
 
-    :root {
-        --primary-color: #1F265B;
-        --secondary-color: #333;
-        --text-color: #555;
-        --heading-color: #333;
-        --light-grey: #f8f8f8;
-        --dark-blue-footer: #1a237e;
-        --white: #fff;
-        --border-color: #ddd;
-        --form-bg-color: #e6f0ff;
-        --section-bg-color: #f0f4f7;
-    }
+:root {
+    --primary-color: #1F265B;
+    --secondary-color: #333;
+    --text-color: #555;
+    --heading-color: #333;
+    --light-grey: #f8f8f8;
+    --dark-blue-footer: #1a237e;
+    --white: #fff;
+    --border-color: #ddd;
+    --form-bg-color: #e6f0ff;
+    --section-bg-color: #f0f4f7;
+}
 
-    .header-bg {
-        background-color: var(--primary-color);
-    }
+.header-bg {
+    background-color: var(--primary-color);
+}
 
-    .footer-bg {
-        background-color: var(--dark-blue-footer);
-    }
+.footer-bg {
+    background-color: var(--dark-blue-footer);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 </style>
 
-
-<!-- Main Content -->
 <main class="flex-1 p-8 md:p-16 flex flex-col items-center">
     <!-- Breadcrumbs -->
     <div class="mb-8 text-gray-600">
@@ -41,110 +61,61 @@
     <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg w-full max-w-5xl">
         <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6 border-b-2 pb-4">Recent Notifications</h2>
 
-        <!-- Notifications List with Scrollbar -->
-        <div class="space-y-4 overflow-y-auto max-h-96">
-            <!-- Notification Card -->
-            <div class="p-4 rounded-xl shadow-sm border border-gray-200 bg-blue-50">
-                <div class="flex items-start justify-between">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-truck-fast text-blue-500"></i>
-                        <div class="text-lg font-semibold text-gray-800">Your delivery is on its way!</div>
-                    </div>
-                    <span class="text-sm text-gray-500 font-medium">23 hours ago</span>
-                </div>
-                <p class="text-base text-gray-600 mt-2">
-                    A new delivery request (Order ID: #MDY702013YGN) is available for acceptance. Check 'Request
-                    Deliveries'.
-                </p>
-            </div>
+        <!-- Notifications List -->
+        <div class="space-y-4 overflow-y-auto max-h-96 custom-scrollbar">
 
-            <!-- Notification Card -->
-            <div class="p-4 rounded-xl shadow-sm border border-gray-200 bg-white">
-                <div class="flex items-start justify-between">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-box-open text-green-500"></i>
-                        <div class="text-lg font-semibold text-gray-800">Delivery complete: Order #7890</div>
-                    </div>
-                    <span class="text-sm text-gray-500 font-medium">1 hour ago</span>
-                </div>
-                <p class="text-base text-gray-600 mt-2">
-                    Your package has been successfully delivered to the recipient. Thank you for using GoDelivery!
-                </p>
-            </div>
+            <?php
+            $typeStyles = [
+                'on_its_way'        => ['bg' => 'bg-blue-50',   'border' => 'border-blue-500',   'icon' => 'text-blue-500',   'icon_class' => 'fas fa-truck-fast'],
+                'delivery_complete' => ['bg' => 'bg-green-50',  'border' => 'border-green-500',  'icon' => 'text-green-500',  'icon_class' => 'fas fa-box-open'],
+                'pickup_confirmed'  => ['bg' => 'bg-yellow-50', 'border' => 'border-yellow-500', 'icon' => 'text-yellow-500', 'icon_class' => 'fas fa-check-circle'],
+                'rejected'          => ['bg' => 'bg-red-50',    'border' => 'border-red-500',    'icon' => 'text-red-500',    'icon_class' => 'fas fa-times-circle'],
+                'default'           => ['bg' => 'bg-gray-50',   'border' => 'border-gray-300',   'icon' => 'text-gray-500',   'icon_class' => 'fas fa-bell'],
+            ];
 
-            <!-- Notification Card -->
-            <div class="p-4 rounded-xl shadow-sm border border-gray-200 bg-white">
-                <div class="flex items-start justify-between">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-check-circle text-orange-500"></i>
-                        <div class="text-lg font-semibold text-gray-800">Pickup request confirmed</div>
-                    </div>
-                    <span class="text-sm text-gray-500 font-medium">3 hours ago</span>
-                </div>
-                <p class="text-base text-gray-600 mt-2">
-                    Your pickup request has been confirmed. A delivery agent will be with you shortly to collect the
-                    parcel.
-                </p>
-            </div>
+            $tz = new DateTimeZone('Asia/Yangon'); // Myanmar timezone
+            ?>
 
-            <!-- Notification Card -->
-            <div class="p-4 rounded-xl shadow-sm border border-gray-200 bg-white">
-                <div class="flex items-start justify-between">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-user-check text-indigo-500"></i>
-                        <div class="text-lg font-semibold text-gray-800">Your account is verified!</div>
-                    </div>
-                    <span class="text-sm text-gray-500 font-medium">Yesterday</span>
-                </div>
-                <p class="text-base text-gray-600 mt-2">
-                    Welcome to GoDelivery! Your account has been verified and is ready to use.
-                </p>
-            </div>
+            <?php if (!empty($noti)): ?>
+            <?php foreach ($noti as $n):
+                    $status = strtolower($n['notification_type'] ?? 'default');
+                    $style  = $typeStyles[$status] ?? $typeStyles['default'];
 
-            <!-- Notification Card -->
-            <div class="p-4 rounded-xl shadow-sm border border-gray-200 bg-blue-50">
-                <div class="flex items-start justify-between">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-tag text-purple-500"></i>
-                        <div class="text-lg font-semibold text-gray-800">New offer available!</div>
-                    </div>
-                    <span class="text-sm text-gray-500 font-medium">2 days ago</span>
-                </div>
-                <p class="text-base text-gray-600 mt-2">
-                    Check out our new limited-time offer on express deliveries. Get a 10% discount on your next two
-                    orders.
-                </p>
-            </div>
+                    // Convert to Myanmar timezone
+                    $createdAt = new DateTime($n['created_at'] ?? 'now', new DateTimeZone('UTC'));
+                    $createdAt->setTimezone($tz);
 
-            <!-- Notification Card -->
-            <div class="p-4 rounded-xl shadow-sm border border-gray-200 bg-white">
-                <div class="flex items-start justify-between">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-comment-dots text-gray-500"></i>
-                        <div class="text-lg font-semibold text-gray-800">Feedback survey</div>
-                    </div>
-                    <span class="text-sm text-gray-500 font-medium">3 days ago</span>
-                </div>
-                <p class="text-base text-gray-600 mt-2">
-                    We'd love to hear your feedback on your recent delivery experience. Please take a moment to
-                    complete our quick survey.
-                </p>
-            </div>
+                    $now = new DateTime('now', $tz);
+                    $timeDiff = $now->getTimestamp() - $createdAt->getTimestamp();
 
-            <!-- Notification Card -->
-            <div class="p-4 rounded-xl shadow-sm border border-gray-200 bg-white">
-                <div class="flex items-start justify-between">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-tools text-red-500"></i>
-                        <div class="text-lg font-semibold text-gray-800">Scheduled maintenance</div>
-                    </div>
-                    <span class="text-sm text-gray-500 font-medium">1 week ago</span>
+                    // Time ago formatting
+                    if ($timeDiff < 60) $timeAgo = 'Just now';
+                    elseif ($timeDiff < 3600) $timeAgo = floor($timeDiff / 60) . ' minutes ago';
+                    elseif ($timeDiff < 86400) $timeAgo = floor($timeDiff / 3600) . ' hours ago';
+                    else $timeAgo = floor($timeDiff / 86400) . ' days ago';
+
+                    // $myanmarTime = $createdAt->format('d M Y, H:i'); // Exact Myanmar time
+                ?>
+            <div
+                class="flex items-start p-4 rounded-xl shadow-sm border-l-4 <?= $style['border'] ?> <?= $style['bg'] ?>">
+                <div class="flex-shrink-0 mr-4">
+                    <i class="<?= $style['icon_class'] ?> <?= $style['icon'] ?> text-xl"></i>
                 </div>
-                <p class="text-base text-gray-600 mt-2">
-                    Please note that the GoDelivery platform will be undergoing scheduled maintenance on Friday at
-                    2:00 AM.
-                </p>
+                <div class="flex-1">
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="font-bold text-lg text-gray-800"><?= htmlspecialchars($n['title']) ?></h3>
+                        <span class="text-sm text-gray-600"><?= $timeAgo ?></span>
+                    </div>
+                    <p class="text-gray-700"><?= htmlspecialchars($n['message']) ?></p>
+                </div>
             </div>
+            <?php endforeach; ?>
+            <?php else: ?>
+            <div
+                class="p-6 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-lg text-center font-medium shadow-sm">
+                Notification is not yet.
+            </div>
+            <?php endif; ?>
 
         </div>
     </div>
@@ -173,39 +144,9 @@
                                 clip-rule="evenodd" />
                         </svg>
                     </a>
-                    <a href="#" class="text-white hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-white hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 2.163c3.21 0 3.584.013 4.852.072 1.258.058 1.838.257 2.222.403.491.189.882.415 1.248.78.368.367.594.757.78 1.248.146.384.345.964.403 2.222.059 1.268.072 1.633.072 4.852s-.013 3.584-.072 4.852c-.058 1.258-.257 1.838-.403 2.222-.189.491-.415.882-.78 1.248-.367.368-.594-.757-.78-1.248-.384.146-.964.345-2.222.403-1.268.059-1.633.072-4.852.072s-3.584-.013-4.852-.072c-1.258-.058-1.838-.257-2.222-.403-.491-.189-.415-.882-.78-1.248-.367-.368-.594-.757-.78-1.248-.146-.384-.345-.964-.403-2.222-.059-1.268-.072-1.633-.072-4.852s.013-3.584.072-4.852c.058-1.258.257-1.838.403-2.222.189-.491.415-.882.78-1.248.367-.368.757-.594 1.248-.78.384-.146.964-.345 2.222-.403 1.268-.059 1.633-.072 4.852-.072zM12 0C8.74 0 8.333.014 7.053.073c-1.234.058-2.105.248-2.83.526-.74.276-1.348.674-1.952 1.278-.604.604-1.002 1.212-1.278 1.952-.278.725-.468 1.6-.526 2.83-.059 1.28-.073 1.687-.073 4.907s.014 3.627.073 4.907c.058 1.234.248 2.105.526 2.83.276.74.674 1.348 1.278 1.952.604.604 1.212 1.002 1.952 1.278.725.278 1.6.468 2.83.526 1.28.059 1.687.073 4.907.073s3.627-.014 4.907-.073c1.234-.058 2.105-.248 2.83-.526.74-.276 1.348-.674 1.952-1.278.604-.604 1.212-1.002 1.278-1.952.278-.725.468-1.6.526-2.83.059-1.28.073-1.687.073-4.907s-.014-3.627-.073-4.907c-.058-1.234-.248-2.105-.526-2.83-.276-.74-.674-1.348-1.278-1.952-.604-.604-1.212-1.002-1.952-1.278-.725-.278-1.6-.468-2.83-.526-1.28-.059-1.687-.073-4.907-.073zM12 6.865a5.135 5.135 0 1 0 0 10.27A5.135 5.135 0 0 0 12 6.865zM12 8.895a3.105 3.105 0 1 1 0 6.21 3.105 3.105 0 0 1 0-6.21z" />
-                        </svg>
-                    </a>
-                    <a href="#" class="text-white hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M19 0H5a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V5a5 5 0 0 0-5-5zm-3 7h-2c-1.087 0-1.85.602-1.85 2.056V11h3l-.48 3H12v8h-3v-8H7V11h2.02v-1.487c0-1.876 1.13-2.915 3.17-2.915h3.81V7z" />
-                        </svg>
-                    </a>
+                    <!-- Add your social icons here as needed -->
                 </div>
-            </div>
-            <div class="hidden md:block">
-                <!-- Placeholder for the image -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-48 w-48 text-white opacity-25" viewBox="0 0 24 24"
-                    fill="currentColor">
-                    <path
-                        d="M4 3h16a2 2 0 012 2v14a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2zM4 5v14h16V5H4zm2 1.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM18 17H6l4-4 4 4 4-4v4z" />
-                </svg>
             </div>
         </div>
     </div>
 </footer>
-</body>
-
-</html>

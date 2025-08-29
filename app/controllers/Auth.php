@@ -396,4 +396,66 @@ class Auth extends Controller
         $this->view('pages/customerlogin');
         exit();
     }
+
+    public function calculator()
+    {
+        $township = $this->db->readAll('townships');
+        $data = [
+            'township' => $township,
+            'result'   => null
+        ];
+        $this->view('user/calculator', $data);
+    }
+
+    public function calculateprice()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $from   = $_POST['fromCity'];
+            $to     = $_POST['toCity'];
+            $weight = $_POST['weight'];
+            $type   = $_POST['serviceType'];
+
+            $township = $this->db->readAll('townships'); // so dropdown still works
+
+            $checkroute = $this->db->checkroute('route', $from, $to);
+            $checkadmin = $this->db->columnFilter('view_available_locations', 'township_id', $to);
+
+
+            if (!$checkroute) {
+                $result = [
+                    'error' => 'No route found between selected cities.'
+                ];
+            } else {
+                $price_per_kg = $checkroute['price'];
+
+                if ($type === 'express') {
+                    $price_per_kg *= 1.5; // 50% more for express
+                }
+
+                $totalamount = $weight * $price_per_kg;
+
+                $fromname = $this->db->getById('townships', $from);
+                $toname = $this->db->getById('townships', $to);
+
+                $result = [
+                    'from'         => $fromname['name'],
+                    'to'           => $toname['name'],
+                    'weight'       => $weight,
+                    'type'         => ucfirst($type),
+                    'price_per_kg' => $price_per_kg,
+                    'total'        => $totalamount,
+                    'note'         => $checkroute['time'],
+                    'phone'        => $checkadmin['agent_phone'],
+                    'agent_name'    => $checkadmin['agent_name']
+                ];
+            }
+
+            $data = [
+                'township' => $township,
+                'result'   => $result
+            ];
+
+            $this->view('user/calculator', $data); // always same view
+        }
+    }
 }

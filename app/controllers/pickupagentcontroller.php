@@ -9,6 +9,7 @@ class pickupagentcontroller extends Controller
     public function __construct()
     {
         $this->db = new Database();
+        $this->model('notification');
         $this->pickup_agent = $_SESSION['user'];
     }
 
@@ -25,18 +26,15 @@ class pickupagentcontroller extends Controller
     {
         $allpickupdata = $this->db->columnFilterAll('pickup_requests_view', 'pickup_agent_id', $this->pickup_agent['id']);
 
-        $allpickupdata = array_filter($allpickupdata, function ($pickup) {
-            return $pickup['status'] !== 'pending';
-        });
+        // $allpickupdata = array_filter($allpickupdata, function ($pickup) {
+        //     return $pickup['status'] !== 'pending';
+        // });
         $data = [
             'allpickupdata' => $allpickupdata,
         ];
 
         $this->view('pickupagent/mypickup', $data);
     }
-
-
-
     public function pickupagentprofile()
     {
         $profile = $this->db->getById('user_full_info', $this->pickup_agent['id']);
@@ -48,7 +46,11 @@ class pickupagentcontroller extends Controller
 
     public function notification()
     {
-        $this->view('pickupagent/pickupagentnotification');
+        $noti = $this->db->columnFilterAll('view_agent_messages', 'to_agent_id', $this->pickup_agent['id']);
+        $data = [
+            'noti' => $noti,
+        ];
+        $this->view('pickupagent/pickupagentnotification', $data);
     }
 
     public function pickupdetail()
@@ -69,6 +71,20 @@ class pickupagentcontroller extends Controller
     public function startpickup()
     {
         $pickup_id = $_GET['id'];
+        $requestCode = $this->db->getById('pickup_requests', $pickup_id);
+
+        $notificationText = "🚚 Your pickup agent is on the way for request #"
+            . $requestCode['request_code']
+            . ". Please be ready at " . $requestCode['sender_address'] . ".";
+
+        $noti = new Notification();
+        $noti->setFromagentid($requestCode['pickup_agent_id']);
+        $noti->setToagentid($requestCode['sender_id']);
+        $noti->setTypeid(6);
+        $noti->setTitle("pickup agent on the way");
+        $noti->setMessage($notificationText);
+        $this->db->create('agent_notifications', $noti->toArray());
+
         $result = $this->db->update('pickup_requests', $pickup_id, ['status_id' => 4]);
         redirect('pickupagentcontroller/mypick');
         return;

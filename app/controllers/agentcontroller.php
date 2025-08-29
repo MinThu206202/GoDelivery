@@ -887,11 +887,53 @@ class Agentcontroller extends Controller
   public function pickupupdate()
   {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      $status = $_POST['status'] ?? null;
+      $status       = $_POST['status'] ?? null;
       $pickup_agent = $_POST['pickup_agent'] ?? null;
-      $pickup_id = $_POST['id'] ?? null;
-      $pickup_code = $_POST['pickup_code'];
+      $pickup_id    = $_POST['id'] ?? null;
+      $pickup_code  = $_POST['pickup_code'] ?? null;
 
+      $fullinfo = $this->db->getById('pickup_requests', $pickup_id);
+
+      if ($status == 2) {
+        // ✅ Accepted
+        $title   = "Pickup Request Confirmed";
+        $message = "Your pickup request #" . $fullinfo['request_code'] .
+          " has been confirmed. An agent will arrive soon at " . $fullinfo['sender_address'] . ".";
+
+        $noti = new Notification();
+        $noti->setFromagentid($fullinfo['agent_id']);
+        $noti->setToagentid($fullinfo['sender_id']);
+        $noti->setTypeid(8);
+        $noti->setTitle($title);
+        $noti->setMessage($message);
+        $this->db->create('agent_notifications', $noti->toArray());
+      } elseif ($status == 5) {
+        // ❌ Rejected
+        $title   = "Pickup Request Rejected";
+        $message = "Sorry, your pickup request #" . $fullinfo['request_code'] .
+          " has been rejected. Please contact support or submit a new request.";
+
+        $noti = new Notification();
+        $noti->setFromagentid($fullinfo['agent_id']);
+        $noti->setToagentid($fullinfo['sender_id']);
+        $noti->setTypeid(8);
+        $noti->setTitle($title);
+        $noti->setMessage($message);
+        $this->db->create('agent_notifications', $noti->toArray());
+      }
+
+
+      $title1 = "New Pickup Assignment Confirmed";
+      $message1 = "You have been assigned to pickup request #" . $fullinfo['request_code'] .
+        ". Please collect the parcel from " . $fullinfo['sender_address'] . ".";
+
+      $noti1 = new Notification();
+      $noti1->setFromagentid($fullinfo['agent_id']);
+      $noti1->setToagentid($fullinfo['pickup_agent_id']);
+      $noti1->setTypeid(8);
+      $noti1->setTitle($title1);
+      $noti1->setMessage($message1);
+      $this->db->create('agent_notifications', $noti1->toArray());
 
       $result = $this->db->update('pickup_requests', $pickup_id, ['pickup_agent_id' => $pickup_agent, 'status_id' => $status]);
 
