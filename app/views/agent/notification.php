@@ -57,12 +57,14 @@ $noti = $data['noti'] ?? [];
                     <?php if (!empty($noti)): ?>
                         <?php
                         $typeStyles = [
-                            'request_delivery' => ['bg' => 'bg-blue-50', 'border' => 'border-blue-500', 'text' => 'text-blue-800'],
-                            'my_delivery'      => ['bg' => 'bg-green-50', 'border' => 'border-green-500', 'text' => 'text-green-800'],
-                            'from_delivery_issue' => ['bg' => 'bg-red-50', 'border' => 'border-red-500', 'text' => 'text-red-800'],
-                            'from_agent'       => ['bg' => 'bg-yellow-50', 'border' => 'border-yellow-500', 'text' => 'text-yellow-800'],
-                            'general'          => ['bg' => 'bg-gray-50', 'border' => 'border-gray-300', 'text' => 'text-gray-800'],
+                            'request_delivery'     => ['bg' => 'bg-blue-50',   'border' => 'border-blue-500',   'text' => 'text-blue-800'],
+                            'my_delivery'          => ['bg' => 'bg-green-50',  'border' => 'border-green-500',  'text' => 'text-green-800'],
+                            'from_delivery_issue'  => ['bg' => 'bg-red-50',    'border' => 'border-red-500',    'text' => 'text-red-800'],
+                            'from_agent'           => ['bg' => 'bg-yellow-50', 'border' => 'border-yellow-500', 'text' => 'text-yellow-800'],
+                            'pickup_request'   => ['bg' => 'bg-indigo-50', 'border' => 'border-indigo-500', 'text' => 'text-indigo-800'],
+                            'general'              => ['bg' => 'bg-gray-50',   'border' => 'border-gray-300',   'text' => 'text-gray-800'],
                         ];
+
                         ?>
 
                         <?php foreach ($noti as $n):

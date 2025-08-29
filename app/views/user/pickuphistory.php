@@ -125,6 +125,8 @@ require_once APPROOT . '/views/inc/nav.php'
                                                                     'payment_success' => 'bg-green-600',
                                                                     'payment_reject' => 'bg-red-600',
                                                                     'voucher_created' => 'bg-purple-600',
+                                                                    'arrived_at_user'             => 'bg-green-600',
+                                                                    'pickup_failed'               => 'bg-red-600',
                                                                     'delivered' => 'bg-green-500',
                                                                     'rejected' => 'bg-red-500',
                                                                     'cancelled' => 'bg-gray-600',

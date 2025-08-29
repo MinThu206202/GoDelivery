@@ -24,7 +24,11 @@ class Pages extends Controller
 
     public function calculator()
     {
-        $this->view('user/calculator');
+        $township = $this->db->readAll('townships');
+        $data = [
+            'township' => $township,
+        ];
+        $this->view('user/calculator', $data);
     }
 
     public function forgetpassword()
@@ -115,7 +119,11 @@ class Pages extends Controller
 
     public function notification()
     {
-        $this->view('user/notification');
+        $noti = $this->db->columnFilterAll('view_agent_messages', 'to_agent_id', $this->customer['id']);
+        $data = [
+            'noti' => $noti,
+        ];
+        $this->view('user/notification', $data);
     }
     public function Dashboard()
     {

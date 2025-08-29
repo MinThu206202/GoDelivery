@@ -117,6 +117,8 @@
                                                     'receipt_submitted'           => 'bg-cyan-500',
                                                     'payment_pending'             => 'bg-amber-600',
                                                     'payment_reject'              => 'bg-red-600',
+                                                    'arrived_at_user'             => 'bg-green-600',
+                                                    'pickup_failed'               => 'bg-red-600',
                                                     'cancelled'                   => 'bg-gray-600',
                                                     'default'                     => 'bg-gray-400'
                                                 ];
@@ -124,8 +126,8 @@
                                                 $status_class = $statusClasses[$status] ?? $statusClasses['default'];
                                                 ?>
 
-                                                <span
-                                                    class="px-3 py-1 inline-flex text-sm font-bold rounded-full shadow-md text-white capitalize <?= $status_class ?> truncate max-w-[160px] whitespace-nowrap leading-tight"
+                                                <span class="px-3 py-1 inline-flex text-sm font-bold rounded-full shadow-md text-white capitalize <?= $status_class ?> 
+                                                     whitespace-nowrap leading-tight"
                                                     title="<?= htmlspecialchars(str_replace('_', ' ', $status)) ?>">
                                                     <?= htmlspecialchars(str_replace('_', ' ', $status)) ?>
                                                 </span>
