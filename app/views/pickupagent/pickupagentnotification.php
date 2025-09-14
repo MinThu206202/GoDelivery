@@ -29,23 +29,23 @@ $noti = $data['noti'] ?? [];
     <header class="bg-white text-gray-800 shadow-sm py-4 px-6 md:px-8 lg:px-12 flex items-center justify-between">
         <h1 class="text-xl md:text-2xl font-bold">Notifications</h1>
         <div class="flex-1 max-w-lg mx-auto">
-            <div class="relative">
-                <input type="text"
-                    class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Search...">
-                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            </div>
         </div>
-        <div class="flex items-center space-x-4">
-            <div class="flex items-center space-x-2">
-                <div
-                    class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-700">
-                    MM
-                </div>
-                <div>
-                    <span class="text-sm font-medium text-gray-600">Mi Mi</span>
-                    <p class="text-xs text-gray-500">Agent ID: YGN0001</p>
-                </div>
+        <div class="flex items-center space-x-2">
+            <!-- Profile Image or Initials -->
+            <div
+                class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center text-sm font-bold text-gray-700">
+                <?php if (!empty($user['profile_image'])): ?>
+                <img src="<?= URLROOT . '/' . htmlspecialchars($user['profile_image']) ?>" alt="Profile Image"
+                    class="w-full h-full object-cover">
+                <?php else: ?>
+                <?= strtoupper(substr($user['name'], 0, 2)) ?>
+                <?php endif; ?>
+            </div>
+
+            <!-- User Info -->
+            <div>
+                <span class="text-sm font-medium text-gray-600"><?= htmlspecialchars($user['name']) ?></span>
+                <p class="text-xs text-gray-500"><?= htmlspecialchars($user['access_code']) ?></p>
             </div>
         </div>
     </header>

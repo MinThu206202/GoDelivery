@@ -9,4 +9,5 @@ class paymentModel extends BaseModel
     protected $method_image;
     protected $method_number;
     protected $account_holder;
+    protected $create_by_agent_id;
 }

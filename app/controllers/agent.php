@@ -19,8 +19,10 @@ class Agent extends Controller
 
     public function home()
     {
+        $pickup = $this->db->columnFilterAll('pickup_requests_view', 'agent_id', $this->agent['id']);
         $delivery = $this->db->columnFilterAll('view_deliveries_detailed', 'sender_agent_id', $this->agent['id']);
         $data = [
+            'pickup_requests' => $pickup,
             'delivery' => $delivery,
         ];
         $this->view('agent/home', $data);
@@ -94,7 +96,7 @@ class Agent extends Controller
         $this->view('agent/notification', $data);
     }
 
-    public function request()
+    public function deliveryrequest()
     {
         $status = ['Awaiting Acceptance'];
         $accept = $this->db->getByDeliveryIdAndStatuses('view_deliveries_detailed', $this->agent['id'], $status);
@@ -227,14 +229,25 @@ class Agent extends Controller
         $allPayments = $this->db->readAll('pickup_requests_view');
 
         // Filter only where payment_method is not null/empty
-        $payment = array_filter($allPayments, function ($row) {
+        $agentId = $this->agent['id'];
+
+
+        $payment = array_filter($allPayments, function ($row) use ($agentId) {
             $method = $row['payment_method'] ?? '';
-            return !empty($method); // ✅ only include if payment_method has a value
+            return !empty($method) && $row['agent_id'] == $agentId;
         });
+
+        $alldeliverypayment = $this->db->readAll('payment_history_view');
+        $paymentdelivery = array_filter($alldeliverypayment, function ($row) use ($agentId) {
+            return  $row['agent_id'] == $agentId;
+        });
+
+
 
         // Pass to view
         $data = [
             'payment' => $payment,
+            'paymentdelivery' => $paymentdelivery,
         ];
 
         $this->view('agent/paymentlist', $data);
@@ -242,10 +255,44 @@ class Agent extends Controller
 
     public function paymenttype()
     {
+        $agentId = $this->agent['id'];
         $allmethod = $this->db->readAll('payment_methods_view');
+        $agentMethods = array_filter($allmethod, function ($method) use ($agentId) {
+            return $method['create_by_agent_id'] == $agentId;
+        });
         $data = [
-            'allmethod' => $allmethod,
+            'allmethod' => $agentMethods,
         ];
         $this->view('agent/paymenttype', $data);
+    }
+    public function outfordelivery()
+    {
+        $allDeliveries = $this->db->readAll('view_deliveries_detailed');
+
+        $deliveriesOutForDelivery = array_filter($allDeliveries, function ($delivery) {
+            return $delivery['delivery_status_id'] == 3 || $delivery['delivery_status_id'] == 8
+                && $delivery['receiver_agent_id'] == $this->agent['id'];
+        });
+        $data = [
+            'deliveries' => $deliveriesOutForDelivery,
+        ];
+        $this->view('agent/out_for_delivery', $data);
+    }
+
+    public function outfordeliveryaction()
+    {
+        require_once APPROOT . '/helpers/Voucher_helper.php';
+
+        $request_code = $_GET['delivery_code'];
+        $allrequestdata = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $request_code);
+        $availablepickupagent = $this->db->columnFilterAll('users', 'created_by_agent', $this->agent['id']);
+        // $checklocation = $this->db->columnFilter('view_available_locations', 'township_name', $allrequestdata['receiver_township']);
+        // $checkroute = $this->db->checkroutename('route_full_info', $allrequestdata['sender_township'], $allrequestdata['receiver_township']);
+
+        $data = [
+            'pickup' => $allrequestdata,
+            'availableAgents' => $availablepickupagent,
+        ];
+        $this->view('agent/out_for_delivery_action', $data);
     }
 }

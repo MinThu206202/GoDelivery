@@ -19,23 +19,23 @@ $currentRoute = $_SERVER['REQUEST_URI'];
     <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            /* Added for standalone view, remove if integrating into full page */
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+        /* Added for standalone view, remove if integrating into full page */
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
 
-        /* Active sidebar link style */
-        .active-sidebar-link {
-            background-color: #2A346C;
-            /* Darker blue from your theme */
-            color: white;
-            font-weight: 600;
-            /* Semibold */
-        }
+    /* Active sidebar link style */
+    .active-sidebar-link {
+        background-color: #2A346C;
+        /* Darker blue from your theme */
+        color: white;
+        font-weight: 600;
+        /* Semibold */
+    }
     </style>
 </head>
 
@@ -85,17 +85,23 @@ $currentRoute = $_SERVER['REQUEST_URI'];
                 My Deliveries
             </a>
 
-            <!-- Agent Profile Link -->
-            <a href="<?= URLROOT; ?>/agent/profile"
+            <a href="<?= URLROOT; ?>/agent/outfordelivery"
                 class="flex items-center px-4 py-3 rounded-lg transition duration-200 
-               <?= strpos($currentRoute, '/agent/profile') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
+    <?= strpos($currentRoute, '/agent/outfordelivery') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
+
+                <!-- Delivery Truck Icon -->
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        d="M9 17v-6h13l1 4H9m0 0H5a2 2 0 01-2-2V7a2 2 0 012-2h4l2 6zM9 17a2 2 0 11-4 0 2 2 0 014 0zm10 0a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
                 </svg>
-                Agent Profile
+
+                Out For Delivery
             </a>
+
+
+
 
             <!-- Create Voucher Link -->
             <a href="<?= URLROOT; ?>/agent/voucher"
@@ -124,9 +130,9 @@ $currentRoute = $_SERVER['REQUEST_URI'];
             </a>
 
             <!-- Request Delivery Link -->
-            <a href="<?= URLROOT; ?>/agent/request"
+            <a href="<?= URLROOT; ?>/agent/deliveryrequest"
                 class="flex items-center px-4 py-3 rounded-lg transition duration-200 
-               <?= strpos($currentRoute, '/agent/request') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
+               <?= strpos($currentRoute, '/agent/deliveryrequest') !== false ? 'active-sidebar-link text-white' : 'text-gray-300 hover:bg-[#2A346C] hover:text-white' ?>">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

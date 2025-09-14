@@ -8,35 +8,35 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
 
-        .auth-message {
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
+    .auth-message {
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
 
-        .auth-message.error {
-            background: #fee2e2;
-            /* light red background */
-            color: #dc2626;
-            /* red text */
-            border: 1px solid #fecaca;
-        }
+    .auth-message.error {
+        background: #fee2e2;
+        /* light red background */
+        color: #dc2626;
+        /* red text */
+        border: 1px solid #fecaca;
+    }
 
-        .auth-message.success {
-            background: #d1fae5;
-            /* light green background */
-            color: #065f46;
-            /* green text */
-            border: 1px solid #a7f3d0;
-        }
+    .auth-message.success {
+        background: #d1fae5;
+        /* light green background */
+        color: #065f46;
+        /* green text */
+        border: 1px solid #a7f3d0;
+    }
     </style>
 </head>
 
@@ -129,26 +129,26 @@
                     DELIVERIES</p>
 
                 <!-- Delivery Illustration Image -->
-                <img src="https://placehold.co/400x250/E0E0E0/666?text=Delivery+Illustration"
-                    alt="Delivery Illustration" class="w-full h-auto rounded-lg shadow-xl">
+                <img src="<?php echo URLROOT; ?>/public/images/login.png" alt="Delivery Illustration"
+                    class="w-full h-auto rounded-lg shadow-xl">
             </div>
         </div>
     </div>
 
     <!-- JavaScript to toggle password visibility -->
     <script>
-        const passwordInput = document.getElementById('password');
-        const toggleButton = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const toggleButton = document.getElementById('togglePassword');
 
-        toggleButton.addEventListener('click', () => {
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                // You could change the SVG icon here to an 'eye-off' icon
-            } else {
-                passwordInput.type = 'password';
-                // You could change the SVG icon here to an 'eye' icon
-            }
-        });
+    toggleButton.addEventListener('click', () => {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            // You could change the SVG icon here to an 'eye-off' icon
+        } else {
+            passwordInput.type = 'password';
+            // You could change the SVG icon here to an 'eye' icon
+        }
+    });
     </script>
 </body>
 

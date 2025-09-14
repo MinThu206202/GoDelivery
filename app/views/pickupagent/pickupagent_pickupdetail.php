@@ -48,15 +48,22 @@ $pickup = $data['pickupdetial'];
         <div class="flex items-center space-x-4">
             <h1 class="text-xl md:text-2xl font-bold">Pickup Details</h1>
         </div>
-        <div class="flex items-center space-x-4">
-            <div class="flex items-center space-x-2">
-                <div
-                    class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-700">
-                    MM</div>
-                <div>
-                    <span class="text-sm font-medium text-gray-600">Mi Mi</span>
-                    <p class="text-xs text-gray-500">Agent ID: YGN0001</p>
-                </div>
+        <div class="flex items-center space-x-2">
+            <!-- Profile Image or Initials -->
+            <div
+                class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center text-sm font-bold text-gray-700">
+                <?php if (!empty($user['profile_image'])): ?>
+                    <img src="<?= URLROOT . '/' . htmlspecialchars($user['profile_image']) ?>" alt="Profile Image"
+                        class="w-full h-full object-cover">
+                <?php else: ?>
+                    <?= strtoupper(substr($user['name'], 0, 2)) ?>
+                <?php endif; ?>
+            </div>
+
+            <!-- User Info -->
+            <div>
+                <span class="text-sm font-medium text-gray-600"><?= htmlspecialchars($user['name']) ?></span>
+                <p class="text-xs text-gray-500"><?= htmlspecialchars($user['access_code']) ?></p>
             </div>
         </div>
     </header>
@@ -246,7 +253,7 @@ $pickup = $data['pickupdetial'];
 
                     <!-- Mark as Complete Button -->
                     <?php if ($pickup['status'] === 'pickup_verified'  || $pickup['status'] === 'voucher_created'): ?>
-                        <a href="<?= URLROOT; ?>/pickupagentcontroller/completepickup?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
+                        <a href="<?= URLROOT; ?>/pickupagentcontroller/complete?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
                             class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors">
                             <i class="fas fa-check mr-2"></i> Complete Pickup
                         </a>

@@ -15,43 +15,43 @@ $user = $_SESSION['user'];
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            --main-bg-color: rgb(31 38 91 / var(--tw-bg-opacity, 1));
-        }
+    :root {
+        --main-bg-color: rgb(31 38 91 / var(--tw-bg-opacity, 1));
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+    }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-        }
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+    }
 
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #e5e7eb;
-            border-radius: 10px;
-        }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #e5e7eb;
+        border-radius: 10px;
+    }
 
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #9ca3af;
-            border-radius: 10px;
-        }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #9ca3af;
+        border-radius: 10px;
+    }
 
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #6b7280;
-        }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+    }
 
-        .text-shadow-md {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
+    .text-shadow-md {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
 
-        .active-link {
-            background-color: #2563eb;
-            color: white;
-        }
+    .active-link {
+        background-color: #2563eb;
+        color: white;
+    }
 
-        /* Tailwind bg-blue-600 */
+    /* Tailwind bg-blue-600 */
     </style>
 </head>
 
@@ -75,7 +75,7 @@ $user = $_SESSION['user'];
 
             <a href="<?php echo URLROOT; ?>/pickupagentcontroller/completepickup" class="flex items-center py-3 px-4 rounded-lg font-semibold transition duration-200 hover:bg-gray-800 
                <?php echo (strpos($current_page, 'completepickup') !== false) ? 'active-link' : 'text-gray-300'; ?>">
-                <i class="fas fa-history mr-3"></i> Completed Pickups
+                <i class="fas fa-history mr-3"></i> Out For Delivery
             </a>
 
             <a href="<?php echo URLROOT; ?>/pickupagentcontroller/pickupagentprofile"

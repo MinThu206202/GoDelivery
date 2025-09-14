@@ -58,9 +58,18 @@ class Admin extends Controller
         $this->view('admin/agent', $data);
     }
 
-    public function profile()
+    public function pickuphistory()
     {
-        $this->view('admin/profile');
+        $user = $this->db->readAll('pickup_requests_view');
+        $data = [
+            'pickups' => $user
+        ];
+        $this->view('admin/pickuphistory', $data);
+    }
+
+    public function pro()
+    {
+        $this->view('admin/pro');
     }
 
     public function access_code()
@@ -83,6 +92,17 @@ class Admin extends Controller
         $this->view('admin/route', $data);
     }
 
+    public function pickupagentlist()
+    {
+        $pickupagent = $this->db->readAll('user_full_info');
+        $pickupAgentsOnly = array_filter($pickupagent, function ($user) {
+            return isset($user['role_name']) && strtolower($user['role_name']) === 'pickup agent';
+        });
+        $data = [
+            'pickupagent' => $pickupAgentsOnly,
+        ];
+        $this->view('admin/pickupagentlist', $data);
+    }
 
 
 

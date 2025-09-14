@@ -13,38 +13,38 @@
     <!-- Font Awesome CDN for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+    }
 
-        .error-message {
-            color: #ef4444;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
+    .error-message {
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
 
-        .modal {
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
+    .modal {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
 
-        .modal-content {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            text-align: center;
-        }
+    .modal-content {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        text-align: center;
+    }
     </style>
 </head>
 
@@ -54,17 +54,45 @@
         <!-- Header -->
         <header class="flex items-center justify-between p-6 bg-white shadow-md rounded-bl-lg">
             <h1 class="text-3xl font-semibold text-gray-800">Add New Pickup Agent</h1>
-            <div class="flex items-center space-x-4">
-                <div class="flex items-center space-x-2">
-                    <!-- Mock Admin Avatar -->
-                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Admin Avatar"
+            <div x-data="{ open: false }" class="relative">
+                <!-- Button-like Trigger -->
+                <button @click="open = !open"
+                    class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
+                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
                         class="w-10 h-10 rounded-full border-2 border-blue-500">
-                    <div>
-                        <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                        <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
+                    <div class="text-left">
+                        <p class="text-lg font-medium text-gray-800">
+                            <?= htmlspecialchars($agent['name']) ?>
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            Agent ID: <?= htmlspecialchars($agent['access_code']) ?>
+                        </p>
                     </div>
+                </button>
+
+                <!-- Dropdown -->
+                <div x-show="open" @click.away="open = false" x-transition
+                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                    <!-- Profile -->
+                    <a href="<?= URLROOT; ?>/agent/profile"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                        Profile
+                    </a>
+
+                    <!-- Divider -->
+                    <div class="border-t my-1"></div>
+
+                    <!-- Logout -->
+                    <a href="<?= URLROOT; ?>/agent/logout"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                        Logout
+                    </a>
                 </div>
             </div>
+
+            <!-- Alpine.js -->
+            <script src="//unpkg.com/alpinejs" defer></script>
+
         </header>
 
         <!-- Form Content -->

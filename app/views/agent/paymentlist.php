@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 
 require_once APPROOT . '/views/inc/agentsidebar.php';
 
+
 ?>
 
 <body class="flex flex-col min-h-screen">
@@ -13,17 +14,45 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
         <header class="flex items-center justify-between p-6 bg-white shadow-md rounded-bl-lg">
             <h1 class="text-3xl font-semibold text-gray-800">Payment List</h1>
             <div class="flex items-center space-x-4">
-                <div class="flex items-center space-x-2">
-                    <!-- Mock Admin Avatar -->
-                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
-                        class="w-10 h-10 rounded-full border-2 border-blue-500">
-                    <div>
-                        <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?>
-                        </p>
-                        <p class="text-sm text-gray-500">Agent ID:
-                            <?= htmlspecialchars($agent['name']) ?></p>
+                <div x-data="{ open: false }" class="relative">
+                    <!-- Button-like Trigger -->
+                    <button @click="open = !open"
+                        class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
+                        <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
+                            class="w-10 h-10 rounded-full border-2 border-blue-500">
+                        <div class="text-left">
+                            <p class="text-lg font-medium text-gray-800">
+                                <?= htmlspecialchars($agent['name']) ?>
+                            </p>
+                            <p class="text-sm text-gray-500">
+                                Agent ID: <?= htmlspecialchars($agent['access_code']) ?>
+                            </p>
+                        </div>
+                    </button>
+
+                    <!-- Dropdown -->
+                    <div x-show="open" @click.away="open = false" x-transition
+                        class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                        <!-- Profile -->
+                        <a href="<?= URLROOT; ?>/agent/profile"
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                            Profile
+                        </a>
+
+                        <!-- Divider -->
+                        <div class="border-t my-1"></div>
+
+                        <!-- Logout -->
+                        <a href="<?= URLROOT; ?>/agent/logout"
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                            Logout
+                        </a>
                     </div>
                 </div>
+
+                <!-- Alpine.js -->
+                <script src="//unpkg.com/alpinejs" defer></script>
+
             </div>
         </header>
 
@@ -88,60 +117,105 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                             </tr>
                         </thead>
                         <tbody id="paymentsTableBody" class="bg-white divide-y divide-gray-200">
-                            <!-- Payment Data is now directly in the HTML -->
+                            <!-- Payment Delivery Records -->
+                            <?php foreach ($data['paymentdelivery'] as $res): ?>
+                                <tr>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words max-w-[120px]">
+                                        <?= htmlspecialchars($res['tracking_code'] ?? 'N/A') ?>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
+                                        <?= (new DateTime($res['created_at']))->format('Y-m-d g:i A') ?>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
+                                        <?= htmlspecialchars($res['receiver_customer_name']) ?>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">
+                                        <p class="font-semibold text-gray-900">
+                                            <?= htmlspecialchars($res['payment_type_name']) ?></p>
+                                        <p class="text-xs"><?= htmlspecialchars($res['payment_method_name']) ?></p>
+                                        <p class="text-xs text-gray-400">
+                                            <?= htmlspecialchars($res['payment_method_number']) ?></p>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
+                                        $<?= htmlspecialchars($res['amount'] ?? 'N/A') ?>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">
+                                        <img src="/Delivery/<?= htmlspecialchars($res['receipt_image']) ?>"
+                                            alt="Payment Screenshot" class="w-16 h-16 rounded-lg"
+                                            onclick="openImageModal(this.src)">
+                                    </td>
+                                    <td class="px-4 py-3 flex gap-2">
+                                        <?php if ($res['delivery_status_name'] === 'payment_success'): ?>
+                                            <span class="bg-green-100 text-green-600 px-2 py-1 rounded font-semibold">Payment
+                                                Success</span>
+                                        <?php elseif ($res['delivery_status_name'] === 'payment_reject'): ?>
+                                            <span class="bg-red-100 text-red-600 px-2 py-1 rounded font-semibold">Payment
+                                                Rejected</span>
+                                        <?php endif; ?>
+
+                                        <?php if (($res['delivery_status_name'] ?? '') === 'Waiting Payment'): ?>
+                                            <!-- Accept Button -->
+                                            <button
+                                                onclick="openConfirmationModal('<?= htmlspecialchars((string)($res['id'] ?? '')) ?>', '<?= urlencode($res['tracking_code'] ?? $res['request_code'] ?? 'N/A') ?>', 'accepted')"
+                                                class="text-white bg-green-600 px-4 py-2 rounded hover:bg-green-700 text-sm min-w-[80px]">
+                                                Accept
+                                            </button>
+
+                                            <!-- Reject Button -->
+                                            <button
+                                                onclick="openConfirmationModal('<?= htmlspecialchars((string)($res['id'] ?? '')) ?>', '<?= urlencode($res['tracking_code'] ?? $res['request_code'] ?? 'N/A') ?>', 'rejected')"
+                                                class="text-white bg-red-500 px-4 py-2 rounded hover:bg-red-600 text-sm min-w-[80px]">
+                                                Reject
+                                            </button>
+                                        <?php endif; ?>
+
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+
+                            <!-- Regular Payment Records -->
                             <?php foreach ($data['payment'] as $res): ?>
                                 <tr>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words max-w-[120px]">
                                         <?= htmlspecialchars($res['request_code'] ?? 'N/A') ?>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
-                                        <?php
-                                        $datetime = new DateTime($res['updated_at']);
-                                        echo $datetime->format('Y-m-d g:i A'); // 2025-08-26 4:36 PM
-                                        ?>
+                                        <?= (new DateTime($res['updated_at']))->format('Y-m-d g:i A') ?>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
                                         <?= htmlspecialchars($res['sender_name']) ?>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500">
-                                        <p class="font-semibold text-gray-900">
-                                            <?= htmlspecialchars($res['payment_type']) ?></p>
+                                        <p class="font-semibold text-gray-900"><?= htmlspecialchars($res['payment_type']) ?>
+                                        </p>
                                         <p class="text-xs"><?= htmlspecialchars($res['payment_method']) ?></p>
-                                        <p class="text-xs text-gray-400">
-                                            <?= htmlspecialchars($res['method_number']) ?></p>
+                                        <p class="text-xs text-gray-400"><?= htmlspecialchars($res['method_number']) ?></p>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
                                         $<?= htmlspecialchars($res['amount'] ?? 'N/A') ?>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500">
-                                        <img src=" /Delivery/<?= htmlspecialchars($res['method_image']) ?>"
+                                        <img src="/Delivery/<?= htmlspecialchars($res['method_image']) ?>"
                                             alt="Payment Screenshot" class="w-16 h-16 rounded-lg"
                                             onclick="openImageModal(this.src)">
                                     </td>
                                     <td class="px-4 py-3 flex gap-2">
                                         <?php if ($res['status'] === 'payment_success'): ?>
-                                            <span class="bg-green-100 text-green-600 px-2 py-1 rounded font-semibold">
-                                                Payment Success
-                                            </span>
+                                            <span class="bg-green-100 text-green-600 px-2 py-1 rounded font-semibold">Payment
+                                                Success</span>
                                         <?php elseif ($res['status'] === 'payment_reject'): ?>
-                                            <span class="bg-red-100 text-red-600 px-2 py-1 rounded font-semibold">
-                                                Payment Rejected
-                                            </span>
+                                            <span class="bg-red-100 text-red-600 px-2 py-1 rounded font-semibold">Payment
+                                                Rejected</span>
                                         <?php endif; ?>
-                                        <!-- Accept Button -->
+
+                                        <!-- Accept/Reject Buttons for Regular Payment -->
                                         <?php if (($res['status'] ?? '') === 'receipt_submitted'): ?>
                                             <button
-                                                onclick="openConfirmationModal('<?= $res['id'] ?>', '<?= urlencode($res['request_code'] ?? 'N/A') ?>', 'accepted')"
-                                                class="text-white bg-green-600 px-4 py-2 rounded hover:bg-green-700 text-sm text-center min-w-[80px]">
-                                                Accept
-                                            </button>
-
-                                            <!-- Reject Button -->
+                                                onclick="openConfirmationModal('<?= addslashes($res['id']) ?>', '<?= addslashes($res['request_code']) ?>', 'accepted')"
+                                                class="text-white bg-green-600 px-4 py-2 rounded hover:bg-green-700 text-sm min-w-[80px]">Accept</button>
                                             <button
-                                                onclick="openConfirmationModal('<?= $res['id'] ?>', '<?= urlencode($res['request_code'] ?? 'N/A') ?>', 'rejected')"
-                                                class="text-white bg-red-500 px-4 py-2 rounded hover:bg-red-600 text-sm text-center min-w-[80px]">
-                                                Reject
-                                            </button>
+                                                onclick="openConfirmationModal('<?= addslashes($res['id']) ?>', '<?= addslashes($res['request_code']) ?>', 'rejected')"
+                                                class="text-white bg-red-500 px-4 py-2 rounded hover:bg-red-600 text-sm min-w-[80px]">Reject</button>
                                         <?php endif; ?>
                                     </td>
                                 </tr>

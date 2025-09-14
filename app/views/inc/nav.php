@@ -14,20 +14,20 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
-            color: #4A5568;
-            background-color: #f8f9fa;
-        }
+    body {
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+        color: #4A5568;
+        background-color: #f8f9fa;
+    }
 
-        .hero-bg {
-            background: linear-gradient(to right, #fff, #e6f0ff);
-        }
+    .hero-bg {
+        background: linear-gradient(to right, #fff, #e6f0ff);
+    }
 
-        .search-box-shadow {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
+    .search-box-shadow {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
     </style>
 </head>
 
@@ -50,30 +50,30 @@
             </a>
 
             <?php if (isset($_SESSION['customer'])): ?>
-                <a href="<?= URLROOT ?>/pages/pickup"
-                    class="flex items-center space-x-2 text-sm font-semibold px-3 py-1 rounded-full transition-colors <?= strpos($current, '/pages/pickup') !== false ? 'bg-white text-[#1F265B]' : 'text-gray-300 hover:text-white' ?>">
-                    <i class="fa-solid fa-truck-fast"></i><span>Pick Up Request</span>
-                </a>
+            <a href="<?= URLROOT ?>/pages/requestpickup"
+                class="flex items-center space-x-2 text-sm font-semibold px-3 py-1 rounded-full transition-colors <?= strpos($current, '/pages/requestpickup') !== false ? 'bg-white text-[#1F265B]' : 'text-gray-300 hover:text-white' ?>">
+                <i class="fa-solid fa-truck-fast"></i><span>Pick Up Request</span>
+            </a>
 
-                <a href="<?= URLROOT ?>/pages/pickuphistory"
-                    class="flex items-center space-x-2 text-sm font-semibold px-3 py-1 rounded-full transition-colors <?= strpos($current, '/pages/pickuphistory') !== false ? 'bg-white text-[#1F265B]' : 'text-gray-300 hover:text-white' ?>">
-                    <i class="fa-solid fa-history"></i><span>Pickup History</span>
-                </a>
+            <a href="<?= URLROOT ?>/pages/pickuphistory"
+                class="flex items-center space-x-2 text-sm font-semibold px-3 py-1 rounded-full transition-colors <?= strpos($current, '/pages/pickuphistory') !== false ? 'bg-white text-[#1F265B]' : 'text-gray-300 hover:text-white' ?>">
+                <i class="fa-solid fa-history"></i><span>Pickup History</span>
+            </a>
 
-                <a href="<?= URLROOT ?>/pages/notification"
-                    class="flex items-center space-x-2 text-sm font-semibold px-3 py-1 rounded-full transition-colors <?= strpos($current, '/pages/notification') !== false ? 'bg-white text-[#1F265B]' : 'text-gray-300 hover:text-white' ?>">
-                    <i class="fa-solid fa-bell"></i><span>Notification</span>
-                </a>
+            <a href="<?= URLROOT ?>/pages/notification"
+                class="flex items-center space-x-2 text-sm font-semibold px-3 py-1 rounded-full transition-colors <?= strpos($current, '/pages/notification') !== false ? 'bg-white text-[#1F265B]' : 'text-gray-300 hover:text-white' ?>">
+                <i class="fa-solid fa-bell"></i><span>Notification</span>
+            </a>
 
-                <a href="<?= URLROOT ?>/auth/logout"
-                    class="flex items-center space-x-2 px-3 py-1 bg-white text-[#1F265B] rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors">
-                    <i class="fa-solid fa-user"></i><span>Logout</span>
-                </a>
+            <a href="<?= URLROOT ?>/auth/logout"
+                class="flex items-center space-x-2 px-3 py-1 bg-white text-[#1F265B] rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors">
+                <i class="fa-solid fa-user"></i><span>Logout</span>
+            </a>
             <?php else: ?>
-                <a href="<?= URLROOT ?>/pages/customerlogin"
-                    class="flex items-center space-x-2 px-3 py-1 bg-white text-[#1F265B] rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors">
-                    <i class="fa-solid fa-user"></i><span>Login</span>
-                </a>
+            <a href="<?= URLROOT ?>/pages/customerlogin"
+                class="flex items-center space-x-2 px-3 py-1 bg-white text-[#1F265B] rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors">
+                <i class="fa-solid fa-user"></i><span>Login</span>
+            </a>
             <?php endif; ?>
         </nav>
     </header>

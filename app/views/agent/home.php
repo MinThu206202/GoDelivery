@@ -30,14 +30,46 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
                     </svg>
                 </button>
             </form>
-            <div class="flex items-center space-x-2">
-                <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
-                    class="w-10 h-10 rounded-full border-2 border-blue-500">
-                <div>
-                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
+            <div x-data="{ open: false }" class="relative">
+                <!-- Button-like Trigger -->
+                <button @click="open = !open"
+                    class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
+                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
+                        class="w-10 h-10 rounded-full border-2 border-blue-500">
+                    <div class="text-left">
+                        <p class="text-lg font-medium text-gray-800">
+                            <?= htmlspecialchars($agent['name']) ?>
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            Agent ID: <?= htmlspecialchars($agent['access_code']) ?>
+                        </p>
+                    </div>
+                </button>
+
+                <!-- Dropdown -->
+                <div x-show="open" @click.away="open = false" x-transition
+                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                    <!-- Profile -->
+                    <a href="<?= URLROOT; ?>/agent/profile"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                        Profile
+                    </a>
+
+                    <!-- Divider -->
+                    <div class="border-t my-1"></div>
+
+                    <!-- Logout -->
+                    <a href="<?= URLROOT; ?>/agent/logout"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                        Logout
+                    </a>
                 </div>
             </div>
+
+            <!-- Alpine.js -->
+            <script src="//unpkg.com/alpinejs" defer></script>
+
+
         </div>
     </header>
 
@@ -97,112 +129,204 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Recent Orders Table -->
             <div class="bg-white p-6 rounded-xl shadow-md lg:col-span-2">
-                <!-- Made it span full width -->
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Orders</h2>
-                <div class="overflow-x-auto">
+
+                <!-- Add scroll here -->
+                <div class="overflow-x-auto max-h-[400px] overflow-y-auto rounded-lg border border-gray-200">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-gray-50 sticky top-0 z-10">
                             <tr>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Order ID</th>
-                                <th scope="col"
+                                <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Customer</th>
-                                <th scope="col"
+                                <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     City</th>
-                                <th scope="col"
+                                <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Amount</th> <!-- New Amount Column Header -->
-                                <th scope="col"
+                                    Amount</th>
+                                <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Status</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Action</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($data['delivery'] as $delivery):
-                                $statusClass = '';
-                                switch ($delivery['delivery_status']) {
-                                    case 'Delivered':
-                                        $statusClass = 'bg-green-100 text-green-800';
-                                        break;
-                                    case 'Pending':
-                                        $statusClass = 'bg-yellow-100 text-yellow-800';
-                                        break;
-                                    case 'In Transit':
-                                        $statusClass = 'bg-blue-100 text-blue-800';
-                                        break;
-                                    case 'Cancelled':
-                                        $statusClass = 'bg-red-100 text-red-800';
-                                        break;
-                                    case 'Return':
-                                        $statusClass = 'bg-purple-100 text-purple-800';
-                                        break;
-                                    default:
-                                        $statusClass = 'bg-gray-100 text-gray-800'; // Default neutral color
-                                        break;
-                                }
-                            ?>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        <span><?= htmlspecialchars($delivery['tracking_code']) ?></span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <span><?= htmlspecialchars($delivery['sender_customer_name']) ?></span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <span><?= htmlspecialchars($delivery['to_township_name']) ?></span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        <span>MMK<?= htmlspecialchars(number_format($delivery['amount'] ?? 0.00, 2)) ?></span>
-                                    </td> <!-- New Amount Column Data -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
-                                            <?= htmlspecialchars($delivery['delivery_status']) ?>
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($delivery['tracking_code']) ?>"
-                                            class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
-                                            View
-                                        </a>
-                                    </td>
-                                </tr>
+                            <?php foreach ($data['delivery'] as $delivery): ?>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <?= htmlspecialchars($delivery['tracking_code']) ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <?= htmlspecialchars($delivery['sender_customer_name']) ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <?= htmlspecialchars($delivery['to_township_name']) ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    MMK<?= htmlspecialchars(number_format($delivery['amount'] ?? 0, 2)) ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php
+                                        $statusClass = match ($delivery['delivery_status']) {
+                                            'Delivered' => 'bg-green-100 text-green-800',
+                                            'Pending' => 'bg-yellow-100 text-yellow-800',
+                                            'In Transit' => 'bg-blue-100 text-blue-800',
+                                            'Cancelled' => 'bg-red-100 text-red-800',
+                                            'Return' => 'bg-purple-100 text-purple-800',
+                                            default => 'bg-gray-100 text-gray-800',
+                                        };
+                                        ?>
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
+                                        <?= htmlspecialchars($delivery['delivery_status']) ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($delivery['tracking_code']) ?>"
+                                        class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+
+            <!-- Pickup Requests Table -->
+            <div class="bg-white p-6 rounded-xl shadow-md lg:col-span-2">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Pickup Requests</h2>
+                <div class="overflow-x-auto max-h-[400px] overflow-y-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50 sticky top-0 z-10">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
+                                    Request ID</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Customer</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    City</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Amount</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
+                                    Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <?php if (!empty($data['pickup_requests'])): ?>
+                            <?php foreach ($data['pickup_requests'] as $request): ?>
+                            <?php
+                                    // Status color mapping
+                                    $statusColors = [
+                                        'pending'                     => 'bg-yellow-500',
+                                        'accepted'                    => 'bg-indigo-500',
+                                        'collected'                   => 'bg-orange-600',
+                                        'voucher_created'             => 'bg-purple-600',
+                                        'delivered'                   => 'bg-green-500',
+                                        'arrived_office'              => 'bg-teal-500',
+                                        'rejected'                    => 'bg-red-500',
+                                        'agent_checked'               => 'bg-pink-500',
+                                        'awaiting_payment'            => 'bg-orange-500',
+                                        'payment_success'             => 'bg-emerald-600',
+                                        'awaiting_cash'               => 'bg-amber-500',
+                                        'cash_collected'              => 'bg-lime-600',
+                                        'pickup_verification_pending' => 'bg-orange-500',
+                                        'pickup_verified'             => 'bg-blue-500',
+                                        'on_the_way'                  => 'bg-sky-500',
+                                        'waiting_for_receipt'         => 'bg-pink-500',
+                                        'receipt_submitted'           => 'bg-cyan-500',
+                                        'payment_pending'             => 'bg-amber-600',
+                                        'payment_reject'              => 'bg-red-600',
+                                        'cancelled'                   => 'bg-gray-600',
+                                        'arrived_at_user'             => 'bg-green-600',
+                                        'pickup_failed'               => 'bg-red-600',
+                                        'default'                     => 'bg-gray-400',
+                                    ];
+
+                                    $statusKey   = strtolower($request['status']);
+                                    $statusClass = $statusColors[$statusKey] ?? $statusColors['default'];
+                                    ?>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <?= htmlspecialchars($request['request_code']) ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <?= htmlspecialchars($request['sender_name']) ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <?= htmlspecialchars($request['sender_township']) ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    MMK<?= htmlspecialchars(number_format($request['amount'] ?? 0, 2)) ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-white <?= $statusClass ?>">
+                                        <?= htmlspecialchars($request['status']) ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="<?= URLROOT; ?>/agentcontroller/pickup_detail/<?= htmlspecialchars($request['request_code']) ?>"
+                                        class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                            <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    🚚 No data yet
+                                </td>
+                            </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
+
     </main>
 </div>
 
 <script>
-    function setActiveLink(clickedElement) {
-        // Get all sidebar links
-        const sidebarLinks = document.querySelectorAll('#sidebarNav a');
+function setActiveLink(clickedElement) {
+    // Get all sidebar links
+    const sidebarLinks = document.querySelectorAll('#sidebarNav a');
 
-        // Remove 'active-sidebar-link' class from all links
-        sidebarLinks.forEach(link => {
-            link.classList.remove('active-sidebar-link');
-        });
-
-        // Add 'active-sidebar-link' class to the clicked element
-        clickedElement.classList.add('active-sidebar-link');
-    }
-
-    // Set 'Dashboard' as active on initial load
-    document.addEventListener('DOMContentLoaded', () => {
-        const dashboardLink = document.querySelector('#sidebarNav a[data-page="dashboard"]');
-        if (dashboardLink) {
-            dashboardLink.classList.add('active-sidebar-link');
-        }
+    // Remove 'active-sidebar-link' class from all links
+    sidebarLinks.forEach(link => {
+        link.classList.remove('active-sidebar-link');
     });
+
+    // Add 'active-sidebar-link' class to the clicked element
+    clickedElement.classList.add('active-sidebar-link');
+}
+
+// Set 'Dashboard' as active on initial load
+document.addEventListener('DOMContentLoaded', () => {
+    const dashboardLink = document.querySelector('#sidebarNav a[data-page="dashboard"]');
+    if (dashboardLink) {
+        dashboardLink.classList.add('active-sidebar-link');
+    }
+});
 </script>
 
 </body>

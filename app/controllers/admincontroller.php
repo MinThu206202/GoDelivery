@@ -1,9 +1,11 @@
 <?php
 require_once APPROOT . '/middleware/AuthMiddleware.php';
 
-class admincontroller extends Controller{
+class admincontroller extends Controller
+{
     private $db;
-    public function __construct(){
+    public function __construct()
+    {
         AuthMiddleware::adminOnly();
         $this->model('UserModel');
         $this->db = new Database();
@@ -58,48 +60,47 @@ class admincontroller extends Controller{
         }
     }
 
-    public function  agent_profile(){
+    public function  agent_profile()
+    {
         // session_start();
 
-        $agentId = $_GET['id'] ?? null;            
-        $isagent = $this->db->columnFilter('user_full_info','id',$agentId);
-        $isdelivery = $this->db->getByDeliveryId('view_deliveries_detailed',$isagent['id']);
-        
+        $agentId = $_GET['id'] ?? null;
+        $isagent = $this->db->columnFilter('user_full_info', 'id', $agentId);
+        $isdelivery = $this->db->getByDeliveryId('view_deliveries_detailed', $isagent['id']);
+
         $data = [
             'agent' => $isagent,
             'delivery' => $isdelivery
         ];
-        $this->view('admin/agent_profile',$data);
+        $this->view('admin/agent_profile', $data);
     }
 
     public function changestatus()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            session_start();
+        // session_start();
 
-            $agentId = $_POST['id'] ?? null;
-            $user = $this->db->columnFilter('users', 'id', $agentId);
+        $agentId = $_GET['id'] ?? null;
 
-            if ($user['status_id'] == 1) {
-                $this->db->update('users', $agentId, ['status_id' => 2]);
-                $mail = new Mail();
-                $ismail = $mail->activeagent($user['email'],$user['name']);
+        $user = $this->db->columnFilter('users', 'id', $agentId);
 
-            } elseif ($user['status_id'] == 2) {
-                $this->db->update('users', $agentId, ['status_id' => 1]);
-                $mail = new Mail();
-                $ismail = $mail->dectivateagent($user['email'], $user['name']);
-            }
-            $isagent = $this->db->columnFilter('user_full_info', 'id', $agentId);
-            $isdelivery = $this->db->getByDeliveryId('view_deliveries_detailed', $isagent['id']);
-
-            $data = [
-                'agent' => $isagent,
-                'delivery' => $isdelivery,
-                'success' => true
-            ];
-            $this->view('admin/agent_profile', $data);
+        if ($user['status_id'] == 1) {
+            $this->db->update('users', $agentId, ['status_id' => 2]);
+            $mail = new Mail();
+            $ismail = $mail->activeagent($user['email'], $user['name']);
+        } elseif ($user['status_id'] == 2) {
+            $this->db->update('users', $agentId, ['status_id' => 1]);
+            $mail = new Mail();
+            $ismail = $mail->dectivateagent($user['email'], $user['name']);
         }
+        $isagent = $this->db->columnFilter('user_full_info', 'id', $agentId);
+        $isdelivery = $this->db->getByDeliveryId('view_deliveries_detailed', $isagent['id']);
+
+        $data = [
+            'agent' => $isagent,
+            'delivery' => $isdelivery,
+            'success' => true
+        ];
+        $this->view('admin/agent_profile', $data);
     }
 
     public function sendmail()
@@ -109,7 +110,7 @@ class admincontroller extends Controller{
         if (!$id) {
             redirect('admin/access_code');
         }
-       
+
 
         $user = $this->db->columnFilter('users', 'id', $id);
 
@@ -118,24 +119,25 @@ class admincontroller extends Controller{
         $access_user = new Voucher_helper();
 
         $shortcode = $access_user->getShortCode($user1['city_name']);
-        $random = str_pad(rand(0,9999),4,'0',STR_PAD_LEFT);
-        $access_code = $shortcode.$random;
+        $random = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+        $access_code = $shortcode . $random;
 
         if ($user && !empty($user['email']) && !empty($user['name']) && !empty($user['security_code'])) {
             (new Mail())->acceptagent($user['email'], $user['name'], $user['security_code']);
 
-            $this->db->update('users', $id, ['status_id' => 1,'access_code' => $access_code]);
+            $this->db->update('users', $id, ['status_id' => 1, 'access_code' => $access_code]);
             // Redirect with success flag
             redirect('admin/access_code?success=1'); // or ?success=0 if failed
-            } else {
+        } else {
             redirect('admin/access_code?mail=error');
         }
     }
 
 
-    public function delivery_detail(){
+    public function delivery_detail()
+    {
         $tracking_code = $_GET['tracking_code'];
-        $id = $this->db->columnFilter('deliveries','tracking_code',$tracking_code);
+        $id = $this->db->columnFilter('deliveries', 'tracking_code', $tracking_code);
         if ($id) {
             $data['detaildelivery'] = [$this->db->getById('view_deliveries_detailed', $id['id'])];
             return $this->view('admin/search', $data);
@@ -154,15 +156,31 @@ class admincontroller extends Controller{
         setMessage('error', 'Tracking code not found or invalid.');
     }
 
-    // public function addroute(){
-    //     if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    //         $fromcity = $_POST['form_city'];
-    //         $tocity = $_POST['to_city'];
-    //         $distance = $_POST['distance'];
-    //         $price = $_POST['price'];
+    public function pickupagentdetail()
+    {
+        $id = $_GET['id'];
+        $fullinfo = $this->db->getById('user_full_info', $id);
+        $data = [
+            'fullinfo' => $fullinfo
+        ];
+        $this->view('admin/pickupagentprofile', $data);
+    }
 
-    //     }
-    // }
+    public function acceptpickupagent()
+    {
+        $id = $_GET['id'];
+        $this->db->update('users', $id, ['status_id' => 1]);
+        header("Location: " . URLROOT . "/admincontroller/pickupagentdetail?id=" . $id);
+        exit;
+    }
+
+    public function rejectpickupagent()
+    {
+        $id = $_GET['id'];
+        $this->db->update('users', $id, ['status_id' => 2]);
+        header("Location: " . URLROOT . "/admincontroller/pickupagentdetail?id=" . $id);
+        exit;
+    }
 
     public function logout()
     {
@@ -175,16 +193,7 @@ class admincontroller extends Controller{
 
         session_destroy();
 
-        $this->view('pages/login');        
+        $this->view('pages/login');
         exit();
     }
-
-
-
 }
-
-
-
-
-
-?>

@@ -15,46 +15,46 @@ if (!isset($data['regions'])) {
 <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/css/util.css">
 <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/css/main.css">
 <style>
-    body {
-        font-family: 'Poppins', sans-serif;
-    }
+body {
+    font-family: 'Poppins', sans-serif;
+}
 
-    :root {
-        --primary-color: #1F265B;
-        --secondary-color: #333;
-        --text-color: #555;
-        --heading-color: #333;
-        --light-grey: #f8f8f8;
-        --dark-blue-footer: #1a237e;
-        --white: #fff;
-        --border-color: #ddd;
-        --form-bg-color: #e6f0ff;
-        --section-bg-color: #f0f4f7;
-    }
+:root {
+    --primary-color: #1F265B;
+    --secondary-color: #333;
+    --text-color: #555;
+    --heading-color: #333;
+    --light-grey: #f8f8f8;
+    --dark-blue-footer: #1a237e;
+    --white: #fff;
+    --border-color: #ddd;
+    --form-bg-color: #e6f0ff;
+    --section-bg-color: #f0f4f7;
+}
 
-    .header-bg {
-        background-color: var(--primary-color);
-    }
+.header-bg {
+    background-color: var(--primary-color);
+}
 
-    .footer-bg {
-        background-color: var(--dark-blue-footer);
-    }
+.footer-bg {
+    background-color: var(--dark-blue-footer);
+}
 
-    .input-style {
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid var(--border-color);
-        background-color: var(--light-grey);
-        font-size: 14px;
-        width: 100%;
-        transition: all 0.2s ease-in-out;
-    }
+.input-style {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--light-grey);
+    font-size: 14px;
+    width: 100%;
+    transition: all 0.2s ease-in-out;
+}
 
-    .input-style:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(31, 38, 91, 0.2);
-    }
+.input-style:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(31, 38, 91, 0.2);
+}
 </style>
 
 
@@ -81,7 +81,7 @@ if (!isset($data['regions'])) {
                     <select id="pickup_region" name="pickup_region" class="input-style">
                         <option value="">Select Region</option>
                         <?php foreach ($data['regions'] as $region): ?>
-                            <option value="<?= $region['id'] ?>"><?= $region['name'] ?></option>
+                        <option value="<?= $region['id'] ?>"><?= $region['name'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -184,12 +184,23 @@ if (!isset($data['regions'])) {
                         Type</label>
                     <select id="delivery_type" name="delivery_type" class="input-style">
                         <option value="">Select delivery type</option>
-                        <option value=1>Normal</option>
-                        <option value=2>Express</option>
-                        <option value=3>In-City</option>
-                        <option value=4>Important</option>
+                        <option value="1">Normal</option>
+                        <option value="2">Express</option>
+                        <option value="3">In-City</option>
+                        <option value="4">Important</option>
                     </select>
+                    <div id="delivery_notice"
+                        class="hidden mt-2 p-3 rounded-md border-l-4 border-yellow-400 bg-yellow-50 text-yellow-800 text-sm flex items-center gap-2 shadow-sm">
+                        <!-- Info Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M12 20c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z" />
+                        </svg>
+                        <span>This delivery is faster and may cost more</span>
+                    </div>
                 </div>
+
             </div>
 
             <!-- Special Notes -->
@@ -229,7 +240,7 @@ if (!isset($data['regions'])) {
                         <select id="receiver_region" name="receiver_region" class="input-style">
                             <option value="">Select Region</option>
                             <?php foreach ($data['regions'] as $region): ?>
-                                <option value="<?= $region['id'] ?>"><?= $region['name'] ?></option>
+                            <option value="<?= $region['id'] ?>"><?= $region['name'] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -323,107 +334,145 @@ if (!isset($data['regions'])) {
 </footer>
 
 <script>
-    // Allow only today up to 5 days later
-    document.addEventListener("DOMContentLoaded", function() {
-        const today = new Date();
-        const maxDate = new Date();
-        maxDate.setDate(today.getDate() + 5);
+// Allow only today up to 5 days later
+document.addEventListener("DOMContentLoaded", function() {
+    const today = new Date();
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 5);
 
-        const todayStr = today.toISOString().split("T")[0];
-        const maxStr = maxDate.toISOString().split("T")[0];
+    const todayStr = today.toISOString().split("T")[0];
+    const maxStr = maxDate.toISOString().split("T")[0];
 
-        const dateInput = document.getElementById("preferred_date");
-        dateInput.setAttribute("min", todayStr);
-        dateInput.setAttribute("max", maxStr);
+    const dateInput = document.getElementById("preferred_date");
+    dateInput.setAttribute("min", todayStr);
+    dateInput.setAttribute("max", maxStr);
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const regionSelect = document.getElementById('pickup_region');
+    const citySelect = document.getElementById('pickup_city');
+    const townshipSelect = document.getElementById('pickup_township');
+
+    regionSelect.addEventListener('change', function() {
+        const regionId = this.value;
+        citySelect.innerHTML = '<option value="">Select City</option>';
+        townshipSelect.innerHTML = '<option value="">Select Township</option>';
+
+        if (regionId) {
+            fetch('<?= URLROOT ?>/routepage/getCities?region_id=' + regionId)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(city => {
+                        let option = document.createElement('option');
+                        option.value = city.id;
+                        option.textContent = city.name;
+                        citySelect.appendChild(option);
+                    });
+                });
+        }
     });
 
+    citySelect.addEventListener('change', function() {
+        const cityId = this.value;
+        townshipSelect.innerHTML = '<option value="">Select Township</option>';
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const regionSelect = document.getElementById('pickup_region');
-        const citySelect = document.getElementById('pickup_city');
-        const townshipSelect = document.getElementById('pickup_township');
-
-        regionSelect.addEventListener('change', function() {
-            const regionId = this.value;
-            citySelect.innerHTML = '<option value="">Select City</option>';
-            townshipSelect.innerHTML = '<option value="">Select Township</option>';
-
-            if (regionId) {
-                fetch('<?= URLROOT ?>/routepage/getCities?region_id=' + regionId)
-                    .then(res => res.json())
-                    .then(data => {
-                        data.forEach(city => {
-                            let option = document.createElement('option');
-                            option.value = city.id;
-                            option.textContent = city.name;
-                            citySelect.appendChild(option);
-                        });
+        if (cityId) {
+            fetch('<?= URLROOT ?>/routepage/getTownships?city_id=' + cityId)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(township => {
+                        let option = document.createElement('option');
+                        option.value = township.id;
+                        option.textContent = township.name;
+                        townshipSelect.appendChild(option);
                     });
-            }
-        });
+                });
+        }
+    });
+});
 
-        citySelect.addEventListener('change', function() {
-            const cityId = this.value;
-            townshipSelect.innerHTML = '<option value="">Select Township</option>';
+document.addEventListener('DOMContentLoaded', function() {
+    const receiverRegionSelect = document.getElementById('receiver_region');
+    const receiverCitySelect = document.getElementById('receiver_city');
+    const receiverTownshipSelect = document.getElementById('receiver_township');
 
-            if (cityId) {
-                fetch('<?= URLROOT ?>/routepage/getTownships?city_id=' + cityId)
-                    .then(res => res.json())
-                    .then(data => {
-                        data.forEach(township => {
-                            let option = document.createElement('option');
-                            option.value = township.id;
-                            option.textContent = township.name;
-                            townshipSelect.appendChild(option);
-                        });
+    receiverRegionSelect.addEventListener('change', function() {
+        const regionId = this.value;
+        receiverCitySelect.innerHTML = '<option value="">Select City</option>';
+        receiverTownshipSelect.innerHTML = '<option value="">Select Township</option>';
+
+        if (regionId) {
+            fetch('<?= URLROOT ?>/routepage/getCities?region_id=' + regionId)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(city => {
+                        let option = document.createElement('option');
+                        option.value = city.id;
+                        option.textContent = city.name;
+                        receiverCitySelect.appendChild(option);
                     });
-            }
-        });
+                });
+        }
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const receiverRegionSelect = document.getElementById('receiver_region');
-        const receiverCitySelect = document.getElementById('receiver_city');
-        const receiverTownshipSelect = document.getElementById('receiver_township');
+    receiverCitySelect.addEventListener('change', function() {
+        const cityId = this.value;
+        receiverTownshipSelect.innerHTML = '<option value="">Select Township</option>';
 
-        receiverRegionSelect.addEventListener('change', function() {
-            const regionId = this.value;
-            receiverCitySelect.innerHTML = '<option value="">Select City</option>';
-            receiverTownshipSelect.innerHTML = '<option value="">Select Township</option>';
-
-            if (regionId) {
-                fetch('<?= URLROOT ?>/routepage/getCities?region_id=' + regionId)
-                    .then(res => res.json())
-                    .then(data => {
-                        data.forEach(city => {
-                            let option = document.createElement('option');
-                            option.value = city.id;
-                            option.textContent = city.name;
-                            receiverCitySelect.appendChild(option);
-                        });
+        if (cityId) {
+            fetch('<?= URLROOT ?>/routepage/getTownships?city_id=' + cityId)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(township => {
+                        let option = document.createElement('option');
+                        option.value = township.id;
+                        option.textContent = township.name;
+                        receiverTownshipSelect.appendChild(option);
                     });
-            }
-        });
-
-        receiverCitySelect.addEventListener('change', function() {
-            const cityId = this.value;
-            receiverTownshipSelect.innerHTML = '<option value="">Select Township</option>';
-
-            if (cityId) {
-                fetch('<?= URLROOT ?>/routepage/getTownships?city_id=' + cityId)
-                    .then(res => res.json())
-                    .then(data => {
-                        data.forEach(township => {
-                            let option = document.createElement('option');
-                            option.value = township.id;
-                            option.textContent = township.name;
-                            receiverTownshipSelect.appendChild(option);
-                        });
-                    });
-            }
-        });
+                });
+        }
     });
+});
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const deliveryType = document.getElementById('delivery_type');
+    const receiverRegionDiv = document.getElementById('receiver_region').parentElement;
+    const receiverCityDiv = document.getElementById('receiver_city').parentElement;
+    const receiverTownshipDiv = document.getElementById('receiver_township').parentElement;
+    const deliveryNotice = document.getElementById('delivery_notice');
+
+    function updateDeliveryFields() {
+        const value = deliveryType.value;
+
+        // Hide receiver region/city/township if In-City
+        if (value === '3') { // In-City
+            receiverRegionDiv.style.display = 'none';
+            receiverCityDiv.style.display = 'none';
+            receiverTownshipDiv.style.display = 'none';
+        } else {
+            receiverRegionDiv.style.display = '';
+            receiverCityDiv.style.display = '';
+            receiverTownshipDiv.style.display = '';
+        }
+
+        // Show notice if Important
+        if (value === '4') { // Important
+            deliveryNotice.classList.remove('hidden');
+        } else {
+            deliveryNotice.classList.add('hidden');
+        }
+    }
+
+    // Initialize on page load
+    updateDeliveryFields();
+
+    // Listen for changes
+    deliveryType.addEventListener('change', updateDeliveryFields);
+});
+</script>
+
 
 
 </body>

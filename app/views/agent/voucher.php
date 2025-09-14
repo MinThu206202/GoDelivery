@@ -8,79 +8,79 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
+
+/* Styles for print */
+@media print {
     body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f3f4f6;
+        background-color: #fff;
+        padding: 0 !important;
+        /* Ensure no padding on body for print */
+        overflow: visible !important;
+        /* Allow content to flow without scrollbars */
+        height: auto !important;
+        /* Allow body to expand to content height */
     }
 
-    /* Styles for print */
-    @media print {
-        body {
-            background-color: #fff;
-            padding: 0 !important;
-            /* Ensure no padding on body for print */
-            overflow: visible !important;
-            /* Allow content to flow without scrollbars */
-            height: auto !important;
-            /* Allow body to expand to content height */
-        }
-
-        .no-print {
-            display: none !important;
-        }
-
-        .voucher-container {
-            box-shadow: none !important;
-            /* Remove shadow for print */
-            border: 1px solid #ccc !important;
-            /* Add a border for print */
-            margin: 0 !important;
-            /* Remove auto margins for print */
-            width: 100% !important;
-            /* Take full width */
-            max-width: none !important;
-            /* Remove max-width restriction */
-            min-height: auto !important;
-            /* Allow height to adjust */
-            padding: 1rem !important;
-            /* Add some padding inside the voucher for print */
-        }
-
-        /* Ensure main content area also allows full content flow */
-        main {
-            overflow-y: visible !important;
-            flex: none !important;
-            /* Remove flex-1 property */
-            height: auto !important;
-            /* Allow height to adjust */
-            padding: 0 !important;
-            /* Remove padding from main for print */
-        }
-
-        /* Ensure table cells with inputs look clean when printed */
-        input,
-        textarea,
-        select {
-            border: none !important;
-            padding: 0 !important;
-            background-color: transparent !important;
-            box-shadow: none !important;
-            outline: none !important;
-        }
-
-        .printable-input-cell input,
-        .printable-input-cell textarea {
-            width: 100%;
-            display: block;
-            border: none !important;
-            background: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            font-size: inherit;
-            line-height: inherit;
-            color: inherit;
-        }
+    .no-print {
+        display: none !important;
     }
+
+    .voucher-container {
+        box-shadow: none !important;
+        /* Remove shadow for print */
+        border: 1px solid #ccc !important;
+        /* Add a border for print */
+        margin: 0 !important;
+        /* Remove auto margins for print */
+        width: 100% !important;
+        /* Take full width */
+        max-width: none !important;
+        /* Remove max-width restriction */
+        min-height: auto !important;
+        /* Allow height to adjust */
+        padding: 1rem !important;
+        /* Add some padding inside the voucher for print */
+    }
+
+    /* Ensure main content area also allows full content flow */
+    main {
+        overflow-y: visible !important;
+        flex: none !important;
+        /* Remove flex-1 property */
+        height: auto !important;
+        /* Allow height to adjust */
+        padding: 0 !important;
+        /* Remove padding from main for print */
+    }
+
+    /* Ensure table cells with inputs look clean when printed */
+    input,
+    textarea,
+    select {
+        border: none !important;
+        padding: 0 !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+    .printable-input-cell input,
+    .printable-input-cell textarea {
+        width: 100%;
+        display: block;
+        border: none !important;
+        background: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        font-size: inherit;
+        line-height: inherit;
+        color: inherit;
+    }
+}
 </style>
 
 
@@ -89,16 +89,45 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
     <!-- Header -->
     <header class="flex items-center justify-between p-6 bg-white shadow-md rounded-bl-lg no-print">
         <h1 class="text-3xl font-semibold text-gray-800">Delivery Voucher</h1>
-        <div class="flex items-center space-x-4">
-            <div class="flex items-center space-x-2">
+        <div x-data="{ open: false }" class="relative">
+            <!-- Button-like Trigger -->
+            <button @click="open = !open"
+                class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
                 <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
-                <div>
-                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
+                <div class="text-left">
+                    <p class="text-lg font-medium text-gray-800">
+                        <?= htmlspecialchars($agent['name']) ?>
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        Agent ID: <?= htmlspecialchars($agent['access_code']) ?>
+                    </p>
                 </div>
+            </button>
+
+            <!-- Dropdown -->
+            <div x-show="open" @click.away="open = false" x-transition
+                class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                <!-- Profile -->
+                <a href="<?= URLROOT; ?>/agent/profile"
+                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                    Profile
+                </a>
+
+                <!-- Divider -->
+                <div class="border-t my-1"></div>
+
+                <!-- Logout -->
+                <a href="<?= URLROOT; ?>/agent/logout"
+                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                    Logout
+                </a>
             </div>
         </div>
+
+        <!-- Alpine.js -->
+        <script src="//unpkg.com/alpinejs" defer></script>
+
     </header>
 
     <!-- Voucher Content -->
@@ -210,9 +239,12 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                             </p>
                         </div>
                         <div>
-                            <label for="coupon" class="block text-sm text-gray-500">Coupon:</label>
-                            <input type="text" name="coupon" id="coupon" placeholder="Enter coupon code (optional)"
-                                class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                            <label for="deliveryType" class="block text-sm text-gray-500">Payment Details</label>
+                            <select id="paymentType" name="payment"
+                                class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
+                                <option value=1>Sender Pay</option>
+                                <option value=2>Receiver Pay</option>
+                            </select>
                         </div>
                     </div>
                     <label for="productType" class="block text-sm text-gray-500 mt-4">Product Type:</label>
@@ -233,9 +265,9 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                                     class="text-gray-700 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
                                     <option value="" disabled selected>Select Region</option>
                                     <?php foreach ($data['region'] as $region) : ?>
-                                        <option value="<?= htmlspecialchars($region['id']); ?>">
-                                            <?= htmlspecialchars($region['name']); ?>
-                                        </option>
+                                    <option value="<?= htmlspecialchars($region['id']); ?>">
+                                        <?= htmlspecialchars($region['name']); ?>
+                                    </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -256,15 +288,6 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Payment Details</h2>
-                        <label for="paymentType" class="block text-sm text-gray-500">Payment Type:</label>
-                        <select id="paymentType" name="payment"
-                            class="text-lg font-medium text-gray-900 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#1F265B]">
-                            <option value="Prepaid">Unpaid</option>
-                            <option value="Paid">Paid</option>
-                        </select>
                     </div>
                 </div>
 
@@ -289,62 +312,56 @@ require_once APPROOT . '/views/inc/agentsidebar.php'; ?>
 </div>
 
 <script>
-    document.getElementById('senderAgentRegion').addEventListener('change', function() {
-        const regionId = this.value;
-        const citySelect = document.getElementById('senderAgentCity');
-        const townshipSelect = document.getElementById('senderAgentTownship');
+const $ = id => document.getElementById(id);
 
-        citySelect.innerHTML = '<option value="">Select City</option>';
-        townshipSelect.innerHTML = '<option value="">Select Township</option>';
+// Generic function to load select options
+const loadOptions = (url, targetSelect, placeholder) => {
+    targetSelect.innerHTML = `<option value="">${placeholder}</option>`;
+    if (!url) return;
 
-        if (!regionId) return;
+    fetch(url)
+        .then(res => res.json())
+        .then(items => {
+            items.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.textContent = item.name;
+                targetSelect.appendChild(opt);
+            });
+        })
+        .catch(err => console.error('Error loading options:', err));
+};
 
-        fetch(`<?= URLROOT; ?>/agent/getCitiesByRegion?region_id=${regionId}`)
-            .then(response => response.json())
-            .then(cities => {
-                cities.forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city.id;
-                    option.textContent = city.name;
-                    citySelect.appendChild(option);
-                });
-            })
-            .catch(err => console.error('Error loading cities:', err));
-    });
+// Region → City
+$('senderAgentRegion').addEventListener('change', function() {
+    const regionId = this.value;
+    loadOptions(`<?= URLROOT; ?>/agent/getCitiesByRegion?region_id=${regionId}`, $('senderAgentCity'),
+        'Select City');
+    $('senderAgentTownship').innerHTML = '<option value="">Select Township</option>';
+});
 
-    document.getElementById('senderAgentCity').addEventListener('change', function() {
-        const cityId = this.value;
-        const townshipSelect = document.getElementById('senderAgentTownship');
+// City → Township
+$('senderAgentCity').addEventListener('change', function() {
+    const cityId = this.value;
+    loadOptions(`<?= URLROOT; ?>/agent/getTownshipsByCity?city_id=${cityId}`, $('senderAgentTownship'),
+        'Select Township');
+});
 
-        townshipSelect.innerHTML = '<option value="">Select Township</option>';
+// Delivery Type logic
+const deliveryTypeHandler = () => {
+    const type = $('deliveryType').value;
+    const importantNote = $('importantNoteContainer');
+    const agentLocation = document.querySelector(
+    '.voucher-container .grid.grid-cols-1.md\\:grid-cols-2.gap-6.mb-8');
 
-        if (!cityId) return;
+    importantNote.classList.toggle('hidden', type !== '4'); // Important
+    agentLocation.classList.toggle('hidden', type === '3'); // In-City
+};
 
-        fetch(`<?= URLROOT; ?>/agent/getTownshipsByCity?city_id=${cityId}`)
-            .then(response => response.json())
-            .then(townships => {
-                townships.forEach(township => {
-                    const option = document.createElement('option');
-                    option.value = township.id;
-                    option.textContent = township.name;
-                    townshipSelect.appendChild(option);
-                });
-            })
-            .catch(err => console.error('Error loading townships:', err));
-    });
-
-    // JavaScript for delivery_type and important note logic
-    document.getElementById('deliveryType').addEventListener('change', function() {
-        const deliveryType = this.value;
-        const importantNoteContainer = document.getElementById('importantNoteContainer');
-
-        if (deliveryType === '4') {
-            importantNoteContainer.classList.remove('hidden');
-        } else {
-            importantNoteContainer.classList.add('hidden');
-        }
-    });
+$('deliveryType').addEventListener('change', deliveryTypeHandler);
 </script>
+
+
 
 </body>
 

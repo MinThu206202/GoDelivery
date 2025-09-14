@@ -4,10 +4,10 @@
 <!-- Inter Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f3f4f6;
-    }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
 </style>
 
 <!-- Main Content Area -->
@@ -16,14 +16,45 @@
     <header class="flex items-center justify-between p-6 bg-white shadow-md rounded-bl-lg">
         <h1 class="text-3xl font-semibold text-gray-800">Deliveries</h1>
         <div class="flex items-center space-x-4">
-            <div class="flex items-center space-x-2">
-                <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
-                    class="w-10 h-10 rounded-full border-2 border-blue-500">
-                <div>
-                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
+            <div x-data="{ open: false }" class="relative">
+                <!-- Button-like Trigger -->
+                <button @click="open = !open"
+                    class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
+                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
+                        class="w-10 h-10 rounded-full border-2 border-blue-500">
+                    <div class="text-left">
+                        <p class="text-lg font-medium text-gray-800">
+                            <?= htmlspecialchars($agent['name']) ?>
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            Agent ID: <?= htmlspecialchars($agent['access_code']) ?>
+                        </p>
+                    </div>
+                </button>
+
+                <!-- Dropdown -->
+                <div x-show="open" @click.away="open = false" x-transition
+                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                    <!-- Profile -->
+                    <a href="<?= URLROOT; ?>/agent/profile"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                        Profile
+                    </a>
+
+                    <!-- Divider -->
+                    <div class="border-t my-1"></div>
+
+                    <!-- Logout -->
+                    <a href="<?= URLROOT; ?>/agent/logout"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                        Logout
+                    </a>
                 </div>
             </div>
+
+            <!-- Alpine.js -->
+            <script src="//unpkg.com/alpinejs" defer></script>
+
         </div>
     </header>
 
@@ -83,7 +114,7 @@
                     </thead>
                     <tbody id="deliveryTableBody" class="bg-white divide-y divide-gray-200">
                         <?php if (!empty($data['delivery'])): ?>
-                            <?php foreach ($data['delivery'] as $delivery):
+                        <?php foreach ($data['delivery'] as $delivery):
                                 $statusClass = match ($delivery['delivery_status']) {
                                     'Pending' => 'bg-gray-100 text-gray-800',
                                     'Awaiting Acceptance' => 'bg-yellow-100 text-yellow-800',
@@ -96,63 +127,63 @@
                                     default => 'bg-gray-100 text-gray-800',
                                 };
                             ?>
-                                <tr data-status="<?= htmlspecialchars($delivery['delivery_status']) ?>">
-                                    <!-- Order ID -->
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words max-w-[120px]">
-                                        <?= htmlspecialchars($delivery['tracking_code']) ?>
-                                    </td>
+                        <tr data-status="<?= htmlspecialchars($delivery['delivery_status']) ?>">
+                            <!-- Order ID -->
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words max-w-[120px]">
+                                <?= htmlspecialchars($delivery['tracking_code']) ?>
+                            </td>
 
-                                    <!-- Customer -->
-                                    <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
-                                        <?= htmlspecialchars($delivery['sender_customer_name']) ?>
-                                    </td>
+                            <!-- Customer -->
+                            <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
+                                <?= htmlspecialchars($delivery['sender_customer_name']) ?>
+                            </td>
 
-                                    <!-- Delivery Date -->
-                                    <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
-                                        <?= htmlspecialchars($delivery['created_at']) ?>
-                                    </td>
+                            <!-- Delivery Date -->
+                            <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
+                                <?= htmlspecialchars($delivery['created_at']) ?>
+                            </td>
 
-                                    <!-- From City -->
-                                    <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
-                                        <?= htmlspecialchars($delivery['from_city_name'] ?? 'N/A') ?>
-                                    </td>
+                            <!-- From City -->
+                            <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
+                                <?= htmlspecialchars($delivery['from_city_name'] ?? 'N/A') ?>
+                            </td>
 
-                                    <!-- Destination City -->
-                                    <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
-                                        <?= htmlspecialchars($delivery['to_city_name'] ?? 'N/A') ?>
-                                    </td>
+                            <!-- Destination City -->
+                            <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
+                                <?= htmlspecialchars($delivery['to_city_name'] ?? 'N/A') ?>
+                            </td>
 
-                                    <!-- Status -->
-                                    <td class="px-6 py-4 text-sm">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?> 
+                            <!-- Status -->
+                            <td class="px-6 py-4 text-sm">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?> 
                      break-words max-w-[120px] text-center">
-                                            <?= htmlspecialchars($delivery['delivery_status']) ?>
-                                        </span>
-                                    </td>
+                                    <?= htmlspecialchars($delivery['delivery_status']) ?>
+                                </span>
+                            </td>
 
-                                    <!-- Actions (View / Edit buttons) -->
-                                    <td class="px-4 py-3 flex flex-wrap gap-2">
-                                        <a href="<?= URLROOT ?>/agentcontroller/delivery_detail/<?= $delivery['tracking_code'] ?>"
-                                            class="text-white bg-[#1F265B] px-3 py-2 rounded hover:bg-[#2A346C] break-words text-center w-[80px]">
-                                            View
-                                        </a>
+                            <!-- Actions (View / Edit buttons) -->
+                            <td class="px-4 py-3 flex flex-wrap gap-2">
+                                <a href="<?= URLROOT ?>/agentcontroller/delivery_detail/<?= $delivery['tracking_code'] ?>"
+                                    class="text-white bg-[#1F265B] px-3 py-2 rounded hover:bg-[#2A346C] break-words text-center w-[80px]">
+                                    View
+                                </a>
 
-                                        <?php if ($delivery['delivery_status'] !== 'In Transit'): ?>
-                                            <a href="<?= URLROOT ?>/agentcontroller/get_data/<?= $delivery['tracking_code'] ?>"
-                                                class="text-white bg-blue-500 px-3 py-2 rounded hover:bg-blue-600 break-words text-center w-[80px]">
-                                                Edit
-                                            </a>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
+                                <?php if ($delivery['delivery_status'] !== 'In Transit'): ?>
+                                <a href="<?= URLROOT ?>/agentcontroller/get_data/<?= $delivery['tracking_code'] ?>"
+                                    class="text-white bg-blue-500 px-3 py-2 rounded hover:bg-blue-600 break-words text-center w-[80px]">
+                                    Edit
+                                </a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
 
-                            <?php endforeach; ?>
+                        <?php endforeach; ?>
                         <?php else: ?>
-                            <tr>
-                                <td colspan="7" class="text-center text-gray-500 text-sm py-6">
-                                    🚚 No delivery requests available.
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="7" class="text-center text-gray-500 text-sm py-6">
+                                🚚 No delivery requests available.
+                            </td>
+                        </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -162,36 +193,36 @@
 </div>
 
 <script>
-    function filterDeliveries(event, status) {
-        event.preventDefault();
-        const rows = document.querySelectorAll('#deliveryTableBody tr');
-        const filterLinks = document.querySelectorAll('.filter-link');
+function filterDeliveries(event, status) {
+    event.preventDefault();
+    const rows = document.querySelectorAll('#deliveryTableBody tr');
+    const filterLinks = document.querySelectorAll('.filter-link');
 
-        filterLinks.forEach(link => {
-            link.classList.remove('active', 'bg-[#1F265B]', 'text-white');
-            link.classList.add('bg-gray-100', 'text-gray-700');
-        });
-
-        event.currentTarget.classList.add('active', 'bg-[#1F265B]', 'text-white');
-        event.currentTarget.classList.remove('bg-gray-100', 'text-gray-700');
-
-        rows.forEach(row => {
-            const rowStatus = row.getAttribute('data-status');
-            row.style.display = (status === 'All' || rowStatus === status) ? '' : 'none';
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const tbody = document.getElementById('deliveryTableBody');
-        const rows = tbody.querySelectorAll('tr');
-        const container = tbody.closest('div');
-
-        if (rows.length <= 0) {
-            // center if only 1 or 2 rows
-            container.classList.add("items-center");
-        } else {
-            // normal scroll if many
-            container.classList.remove("items-center");
-        }
+    filterLinks.forEach(link => {
+        link.classList.remove('active', 'bg-[#1F265B]', 'text-white');
+        link.classList.add('bg-gray-100', 'text-gray-700');
     });
+
+    event.currentTarget.classList.add('active', 'bg-[#1F265B]', 'text-white');
+    event.currentTarget.classList.remove('bg-gray-100', 'text-gray-700');
+
+    rows.forEach(row => {
+        const rowStatus = row.getAttribute('data-status');
+        row.style.display = (status === 'All' || rowStatus === status) ? '' : 'none';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tbody = document.getElementById('deliveryTableBody');
+    const rows = tbody.querySelectorAll('tr');
+    const container = tbody.closest('div');
+
+    if (rows.length <= 0) {
+        // center if only 1 or 2 rows
+        container.classList.add("items-center");
+    } else {
+        // normal scroll if many
+        container.classList.remove("items-center");
+    }
+});
 </script>

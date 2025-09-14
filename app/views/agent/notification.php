@@ -6,29 +6,29 @@ $noti = $data['noti'] ?? [];
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f3f4f6;
-    }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
 
-    /* Custom scrollbar */
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 8px;
-    }
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px;
-    }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 </style>
 
 <div class="flex-1 flex flex-col overflow-hidden">
@@ -36,14 +36,45 @@ $noti = $data['noti'] ?? [];
     <header class="flex items-center justify-between p-6 bg-white shadow-md rounded-bl-lg">
         <h1 class="text-3xl font-semibold text-gray-800">Notifications</h1>
         <div class="flex items-center space-x-4">
-            <div class="flex items-center space-x-2">
-                <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
-                    class="w-10 h-10 rounded-full border-2 border-blue-500">
-                <div>
-                    <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
+            <div x-data="{ open: false }" class="relative">
+                <!-- Button-like Trigger -->
+                <button @click="open = !open"
+                    class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
+                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
+                        class="w-10 h-10 rounded-full border-2 border-blue-500">
+                    <div class="text-left">
+                        <p class="text-lg font-medium text-gray-800">
+                            <?= htmlspecialchars($agent['name']) ?>
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            Agent ID: <?= htmlspecialchars($agent['access_code']) ?>
+                        </p>
+                    </div>
+                </button>
+
+                <!-- Dropdown -->
+                <div x-show="open" @click.away="open = false" x-transition
+                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                    <!-- Profile -->
+                    <a href="<?= URLROOT; ?>/agent/profile"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                        Profile
+                    </a>
+
+                    <!-- Divider -->
+                    <div class="border-t my-1"></div>
+
+                    <!-- Logout -->
+                    <a href="<?= URLROOT; ?>/agent/logout"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                        Logout
+                    </a>
                 </div>
             </div>
+
+            <!-- Alpine.js -->
+            <script src="//unpkg.com/alpinejs" defer></script>
+
         </div>
     </header>
 
@@ -55,7 +86,7 @@ $noti = $data['noti'] ?? [];
             <div class="overflow-y-auto max-h-[550px] pr-4 custom-scrollbar">
                 <div class="space-y-4">
                     <?php if (!empty($noti)): ?>
-                        <?php
+                    <?php
                         $typeStyles = [
                             'request_delivery'     => ['bg' => 'bg-blue-50',   'border' => 'border-blue-500',   'text' => 'text-blue-800'],
                             'my_delivery'          => ['bg' => 'bg-green-50',  'border' => 'border-green-500',  'text' => 'text-green-800'],
@@ -67,7 +98,7 @@ $noti = $data['noti'] ?? [];
 
                         ?>
 
-                        <?php foreach ($noti as $n):
+                    <?php foreach ($noti as $n):
                             $type = strtolower($n['notification_type'] ?? 'general');
                             $style = $typeStyles[$type] ?? $typeStyles['general'];
                             $createdAt = strtotime($n['created_at'] ?? '');
@@ -82,20 +113,20 @@ $noti = $data['noti'] ?? [];
                                 $timeAgo = floor($timeDiff / 86400) . ' days ago';
                             }
                         ?>
-                            <div
-                                class="<?= $style['bg'] ?> <?= $style['border'] ?> <?= $style['text'] ?> p-4 rounded-lg shadow-sm border-l-4">
-                                <div class="flex justify-between items-center mb-1">
-                                    <h3 class="font-bold text-lg"><?= htmlspecialchars($n['title']) ?></h3>
-                                    <span class="text-sm text-gray-600"><?= $timeAgo ?></span>
-                                </div>
-                                <p class="text-gray-700"><?= htmlspecialchars($n['message']) ?></p>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div
-                            class="p-6 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-lg text-center font-medium shadow-sm">
-                            Notification is not yet.
+                    <div
+                        class="<?= $style['bg'] ?> <?= $style['border'] ?> <?= $style['text'] ?> p-4 rounded-lg shadow-sm border-l-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="font-bold text-lg"><?= htmlspecialchars($n['title']) ?></h3>
+                            <span class="text-sm text-gray-600"><?= $timeAgo ?></span>
                         </div>
+                        <p class="text-gray-700"><?= htmlspecialchars($n['message']) ?></p>
+                    </div>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <div
+                        class="p-6 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-lg text-center font-medium shadow-sm">
+                        Notification is not yet.
+                    </div>
                     <?php endif; ?>
                 </div>
             </div>

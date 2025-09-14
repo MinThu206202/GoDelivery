@@ -1,6 +1,3 @@
-<?php
-session_start();
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,7 +48,7 @@ session_start();
                     id="createAccountForm">
 
                     <input type="text" name="name" placeholder="Full Name" required />
-                    <input type="number" name="phonenumber" placeholder="Phone Number" required />
+                    <input type="text" name="phonenumber" placeholder="Phone Number" required />
                     <input type="email" name="email" placeholder="Email" required />
 
                     <select id="region" name="region_id" required>
@@ -141,159 +138,158 @@ session_start();
                     CUSTOMERS
                     NATIONWIDE.
                 </p>
-                <img src="https://placehold.co/450x300/1a237e/e0e0e0?text=Delivery+Network"
-                    alt="Delivery Network Illustration" />
+                <img src="<?php echo URLROOT; ?>/public/images/login.png" alt="Delivery Network Illustration" />
             </div>
         </div>
     </div>
 
     <script>
-        document
-            .getElementById(
-                'region'
-            )
-            .addEventListener(
-                'change',
-                function() {
-                    const
-                        regionId =
-                        this
-                        .value;
-                    fetch
-                        (
-                            `<?= URLROOT ?>/auth/getCities?region_id=${regionId}`
-                        )
-                        .then(
-                            res =>
-                            res
-                            .json()
-                        )
-                        .then(
-                            data => {
-                                const
-                                    citySelect =
-                                    document
-                                    .getElementById(
-                                        'city'
-                                    );
-                                citySelect
-                                    .innerHTML =
-                                    '<option value="">Select City</option>';
-                                data.forEach(
-                                    city => {
-                                        citySelect
-                                            .innerHTML +=
-                                            `<option value="${city.id}">${city.name}</option>`;
-                                    }
+    document
+        .getElementById(
+            'region'
+        )
+        .addEventListener(
+            'change',
+            function() {
+                const
+                    regionId =
+                    this
+                    .value;
+                fetch
+                    (
+                        `<?= URLROOT ?>/auth/getCities?region_id=${regionId}`
+                    )
+                    .then(
+                        res =>
+                        res
+                        .json()
+                    )
+                    .then(
+                        data => {
+                            const
+                                citySelect =
+                                document
+                                .getElementById(
+                                    'city'
                                 );
-                                document
-                                    .getElementById(
-                                        'township'
-                                    )
-                                    .innerHTML =
-                                    '<option value="">Select Township</option>';
-                                document
-                                    .getElementById(
-                                        'ward'
-                                    )
-                                    .innerHTML =
-                                    '<option value="">Select Ward</option>';
-                            }
-                        );
-                }
-            );
+                            citySelect
+                                .innerHTML =
+                                '<option value="">Select City</option>';
+                            data.forEach(
+                                city => {
+                                    citySelect
+                                        .innerHTML +=
+                                        `<option value="${city.id}">${city.name}</option>`;
+                                }
+                            );
+                            document
+                                .getElementById(
+                                    'township'
+                                )
+                                .innerHTML =
+                                '<option value="">Select Township</option>';
+                            document
+                                .getElementById(
+                                    'ward'
+                                )
+                                .innerHTML =
+                                '<option value="">Select Ward</option>';
+                        }
+                    );
+            }
+        );
 
-        document
-            .getElementById(
-                'city'
-            )
-            .addEventListener(
-                'change',
-                function() {
-                    const
-                        cityId =
-                        this
-                        .value;
-                    fetch
-                        (
-                            `<?= URLROOT ?>/auth/getTownships?city_id=${cityId}`
-                        )
-                        .then(
-                            res =>
-                            res
-                            .json()
-                        )
-                        .then(
-                            data => {
-                                const
-                                    townshipSelect =
-                                    document
-                                    .getElementById(
-                                        'township'
-                                    );
-                                townshipSelect
-                                    .innerHTML =
-                                    '<option value="">Select Township</option>';
-                                data.forEach(
-                                    township => {
-                                        townshipSelect
-                                            .innerHTML +=
-                                            `<option value="${township.id}">${township.name}</option>`;
-                                    }
-                                );
+    document
+        .getElementById(
+            'city'
+        )
+        .addEventListener(
+            'change',
+            function() {
+                const
+                    cityId =
+                    this
+                    .value;
+                fetch
+                    (
+                        `<?= URLROOT ?>/auth/getTownships?city_id=${cityId}`
+                    )
+                    .then(
+                        res =>
+                        res
+                        .json()
+                    )
+                    .then(
+                        data => {
+                            const
+                                townshipSelect =
                                 document
-                                    .getElementById(
-                                        'ward'
-                                    )
-                                    .innerHTML =
-                                    '<option value="">Select Ward</option>';
-                            }
-                        );
-                }
-            );
-
-        document
-            .getElementById(
-                'township'
-            )
-            .addEventListener(
-                'change',
-                function() {
-                    const
-                        townshipId =
-                        this
-                        .value;
-                    fetch
-                        (
-                            `<?= URLROOT ?>/auth/getWards?township_id=${townshipId}`
-                        )
-                        .then(
-                            res =>
-                            res
-                            .json()
-                        )
-                        .then(
-                            data => {
-                                const
-                                    wardSelect =
-                                    document
-                                    .getElementById(
-                                        'ward'
-                                    );
-                                wardSelect
-                                    .innerHTML =
-                                    '<option value="">Select Ward</option>';
-                                data.forEach(
-                                    ward => {
-                                        wardSelect
-                                            .innerHTML +=
-                                            `<option value="${ward.id}">${ward.name}</option>`;
-                                    }
+                                .getElementById(
+                                    'township'
                                 );
-                            }
-                        );
-                }
-            );
+                            townshipSelect
+                                .innerHTML =
+                                '<option value="">Select Township</option>';
+                            data.forEach(
+                                township => {
+                                    townshipSelect
+                                        .innerHTML +=
+                                        `<option value="${township.id}">${township.name}</option>`;
+                                }
+                            );
+                            document
+                                .getElementById(
+                                    'ward'
+                                )
+                                .innerHTML =
+                                '<option value="">Select Ward</option>';
+                        }
+                    );
+            }
+        );
+
+    document
+        .getElementById(
+            'township'
+        )
+        .addEventListener(
+            'change',
+            function() {
+                const
+                    townshipId =
+                    this
+                    .value;
+                fetch
+                    (
+                        `<?= URLROOT ?>/auth/getWards?township_id=${townshipId}`
+                    )
+                    .then(
+                        res =>
+                        res
+                        .json()
+                    )
+                    .then(
+                        data => {
+                            const
+                                wardSelect =
+                                document
+                                .getElementById(
+                                    'ward'
+                                );
+                            wardSelect
+                                .innerHTML =
+                                '<option value="">Select Ward</option>';
+                            data.forEach(
+                                ward => {
+                                    wardSelect
+                                        .innerHTML +=
+                                        `<option value="${ward.id}">${ward.name}</option>`;
+                                }
+                            );
+                        }
+                    );
+            }
+        );
     </script>
 </body>
 

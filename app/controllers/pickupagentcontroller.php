@@ -10,6 +10,7 @@ class pickupagentcontroller extends Controller
     {
         $this->db = new Database();
         $this->model('notification');
+        $this->model('paymenthistoryModel');
         $this->pickup_agent = $_SESSION['user'];
     }
 
@@ -159,10 +160,15 @@ class pickupagentcontroller extends Controller
 
     public function completepickup()
     {
-        $id = $_GET['id'];
-        $request_code = $_GET['request_code'] ?? null;
-        $this->db->update('pickup_requests', $id, ['status_id' => 3]);
-        redirect('pickupagentcontroller/pickupdetail?request_code=' . $request_code);
+
+        $outofdelivery = $this->db->readAll('view_deliveries_detailed');
+        $filteredDeliveries = array_filter($outofdelivery, function ($delivery) {
+            return $delivery['pickupagent_id'] == $this->pickup_agent['id'];
+        });
+        $data = [
+            'alldata' => $filteredDeliveries,
+        ];
+        $this->view('pickupagent/completepickup', $data);
         return;
     }
 
@@ -189,6 +195,224 @@ class pickupagentcontroller extends Controller
         $id = $_GET['id'];
         $this->db->update('pickup_requests', $id, ['status_id' => 16]);
         redirect('pickupagentcontroller/mypick');
+        return;
+    }
+
+    public function complete()
+    {
+        $id = $_GET['id'];
+        $request_code = $_GET['request_code'] ?? null;
+        $this->db->update('pickup_requests', $id, ['status_id' => 3]);
+        redirect('pickupagentcontroller/pickupdetail?request_code=' . $request_code);
+        return;
+    }
+    public function deliverparcel()
+    {
+        $id = $_GET['id'];
+        $this->db->update('deliveries', $id, ['delivery_status_id' => 9]);
+        redirect('pickupagentcontroller/completepickup');
+        return;
+    }
+
+    public function outofdeliverydetail()
+    {
+        $agentId = $this->pickup_agent['created_by_agent'];
+        $request_code = $_GET['request_code'];
+        $payment = $this->db->readAll('payment_methods_view');
+        $paymenttype = array_filter($payment, function ($method) use ($agentId) {
+            return $method['create_by_agent_id'] == $agentId;
+        });
+        $pickupdetail = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $request_code);
+        $data = [
+            'payment' => $paymenttype,
+            'pickupdetial' => $pickupdetail,
+        ];
+        $this->view('pickupagent/outdelivery_detail', $data);
+    }
+
+    public function arrivedoutofdelivery()
+    {
+        $id = $_GET['id'] ?? null;
+        $request_code = $_GET['request_code'] ?? null;
+
+        if (!$id) {
+            redirect('pickupagentcontroller/outofdelivery');
+            return;
+        }
+
+        $delivery = $this->db->getById('deliveries', $id);
+
+        if ($delivery) {
+            // Map payment status to delivery status
+            $statusMap = [
+                1 => 3, // e.g., prepaid
+                2 => 10  // e.g., COD
+            ];
+
+            if (isset($statusMap[$delivery['payment_status_id']])) {
+                $this->db->update('deliveries', $id, ['delivery_status_id' => $statusMap[$delivery['payment_status_id']]]);
+            }
+        }
+
+        redirect('pickupagentcontroller/outofdeliverydetail?request_code=' . $request_code);
+    }
+
+
+    public function outofdeliveryreturn()
+    {
+        $id = $_GET['id'];
+        $request_code = $_GET['request_code'] ?? null;
+        $this->db->update('deliveries', $id, ['delivery_status_id' => 5]);
+        redirect('pickupagentcontroller/outofdeliverydetail?request_code=' . $request_code);
+        return;
+    }
+
+    public function savepayment()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $payment_type = $_POST['payment_type'];
+            $method_id = $_POST['method_id'];
+            $agent_id = $_POST['agent_id'];
+            $delivery_id = $_POST['delivery_id'];
+            $payment_image = null;
+            $agent = $this->db->getById('users', $agent_id);
+
+            if ($payment_type == 1) {
+                $this->db->update('deliveries', $delivery_id, ['delivery_status_id' => 3]);
+
+                $request_code = $this->db->getById('deliveries', $delivery_id);
+                redirect("pickupagentcontroller/outofdeliverydetail?request_code={$request_code['tracking_code']}");
+                return;
+            }
+
+            // --- Handle file upload ---
+            if (isset($_FILES['receipt']) && $_FILES['receipt']['error'] !== UPLOAD_ERR_NO_FILE) {
+                $file = $_FILES['receipt'];
+
+                // Upload directory
+                $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/Delivery/public/uploads/";
+
+                // Ensure folder exists
+                if (!is_dir($uploadDir)) {
+                    if (!mkdir($uploadDir, 0755, true)) {
+                        throw new Exception("Failed to create upload folder: " . $uploadDir);
+                    }
+                }
+
+                // Check writable
+                if (!is_writable($uploadDir)) {
+                    throw new Exception("Upload folder is not writable: " . $uploadDir);
+                }
+
+                // Validate file size (max 5MB)
+                $maxFileSize = 5 * 1024 * 1024; // 5MB
+                if ($file['size'] > $maxFileSize) {
+                    throw new Exception("File is too large. Max 5MB.");
+                }
+
+                // Validate MIME type
+                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/avif'];
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mimeType = finfo_file($finfo, $file['tmp_name']);
+                finfo_close($finfo);
+
+                if (!in_array($mimeType, $allowedMimeTypes)) {
+                    throw new Exception("Invalid file type. Only JPG, PNG, AVIF, GIF allowed.");
+                }
+
+                // Sanitize and create unique filename
+                $originalName  = pathinfo($file['name'], PATHINFO_FILENAME);
+                $extension     = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                $sanitizedBase = preg_replace("/[^A-Za-z0-9_\-]/", '', $originalName);
+                $sanitizedBase = substr($sanitizedBase, 0, 50);
+                $newFileName   = uniqid('payment_', true) . '_' . $sanitizedBase . '.' . $extension;
+
+                $targetPath = $uploadDir . $newFileName;
+
+                // Move uploaded file
+                if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+                    throw new Exception("Failed to move uploaded file.");
+                }
+
+                // Save path relative to project
+                $payment_image = 'public/uploads/' . $newFileName;
+            }
+
+            $payment = new paymenthistoryModel();
+            $payment->deliveries_id = $delivery_id;
+            $payment->payment_method_id = $method_id;
+            $payment->agent_id = $agent['created_by_agent'];
+            $payment->receipt_image = $payment_image;
+            date_default_timezone_set('Asia/Yangon');
+            $payment->created_at = date('Y-m-d H:i:s');
+            $this->db->create('payment_history', $payment->toArray());
+            $this->db->update('deliveries', $delivery_id, ['delivery_status_id' => 11]);
+
+            $request_code = $this->db->getById('deliveries', $delivery_id);
+            redirect("pickupagentcontroller/outofdeliverydetail?request_code={$request_code['tracking_code']}");
+            return;
+        }
+    }
+
+    public function updateProfile()
+    {
+        $id = $_POST['user_id'];
+        $name = $_POST['name'];
+        $profile_image = null;
+
+        if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $file = $_FILES['profile_image'];
+
+            // Upload directory
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/Delivery/public/uploads/";
+
+            // Ensure folder exists
+            if (!is_dir($uploadDir)) {
+                if (!mkdir($uploadDir, 0755, true)) {
+                    throw new Exception("Failed to create upload folder: " . $uploadDir);
+                }
+            }
+
+            // Check writable
+            if (!is_writable($uploadDir)) {
+                throw new Exception("Upload folder is not writable: " . $uploadDir);
+            }
+
+            // Validate file size (max 5MB)
+            $maxFileSize = 5 * 1024 * 1024; // 5MB
+            if ($file['size'] > $maxFileSize) {
+                throw new Exception("File is too large. Max 5MB.");
+            }
+
+            // Validate MIME type
+            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/avif'];
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mimeType = finfo_file($finfo, $file['tmp_name']);
+            finfo_close($finfo);
+
+            if (!in_array($mimeType, $allowedMimeTypes)) {
+                throw new Exception("Invalid file type. Only JPG, PNG, AVIF, GIF allowed.");
+            }
+
+            // Sanitize and create unique filename
+            $originalName  = pathinfo($file['name'], PATHINFO_FILENAME);
+            $extension     = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $sanitizedBase = preg_replace("/[^A-Za-z0-9_\-]/", '', $originalName);
+            $sanitizedBase = substr($sanitizedBase, 0, 50);
+            $newFileName   = uniqid('payment_', true) . '_' . $sanitizedBase . '.' . $extension;
+
+            $targetPath = $uploadDir . $newFileName;
+
+            // Move uploaded file
+            if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+                throw new Exception("Failed to move uploaded file.");
+            }
+
+            // Save path relative to project
+            $profile_image = 'public/uploads/' . $newFileName;
+        }
+        $redult = $this->db->update('users', $id, ['name' => $name, 'profile_image' => $profile_image]);
+        redirect('pickupagentcontroller/pickupagentprofile');
         return;
     }
 }
