@@ -14,17 +14,45 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
         <header class="flex items-center justify-between p-6 bg-white shadow-md rounded-bl-lg">
             <h1 class="text-3xl font-semibold text-gray-800">Payment Types</h1>
             <div class="flex items-center space-x-4">
-                <div class="flex items-center space-x-2">
-                    <!-- Mock Admin Avatar -->
-                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Cashier Avatar"
-                        class="w-10 h-10 rounded-full border-2 border-blue-500">
-                    <div>
-                        <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?>
-                        </p>
-                        <p class="text-sm text-gray-500">Agent ID:
-                            <?= htmlspecialchars($agent['access_code']) ?></p>
+                <div x-data="{ open: false }" class="relative">
+                    <!-- Button-like Trigger -->
+                    <button @click="open = !open"
+                        class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
+                        <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
+                            class="w-10 h-10 rounded-full border-2 border-blue-500">
+                        <div class="text-left">
+                            <p class="text-lg font-medium text-gray-800">
+                                <?= htmlspecialchars($agent['name']) ?>
+                            </p>
+                            <p class="text-sm text-gray-500">
+                                Agent ID: <?= htmlspecialchars($agent['access_code']) ?>
+                            </p>
+                        </div>
+                    </button>
+
+                    <!-- Dropdown -->
+                    <div x-show="open" @click.away="open = false" x-transition
+                        class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                        <!-- Profile -->
+                        <a href="<?= URLROOT; ?>/agent/profile"
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                            Profile
+                        </a>
+
+                        <!-- Divider -->
+                        <div class="border-t my-1"></div>
+
+                        <!-- Logout -->
+                        <a href="<?= URLROOT; ?>/agent/logout"
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                            Logout
+                        </a>
                     </div>
                 </div>
+
+                <!-- Alpine.js -->
+                <script src="//unpkg.com/alpinejs" defer></script>
+
             </div>
         </header>
 
@@ -51,17 +79,17 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
 
                 <!-- Fixed Table Height -->
                 <?php if (!empty($_SESSION['flash_message'])): ?>
-                    <?php
+                <?php
                     $flash = $_SESSION['flash_message'];
                     unset($_SESSION['flash_message']); // clear after showing
                     ?>
-                    <div class="mb-4">
-                        <div id="flashMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 
+                <div class="mb-4">
+                    <div id="flashMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 
             px-6 py-3 rounded shadow-md text-white font-medium 
             <?= $flash['type'] === 'success' ? 'bg-green-500' : 'bg-red-500' ?>">
-                            <?= htmlspecialchars($flash['message']) ?>
-                        </div>
+                        <?= htmlspecialchars($flash['message']) ?>
                     </div>
+                </div>
                 <?php endif; ?>
 
                 <div class="overflow-x-auto h-[450px] flex">
@@ -92,34 +120,34 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <?php foreach ($data['allmethod'] as $res): ?>
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-3 text-sm font-medium max-w-[150px]">
-                                        <span class="px-2 py-1 text-xs font-semibold rounded-full
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-3 text-sm font-medium max-w-[150px]">
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full
                     <?= strtolower($res['name']) === 'banking' ? 'bg-blue-100 text-blue-800' : '' ?>
                     <?= strtolower($res['name']) === 'online' ? 'bg-green-100 text-green-800' : '' ?>">
-                                            <?= htmlspecialchars($res['name']) ?>
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-3 text-sm text-gray-700 font-medium max-w-[150px]">
-                                        <?= htmlspecialchars($res['method_name']) ?>
-                                    </td>
-                                    <td class="px-6 py-3 text-sm text-gray-500 max-w-[150px]">
-                                        <?= htmlspecialchars($res['method_number']) ?>
-                                    </td>
-                                    <td class="px-6 py-3 text-sm text-gray-500 max-w-[150px]">
-                                        <?= htmlspecialchars($res['account_name'] ?? $res['method_name']) ?>
-                                    </td>
-                                    <td class="px-6 py-3 text-sm text-gray-500">
-                                        <?php if (!empty($res['method_image'])): ?>
-                                            <img src="/Delivery/<?= htmlspecialchars($res['method_image']) ?>"
-                                                alt="Payment Screenshot"
-                                                class="w-24 h-12 rounded-lg cursor-pointer hover:scale-105 transition-transform shadow-sm"
-                                                onclick="openImageModal(this.src)">
-                                        <?php else: ?>
-                                            <span class="text-gray-400 text-xs italic">No image</span>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
+                                        <?= htmlspecialchars($res['name']) ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-3 text-sm text-gray-700 font-medium max-w-[150px]">
+                                    <?= htmlspecialchars($res['method_name']) ?>
+                                </td>
+                                <td class="px-6 py-3 text-sm text-gray-500 max-w-[150px]">
+                                    <?= htmlspecialchars($res['method_number']) ?>
+                                </td>
+                                <td class="px-6 py-3 text-sm text-gray-500 max-w-[150px]">
+                                    <?= htmlspecialchars($res['account_holder'] ?? $res['method_name']) ?>
+                                </td>
+                                <td class="px-6 py-3 text-sm text-gray-500">
+                                    <?php if (!empty($res['method_image'])): ?>
+                                    <img src="/Delivery/<?= htmlspecialchars($res['method_image']) ?>"
+                                        alt="Payment Screenshot"
+                                        class="w-24 h-12 rounded-lg cursor-pointer hover:scale-105 transition-transform shadow-sm"
+                                        onclick="openImageModal(this.src)">
+                                    <?php else: ?>
+                                    <span class="text-gray-400 text-xs italic">No image</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -187,6 +215,9 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                         class="mt-1 block w-full border border-gray-300 rounded-lg p-2 focus:ring-[#1F265B] focus:border-[#1F265B]">
                 </div>
 
+                <input type="hidden" name="agent_id" value="                                <?= htmlspecialchars($agent['id']) ?>
+">
+
                 <!-- Buttons -->
                 <div class="flex justify-end space-x-3 mt-6">
                     <button type="button" onclick="closeModal()"
@@ -202,32 +233,32 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
     </div>
 
     <script>
-        function openModal() {
-            document.getElementById('addPaymentModal').classList.remove('hidden');
-        }
+    function openModal() {
+        document.getElementById('addPaymentModal').classList.remove('hidden');
+    }
 
-        function closeModal() {
-            document.getElementById('addPaymentModal').classList.add('hidden');
-        }
+    function closeModal() {
+        document.getElementById('addPaymentModal').classList.add('hidden');
+    }
 
-        function openImageModal(src) {
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImage');
-            modalImg.src = src;
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.classList.add('opacity-100');
-        }
+    function openImageModal(src) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        modalImg.src = src;
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100');
+    }
 
-        function closeImageModal() {
-            const modal = document.getElementById('imageModal');
-            modal.classList.remove('opacity-100');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+    }
 
-        // Optional: close modal when clicking outside the image
-        document.getElementById('imageModal').addEventListener('click', function(e) {
-            if (e.target.id === 'imageModal') closeImageModal();
-        });
+    // Optional: close modal when clicking outside the image
+    document.getElementById('imageModal').addEventListener('click', function(e) {
+        if (e.target.id === 'imageModal') closeImageModal();
+    });
     </script>
 
 </body>

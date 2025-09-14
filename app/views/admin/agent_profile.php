@@ -1,343 +1,207 @@
-<?php require_once APPROOT . '/views/inc/sidebar.php';
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-
-$status = $data['agent']['status_name'];
-$statusLower = strtolower($status);
-
-if ($statusLower === 'active') {
-    $statusClass = 'status-active';
-    $buttonText = 'Deactivate Agent';
-    $buttonClass = 'btn-red';
-} else {
-    $statusClass = 'status-inactive';
-    $buttonText = 'Activate Agent';
-    $buttonClass = 'btn-green';
-}
+<?php
+$currentRoute = $_SERVER['REQUEST_URI'];
+$agent = $data['agent'];
+require_once APPROOT . '/views/inc/sidebar.php';
 ?>
-<?php if (!empty($data['success'])): ?>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const successBox = document.getElementById('successBox');
-            successBox.textContent = '✅ Agent status changed. Email sent!';
-            successBox.classList.remove('hidden');
-            setTimeout(() => successBox.classList.add('hidden'), 3000);
-        });
-    </script>
-<?php endif; ?>
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/admin/agent_profile.css">
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-    /* Unified button styling */
-    .agent-action-buttons button {
-        font-size: 16px;
-        padding: 12px 24px;
-        border-radius: 6px;
-        font-weight: 600;
-        min-width: 160px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f1f5f9;
+}
 
-    .status-inactive {
-        background-color: #dc3545;
-        color: white;
-    }
+.sidebar a {
+    position: relative;
+    transition: all 0.3s ease;
+}
 
-    .status-active {
-        background-color: #28a745;
-        color: white;
-    }
+.sidebar a.active-sidebar-link {
+    background-color: #fff;
+    color: #1F265B;
+    font-weight: 600;
+}
 
-    .btn-red {
-        background-color: #dc3545;
-        color: white;
-    }
+.sidebar a.active-sidebar-link::before,
+.sidebar a:not(.active-sidebar-link):hover::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 8px;
+    background-color: #FBBF24;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
 
-    .btn-red:hover {
-        background-color: #c82333;
-    }
-
-    .btn-green {
-        background-color: #28a745;
-        color: white;
-    }
-
-    .btn-green:hover {
-        background-color: #218838;
-    }
-
-    .update-info-button {
-        background-color: #1F265B;
-        color: white;
-    }
-
-    .update-info-button:hover {
-        background-color: #151a3b;
-    }
-
-    /* Confirm Modal Overlay */
-    .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.45);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
-
-    .modal {
-        background: white;
-        padding: 24px 30px;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 420px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        animation: fadeIn 0.3s ease-in-out;
-    }
-
-    .modal h3 {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 10px;
-        color: #1F265B;
-    }
-
-    .modal p {
-        font-size: 16px;
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-    .modal-buttons {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-    }
-
-    .btn-primary {
-        background-color: #1F265B;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-    }
-
-    .btn-primary:hover {
-        background-color: #151a3b;
-    }
-
-    .btn-secondary {
-        background-color: #e0e0e0;
-        color: #333;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-    }
-
-    .btn-secondary:hover {
-        background-color: #d0d0d0;
-    }
-
-    .success-box {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #28a745;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 6px;
-        font-size: 16px;
-        z-index: 1001;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+.sidebar a:not(.active-sidebar-link):hover {
+    background-color: #fef3c7;
+    color: #1F265B;
+}
 </style>
 
-<main class="main-content">
-    <header class="dashboard-header">
-        <div class="header-left">
-            <h2 class="value"> <a href=""> Agent</a>/</h2>
-            <h2 class="page-title">Agent View</h2>
+
+<!-- Main Content -->
+<div class="flex-1 p-8 md:ml-64">
+    <!-- Topbar -->
+    <header class="flex justify-between items-center pb-8 border-b border-gray-300">
+        <div class="flex items-center space-x-4 text-gray-800">
+            <h1 class="text-3xl font-bold">Agent View</h1>
         </div>
-        <div class="header-right">
-            <div class="admin-profile">
-                <div class="profile-icon"><i class="fas fa-user-circle"></i></div>
-                <span><?= htmlspecialchars($_SESSION['user']['name']) ?></span>
+        <div class="flex items-center space-x-4">
+            <i class="fas fa-user-circle text-gray-500 text-3xl"></i>
+            <div class="flex flex-col">
+                <span class="text-gray-800 font-semibold"><?= htmlspecialchars($_SESSION['user']['name']) ?></span>
             </div>
         </div>
     </header>
 
-    <section class="agent-view-panel panel">
-        <div class="agent-profile-section">
-            <div class="agent-avatar">
-                <img id="agentProfilePhoto" src="https://placehold.co/100x100/F0F4F7/1F265B?text=Agent"
-                    alt="Agent Profile Photo">
+    <!-- Main Panel -->
+    <main class="mt-8">
+        <!-- Agent Info and Actions -->
+        <div class="bg-white p-8 rounded-3xl shadow-xl border border-gray-200">
+            <!-- Agent Details -->
+            <!-- Agent Details -->
+            <div class="p-6 bg-[#1F265B] text-white rounded-2xl shadow-lg mb-8">
+                <div class="flex items-center justify-between">
+                    <!-- Left side: Badge + Name + Status -->
+                    <div class="flex items-center space-x-4">
+                        <span
+                            class="bg-[#FBBF24] text-[#1F265B] px-4 py-2 text-sm font-semibold rounded-full">Agent</span>
+
+                        <p class="font-bold text-xl"><?= htmlspecialchars($agent['name']) ?></p>
+
+                        <?php
+                        $statusClass = '';
+                        if ($agent['status_name'] === 'Active') {
+                            $statusClass = 'bg-green-100 text-green-800';
+                        } elseif ($agent['status_name'] === 'Pending') {
+                            $statusClass = 'bg-yellow-100 text-yellow-800';
+                        } elseif ($agent['status_name'] === 'Inactive') {
+                            $statusClass = 'bg-red-100 text-red-800';
+                        }
+                        ?>
+
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full <?= $statusClass ?>">
+                            <?= htmlspecialchars($agent['status_name']) ?>
+                        </span>
+
+                    </div>
+
+                    <!-- Right side: Deactivate button -->
+                    <?php
+                    // Decide button label, color based on status
+                    if ($agent['status_name'] === 'Active') {
+                        $btnText = 'Deactivate Agent';
+                        $btnClass = 'bg-red-600 hover:bg-red-700';
+                    } else {
+                        $btnText = 'Activate Agent';
+                        $btnClass = 'bg-green-600 hover:bg-green-700';
+                    }
+                    ?>
+
+                    <a href="<?= URLROOT ?>/admincontroller/changestatus?id=<?= $agent['id'] ?>"
+                        class="px-6 py-2 <?= $btnClass ?> text-white font-semibold rounded-lg shadow transition-colors duration-200">
+                        <?= $btnText ?>
+                    </a>
+
+                </div>
+
+                <!-- Agent Info Grid -->
+                <div class="mt-6 space-y-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <p class="text-sm">Name: <?= htmlspecialchars($agent['name']) ?></p>
+                    <p class="text-sm">Email: <?= htmlspecialchars($agent['email']) ?></p>
+                    <p class="text-sm">Password: **********</p>
+                    <p class="text-sm">Phone: <?= htmlspecialchars($agent['phone']) ?></p>
+                    <p class="text-sm">Code: <?= htmlspecialchars($agent['access_code']) ?></p>
+                    <p class="text-sm">Address: <?= htmlspecialchars($agent['region_name']) ?></p>
+                </div>
             </div>
-            <div class="agent-details">
-                <div class="detail-row">
-                    <span class="label">Name</span>
-                    <span class="value" id="currentAgentName"><?= htmlspecialchars($data['agent']['name']) ?></span>
-                    <span class="value status-tag <?= $statusClass ?>"
-                        id="currentAgentStatus"><?= htmlspecialchars($status) ?></span>
+
+            <!-- Agent Stats -->
+            <div class="mt-8 text-center">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Agent Statistics</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- Assigned Deliveries -->
+                    <div
+                        class="p-6 bg-white rounded-2xl shadow-md border border-gray-200 flex flex-col items-center justify-center space-y-2 transform transition-transform duration-200 hover:scale-105">
+                        <i class="fas fa-list-ul text-3xl text-blue-500"></i>
+                        <p class="text-gray-600 text-sm">Assigned</p>
+                        <p class="text-3xl font-bold text-gray-800">10</p>
+                    </div>
+                    <!-- Pending Deliveries -->
+                    <div
+                        class="p-6 bg-white rounded-2xl shadow-md border border-gray-200 flex flex-col items-center justify-center space-y-2 transform transition-transform duration-200 hover:scale-105">
+                        <i class="fas fa-clock text-3xl text-yellow-500"></i>
+                        <p class="text-gray-600 text-sm">Pending</p>
+                        <p class="text-3xl font-bold text-gray-800">10</p>
+                    </div>
+                    <!-- Complete Deliveries -->
+                    <div
+                        class="p-6 bg-white rounded-2xl shadow-md border border-gray-200 flex flex-col items-center justify-center space-y-2 transform transition-transform duration-200 hover:scale-105">
+                        <i class="fas fa-check-circle text-3xl text-green-500"></i>
+                        <p class="text-gray-600 text-sm">Completed</p>
+                        <p class="text-3xl font-bold text-gray-800">10</p>
+                    </div>
                 </div>
-                <div class="detail-row">
-                    <span class="label">Phone:</span>
-                    <span class="value" id="currentAgentPhone"><?= htmlspecialchars($data['agent']['phone']) ?></span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">Email:</span>
-                    <span class="value" id="currentAgentEmail"><?= htmlspecialchars($data['agent']['email']) ?></span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">Code:</span>
-                    <span class="value"
-                        id="currentAgentCode"><?= htmlspecialchars($data['agent']['access_code']) ?></span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">Password:</span>
-                    <span class="value">********</span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">Address:</span>
-                    <span class="value"><?= htmlspecialchars($data['agent']['address']) ?></span>
+
+                <!-- Assigned Deliveries Table (moved here) -->
+                <div class="mt-8">
+                    <h2 class="text-2xl font-semibold mb-6 text-gray-800">Assigned Deliveries</h2>
+                    <div class="overflow-x-auto bg-white rounded-3xl shadow-xl border border-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        DELIVERY ID</th>
+                                    <th scope="col"
+                                        class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        CUSTOMER</th>
+                                    <th scope="col"
+                                        class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        STATUS</th>
+                                    <th scope="col"
+                                        class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        DATE</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <?php if (!empty($data['delivery'])): ?>
+                                <?php foreach ($data['delivery'] as $delivery): ?>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        <?= htmlspecialchars($delivery['tracking_code']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <?= htmlspecialchars($delivery['sender_customer_name']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                <?= $delivery['delivery_status'] === 'Delivered' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' ?>">
+                                            <?= htmlspecialchars($delivery['delivery_status']) ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <?= htmlspecialchars($delivery['created_at']) ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                                <?php else: ?>
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-gray-500">No deliveries found.</td>
+                                </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class=" agent-summary-cards">
-            <div class="card"><span class="label">Assigned Deliveries</span><span class="value">10</span></div>
-            <div class="card"><span class="label">Pending Deliveries</span><span class="value">10</span></div>
-            <div class="card"><span class="label">Complete Deliveries</span><span class="value">10</span></div>
-        </div>
-
-        <div class="agent-action-buttons">
-            <button class="<?= $buttonClass ?>" id="deactivateAccountButton"><?= $buttonText ?></button>
-            <button id="updateProfileButton" class="update-info-button">Update Info</button>
-        </div>
-
-        <h3 class="assigned-deliveries-heading">Assigned Deliveries</h3>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Delivery ID</th>
-                        <th>Customer</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($data['delivery'])): ?>
-                        <?php foreach ($data['delivery'] as $delivery): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($delivery['tracking_code']) ?></td>
-                                <td><?= htmlspecialchars($delivery['sender_customer_name']) ?></td>
-                                <td><?= htmlspecialchars($delivery['delivery_status']) ?></td>
-                                <td><?= htmlspecialchars($delivery['created_at']) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="4" style="text-align:center;">No deliveries found.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-    </section>
-</main>
-
-<input type="hidden" id="agentId" value="<?= htmlspecialchars($data['agent']['id']) ?>">
-
-<!-- ✅ Confirmation Modal -->
-<div id="customConfirmBox" class="modal-overlay hidden">
-    <div class="modal">
-        <h3 id="confirmTitle">Confirm Action</h3>
-        <p id="confirmText">Are you sure you want to deactivate this agent?</p>
-        <div class="modal-buttons">
-            <button id="confirmYes" class="btn-primary">Confirm</button>
-            <button id="confirmNo" class="btn-secondary">Cancel</button>
-        </div>
-    </div>
+    </main>
 </div>
+</body>
 
-<!-- ✅ Success Toast -->
-<div id="successBox" class="success-box hidden"></div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const statusText = document.getElementById('currentAgentStatus');
-        const actionBtn = document.getElementById('deactivateAccountButton');
-        const confirmBox = document.getElementById('customConfirmBox');
-        const confirmText = document.getElementById('confirmText');
-        const successBox = document.getElementById('successBox');
-        const confirmYes = document.getElementById('confirmYes');
-        const confirmNo = document.getElementById('confirmNo');
-        const agentId = document.getElementById('agentId').value;
-
-        // When action button is clicked, show confirmation
-        actionBtn.addEventListener('click', () => {
-            const isActive = statusText.textContent.trim().toLowerCase() === 'active';
-            confirmText.textContent = isActive ?
-                'Are you sure you want to deactivate this agent?' :
-                'Are you sure you want to activate this agent?';
-            confirmBox.classList.remove('hidden');
-        });
-
-        // When confirm YES is clicked
-        confirmYes.addEventListener('click', () => {
-            // Submit POST form
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '<?= URLROOT ?>/admincontroller/changestatus';
-
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'id';
-            input.value = agentId;
-
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
-        });
-
-        // When NO is clicked
-        confirmNo.addEventListener('click', () => {
-            confirmBox.classList.add('hidden');
-        });
-
-        // ✅ Show success message if redirected with ?success=1
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('success') === '1') {
-            successBox.textContent = '✅ Agent status changed. Email sent!';
-            successBox.classList.remove('hidden');
-            setTimeout(() => successBox.classList.add('hidden'), 3000);
-        }
-    });
-</script>
+</html>

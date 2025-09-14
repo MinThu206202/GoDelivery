@@ -4,17 +4,17 @@ $pickup = $data['pickup'];
 ?>
 
 <style>
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f3f4f6;
-}
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+    }
 
-.status-pending {
-    background-color: #fef3c7;
-    /* yellow-100 */
-    color: #b45309;
-    /* amber-700 */
-}
+    .status-pending {
+        background-color: #fef3c7;
+        /* yellow-100 */
+        color: #b45309;
+        /* amber-700 */
+    }
 </style>
 
 <body class="bg-gray-100 antialiased">
@@ -25,16 +25,50 @@ body {
         </header> -->
         <header class="flex items-center justify-between p-6 bg-white shadow-md rounded-bl-lg">
             <h1 class="text-3xl font-semibold text-gray-800">Pickup Request Details</h1>
-            <div class="flex items-center space-x-4">
-                <div class="flex items-center space-x-2">
-                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
+            <div x-data="{ open: false }" class="relative">
+                <!-- Button-like Trigger -->
+                <button
+                    @click="open = !open"
+                    class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
+                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>"
+                        alt="Agent Avatar"
                         class="w-10 h-10 rounded-full border-2 border-blue-500">
-                    <div>
-                        <p class="text-lg font-medium text-gray-800"><?= htmlspecialchars($agent['name']) ?></p>
-                        <p class="text-sm text-gray-500">Agent ID: <?= htmlspecialchars($agent['access_code']) ?></p>
+                    <div class="text-left">
+                        <p class="text-lg font-medium text-gray-800">
+                            <?= htmlspecialchars($agent['name']) ?>
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            Agent ID: <?= htmlspecialchars($agent['access_code']) ?>
+                        </p>
                     </div>
+                </button>
+
+                <!-- Dropdown -->
+                <div
+                    x-show="open"
+                    @click.away="open = false"
+                    x-transition
+                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                    <!-- Profile -->
+                    <a href="<?= URLROOT; ?>/agent/profile"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                        Profile
+                    </a>
+
+                    <!-- Divider -->
+                    <div class="border-t my-1"></div>
+
+                    <!-- Logout -->
+                    <a href="<?= URLROOT; ?>/agent/logout"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                        Logout
+                    </a>
                 </div>
             </div>
+
+            <!-- Alpine.js -->
+            <script src="//unpkg.com/alpinejs" defer></script>
+
         </header>
 
         <!-- Main Content Area -->

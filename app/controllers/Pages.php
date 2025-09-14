@@ -36,10 +36,47 @@ class Pages extends Controller
         $this->view('pages/forgetpassword');
     }
 
+    // Get cities by region
+    public function getCities()
+    {
+        $regionId = $_GET['region_id'] ?? null;
+
+        if ($regionId) {
+            $cities = $this->db->columnFilterAll('cities', 'region_id', $regionId);
+            echo json_encode($cities);
+        } else {
+            echo json_encode([]);
+        }
+    }
+
+    // Get townships by city
+    public function getTownships()
+    {
+        $cityId = $_GET['city_id'] ?? null;
+
+        if ($cityId) {
+            $townships = $this->db->columnFilterAll('townships', 'city_id', $cityId);
+            echo json_encode($townships);
+        } else {
+            echo json_encode([]);
+        }
+    }
+
+
     public function ournetwork()
     {
-        $this->view('user/ournetwork');
+        $regions = $this->db->readAll('regions');
+        $places  = $this->db->readAll('view_available_locations'); // all locations
+
+        $data = [
+            'regions' => $regions,
+            'places'  => $places,
+        ];
+
+        $this->view('user/ournetwork', $data);
     }
+
+
 
     public function register()
     {
@@ -63,7 +100,7 @@ class Pages extends Controller
         $this->view('pages/changepassword');
     }
 
-    public function pickup()
+    public function requestpickup()
     {
         $region = $this->db->readAll('regions');
         $cities = $this->db->readAll('cities'); // Fetch all cities from DB

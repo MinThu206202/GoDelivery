@@ -216,12 +216,14 @@ class Agentcontroller extends Controller
 
     $totalPrice = (float)$_POST['weight'] * (float) $route['price'];
 
-    $paymentStatus = $this->db->columnFilter('payment_statuses', 'name', $_POST['payment']);
+    $paymentStatusId = $_POST['payment'];
+
+    // $paymentStatus = $this->db->columnFilter('payment_statuses', 'name', $_POST['payment']);
 
     $senderId = $user->createUser($senderData);
     $receiverId = $user->createUser($receiverData);
 
-    $deliveryData = $user->buildDeliveryData($_POST, $agent, $receiverAgent, $senderId, $receiverId, $trackingNumber, $arrivalTime, $totalPrice, $paymentStatus['id']);
+    $deliveryData = $user->buildDeliveryData($_POST, $agent, $receiverAgent, $senderId, $receiverId, $trackingNumber, $arrivalTime, $totalPrice, $paymentStatusId);
     $this->db->create('deliveries', $deliveryData);
 
     $trackingcode = $this->db->columnFilter('deliveries', 'tracking_code', $trackingNumber);
@@ -285,10 +287,10 @@ class Agentcontroller extends Controller
           'message'       => "You accepted delivery: $code. Proceed to pickup.",
           'created_at'    => date('Y-m-d H:i:s', time())
         ]);
-        return redirect('agent/request?accepted=1');
+        return redirect('agent/deliveryrequest?accepted=1');
       }
 
-      return redirect('agent/request?accepted=0');
+      return redirect('agent/deliveryrequest?accepted=0');
     }
   }
 
@@ -963,8 +965,10 @@ class Agentcontroller extends Controller
   public function addpayment()
   {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
       try {
         // --- Get inputs ---
+        $agent_id = $_POST['agent_id'];
         $payment_type   = $_POST['payment_type'] ?? '';
         $payment_name   = $_POST['payment_name'] ?? '';
         $payment_holder = $_POST['payment_holder']  ?? '';
@@ -1028,6 +1032,7 @@ class Agentcontroller extends Controller
 
         // --- Insert payment record into DB ---
         $payment = new paymentModel();
+        $payment->create_by_agent_id = $agent_id;
         $payment->payment_type_id = $payment_type;
         $payment->method_name = $payment_name;
         $payment->method_image = $payment_image;
@@ -1134,6 +1139,17 @@ class Agentcontroller extends Controller
     return;
   }
 
+  public function outofdelivery()
+  {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $agent = $_POST['delivery_agent'];
+      $code = $_POST['code'];
+
+      $result = $this->db->update('deliveries', $code, ['pickupagent_id' => $agent, 'delivery_status_id' => 8]);
+      redirect('agent/outfordelivery');
+      return;
+    }
+  }
 
   public function logout()
   {
