@@ -3,41 +3,41 @@ $pickup = $data['pickupdetial'];
 ?>
 
 <style>
-    :root {
-        --main-bg-color: rgb(31 38 91 / var(--tw-bg-opacity, 1));
-    }
+:root {
+    --main-bg-color: rgb(31 38 91 / var(--tw-bg-opacity, 1));
+}
 
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f3f4f6;
-    }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
 
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 8px;
-    }
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: #e5e7eb;
-        border-radius: 10px;
-    }
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #e5e7eb;
+    border-radius: 10px;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #9ca3af;
-        border-radius: 10px;
-    }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 10px;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #6b7280;
-    }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
 
-    .text-shadow-md {
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
+.text-shadow-md {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
 
-    .active-link {
-        background-color: #2563eb;
-        color: white;
-    }
+.active-link {
+    background-color: #2563eb;
+    color: white;
+}
 </style>
 
 
@@ -53,10 +53,10 @@ $pickup = $data['pickupdetial'];
             <div
                 class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center text-sm font-bold text-gray-700">
                 <?php if (!empty($user['profile_image'])): ?>
-                    <img src="<?= URLROOT . '/' . htmlspecialchars($user['profile_image']) ?>" alt="Profile Image"
-                        class="w-full h-full object-cover">
+                <img src="<?= URLROOT . '/' . htmlspecialchars($user['profile_image']) ?>" alt="Profile Image"
+                    class="w-full h-full object-cover">
                 <?php else: ?>
-                    <?= strtoupper(substr($user['name'], 0, 2)) ?>
+                <?= strtoupper(substr($user['name'], 0, 2)) ?>
                 <?php endif; ?>
             </div>
 
@@ -72,18 +72,18 @@ $pickup = $data['pickupdetial'];
         $flash = $_SESSION['flash_message'];
         unset($_SESSION['flash_message']);
     ?>
-        <div id="flashMessage" class="mx-auto mb-6 max-w-lg text-center 
+    <div id="flashMessage" class="mx-auto mb-6 max-w-lg text-center 
                 px-6 py-3 rounded shadow-md text-white font-medium
                 <?= $flash['type'] === 'success' ? 'bg-green-500' : 'bg-red-500' ?>">
-            <?= htmlspecialchars($flash['message']) ?>
-        </div>
+        <?= htmlspecialchars($flash['message']) ?>
+    </div>
 
-        <script>
-            setTimeout(() => {
-                const flash = document.getElementById('flashMessage');
-                if (flash) flash.style.display = 'none';
-            }, 4000);
-        </script>
+    <script>
+    setTimeout(() => {
+        const flash = document.getElementById('flashMessage');
+        if (flash) flash.style.display = 'none';
+    }, 4000);
+    </script>
     <?php endif; ?>
 
     <!-- Main Content -->
@@ -109,6 +109,7 @@ $pickup = $data['pickupdetial'];
                         'rejected'                    => 'bg-red-500',
                         'agent_checked'               => 'bg-pink-500',
                         'awaiting_payment'            => 'bg-orange-500',
+                        'arrived_at_office' => 'bg-blue-400',
                         'payment_success'             => 'bg-emerald-600',
                         'awaiting_cash'               => 'bg-amber-500',
                         'cash_collected'              => 'bg-lime-600',
@@ -215,49 +216,58 @@ $pickup = $data['pickupdetial'];
 
                     <!-- Edit Button -->
                     <?php if ($pickup['status'] === 'arrived_at_user'): ?>
-                        <button onclick="openEditModal()"
-                            class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 transition-colors">
-                            <i class="fas fa-pencil-alt mr-2"></i> Edit Pickup
-                        </button>
+                    <button onclick="openEditModal()"
+                        class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 transition-colors">
+                        <i class="fas fa-pencil-alt mr-2"></i> Edit Pickup
+                    </button>
 
-                        <!-- Pickup Verify Button -->
-                        <a href="<?= URLROOT; ?>/pickupagentcontroller/verifypickup?id=<?= htmlspecialchars($pickup['id']); ?>"
-                            class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 transition-colors">
-                            <i class="fas fa-user-check mr-2"></i> Pickup Verify
-                        </a>
+                    <!-- Pickup Verify Button -->
+                    <a href="<?= URLROOT; ?>/pickupagentcontroller/verifypickup?id=<?= htmlspecialchars($pickup['id']); ?>"
+                        class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 transition-colors">
+                        <i class="fas fa-user-check mr-2"></i> Pickup Verify
+                    </a>
                     <?php endif; ?>
 
                     <!-- Arrived at User Button -->
                     <?php if ($pickup['status'] === 'on_the_way'): ?>
-                        <!-- Arrived at User Button -->
-                        <a href="<?= URLROOT; ?>/pickupagentcontroller/arrived?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
-                            class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors">
-                            <i class="fas fa-map-marker-alt mr-2"></i> Arrived at User
-                        </a>
+                    <!-- Arrived at User Button -->
+                    <a href="<?= URLROOT; ?>/pickupagentcontroller/arrived?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
+                        class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors">
+                        <i class="fas fa-map-marker-alt mr-2"></i> Arrived at User
+                    </a>
 
-                        <!-- Pickup Fail Button -->
-                        <a href="<?= URLROOT; ?>/pickupagentcontroller/pickupfail?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
-                            class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition-colors">
-                            <i class="fas fa-times-circle mr-2"></i> Pickup Fail
-                        </a>
+                    <!-- Pickup Fail Button -->
+                    <a href="<?= URLROOT; ?>/pickupagentcontroller/pickupfail?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
+                        class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition-colors">
+                        <i class="fas fa-times-circle mr-2"></i> Pickup Fail
+                    </a>
                     <?php endif; ?>
 
 
                     <?php if ($pickup['status'] === 'awaiting_cash'): ?>
-                        <a href="<?= URLROOT; ?>/pickupagentcontroller/collectcash?id=<?= htmlspecialchars($pickup['id']); ?>"
-                            class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 transition-colors">
-                            <i class="fas fa-money-bill-wave mr-2"></i> Collect Cash
-                        </a>
+                    <a href="<?= URLROOT; ?>/pickupagentcontroller/collectcash?id=<?= htmlspecialchars($pickup['id']); ?>"
+                        class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 transition-colors">
+                        <i class="fas fa-money-bill-wave mr-2"></i> Collect Cash
+                    </a>
                     <?php endif; ?>
 
 
                     <!-- Mark as Complete Button -->
                     <?php if ($pickup['status'] === 'pickup_verified'  || $pickup['status'] === 'voucher_created'): ?>
-                        <a href="<?= URLROOT; ?>/pickupagentcontroller/complete?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
-                            class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors">
-                            <i class="fas fa-check mr-2"></i> Complete Pickup
-                        </a>
+                    <a href="<?= URLROOT; ?>/pickupagentcontroller/complete?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
+                        class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors">
+                        <i class="fas fa-check mr-2"></i> Complete Pickup
+                    </a>
                     <?php endif; ?>
+
+                    <?php if ($pickup['status'] === 'collected'): ?>
+                    <a href="<?= URLROOT; ?>/pickupagentcontroller/arrived_at_office?id=<?= htmlspecialchars($pickup['id']); ?>&request_code=<?= urlencode($pickup['request_code']); ?>"
+                        class="w-full sm:w-auto flex justify-center items-center py-3 px-6 rounded-lg font-bold text-white 
+               bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-colors">
+                        <i class="fas fa-check mr-2"></i> Arrived at Office
+                    </a>
+                    <?php endif; ?>
+
                 </div>
             </div>
         </div>
@@ -326,27 +336,27 @@ $pickup = $data['pickupdetial'];
 </div>
 
 <script>
-    function openEditModal() {
-        document.getElementById('editModal').classList.remove('hidden');
-    }
+function openEditModal() {
+    document.getElementById('editModal').classList.remove('hidden');
+}
 
-    function closeEditModal() {
-        document.getElementById('editModal').classList.add('hidden');
-    }
+function closeEditModal() {
+    document.getElementById('editModal').classList.add('hidden');
+}
 
-    // When save clicked
-    document.getElementById('editForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+// When save clicked
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-        // collect form data
-        const formData = new FormData(this);
-        const queryString = new URLSearchParams(formData).toString();
+    // collect form data
+    const formData = new FormData(this);
+    const queryString = new URLSearchParams(formData).toString();
 
-        // redirect with params to your PHP controller
-        window.location.href =
-            "<?= URLROOT; ?>/pickupagentcontroller/editpickup?id=<?= htmlspecialchars($pickup['id']); ?>&" +
-            queryString;
-    });
+    // redirect with params to your PHP controller
+    window.location.href =
+        "<?= URLROOT; ?>/pickupagentcontroller/editpickup?id=<?= htmlspecialchars($pickup['id']); ?>&" +
+        queryString;
+});
 </script>
 
 

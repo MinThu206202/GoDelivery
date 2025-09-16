@@ -14,7 +14,7 @@ body {
 <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Header -->
     <header class="flex items-center justify-between p-6 bg-white shadow-md rounded-bl-lg">
-        <h1 class="text-3xl font-semibold text-gray-800">Deliveries</h1>
+        <h1 class="text-3xl font-semibold text-gray-800">Incoming Deliveries</h1>
         <div class="flex items-center space-x-4">
             <div x-data="{ open: false }" class="relative">
                 <!-- Button-like Trigger -->
@@ -45,7 +45,7 @@ body {
                     <div class="border-t my-1"></div>
 
                     <!-- Logout -->
-                    <a href="<?= URLROOT; ?>/agent/logout"
+                    <a href="<?= URLROOT; ?>/agentcontroller/logout"
                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                         Logout
                     </a>
@@ -123,19 +123,27 @@ body {
                         <tbody id="deliveryTableBody" class="bg-white divide-y divide-gray-200">
                             <?php if (!empty($data['delivery'])): ?>
                             <?php foreach ($data['delivery'] as $delivery):
-                                    $statusClass = match ($delivery['delivery_status']) {
-                                        'Pending' => 'bg-gray-100 text-gray-800',
-                                        'Awaiting Acceptance' => 'bg-yellow-100 text-yellow-800',
-                                        'Rejected' => 'bg-red-100 text-red-800',
-                                        'In Transit' => 'bg-blue-100 text-blue-800',
+                                    $statusClass = match (trim($delivery['delivery_status'])) {
+                                        'Pending' => 'bg-yellow-100 text-yellow-800',
+                                        'Ready for Pickup' => 'bg-indigo-100 text-indigo-800',
                                         'Delivered' => 'bg-green-100 text-green-800',
-                                        'Return' => 'bg-purple-100 text-purple-800',
-                                        'Cancelled' => 'bg-rose-100 text-rose-800',
-                                        'Failed Delivery' => 'bg-orange-100 text-orange-800',
+                                        'Cancelled' => 'bg-red-100 text-red-800',
+                                        'Returned' => 'bg-purple-100 text-purple-800',
+                                        'Awaiting Acceptance' => 'bg-blue-100 text-blue-800',
+                                        'Rejected' => 'bg-red-200 text-red-900',
+                                        'Out for Delivery' => 'bg-blue-200 text-blue-900',
+                                        'Deliver Parcel' => 'bg-green-200 text-green-900',
+                                        'Waiting Payment' => 'bg-yellow-200 text-yellow-900',
+                                        'Receipt Submitted' => 'bg-indigo-200 text-indigo-900',
+                                        'Payment Success' => 'bg-green-300 text-green-900',
+                                        'On the Way' => 'bg-blue-300 text-blue-900',
+                                        'Rejected by Agent' => 'bg-red-300 text-red-900',
+                                        'Delivery at Office' => 'bg-indigo-300 text-indigo-900',
                                         default => 'bg-gray-100 text-gray-800',
                                     };
                                 ?>
                             <tr data-status="<?= htmlspecialchars($delivery['delivery_status']) ?>">
+
                                 <!-- Order ID -->
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words max-w-[120px]">
                                     <?= htmlspecialchars($delivery['tracking_code']) ?>
@@ -170,17 +178,18 @@ body {
                                 </td>
 
                                 <!-- Actions (View / Edit buttons) -->
-                                <td class="px-4 py-3 flex flex-wrap gap-2">
+                                <td class="px-4 py-3 flex gap-2">
                                     <a href="<?= URLROOT ?>/agentcontroller/delivery_detail/<?= $delivery['tracking_code'] ?>"
-                                        class="text-white bg-[#1F265B] px-3 py-2 rounded hover:bg-[#2A346C] break-words text-center w-[80px]">
+                                        class="w-[80px] text-center px-3 py-2 rounded bg-[#1F265B] text-white hover:bg-[#2A346C] transition">
                                         View
                                     </a>
 
                                     <a href="<?= URLROOT ?>/agentcontroller/edit_incomedelivery/<?= $delivery['tracking_code'] ?>"
-                                        class="text-white bg-blue-500 px-3 py-2 rounded hover:bg-blue-600 break-words text-center w-[80px]">
+                                        class="w-[80px] text-center px-3 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 transition">
                                         Edit
                                     </a>
                                 </td>
+
                             </tr>
 
                             <?php endforeach; ?>

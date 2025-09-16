@@ -5,24 +5,24 @@ $name = isset($_SESSION['user']) ? $_SESSION['user'] : ['name' => 'Admin'];
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f1f5f9;
-}
-
-.bg-custom-blue {
-    background-color: #1F265B;
-}
-
-.main-content {
-    margin-left: 0;
-}
-
-@media(min-width: 768px) {
-    .main-content {
-        margin-left: 16rem;
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f1f5f9;
     }
-}
+
+    .bg-custom-blue {
+        background-color: #1F265B;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    @media(min-width: 768px) {
+        .main-content {
+            margin-left: 16rem;
+        }
+    }
 </style>
 
 
@@ -45,29 +45,29 @@ body {
                 </p>
 
                 <?php if (strtolower($data['location']['status_location_name']) === 'active'): ?>
-                <button id="deactivate-location-button"
-                    class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300 font-bold shadow-md">
-                    Deactivate Location
-                </button>
+                    <button id="deactivate-location-button"
+                        class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300 font-bold shadow-md">
+                        Deactivate Location
+                    </button>
                 <?php else: ?>
-                <button id="activate-location-button"
-                    class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 font-bold shadow-md">
-                    Activate Location
-                </button>
+                    <button id="activate-location-button"
+                        class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 font-bold shadow-md">
+                        Activate Location
+                    </button>
                 <?php endif; ?>
             </div>
 
             <!-- Right: Assigned Agent -->
             <?php if (!empty($data['location']['agent_name'])): ?>
-            <div class="bg-gray-50 border rounded-lg p-5 shadow-sm">
-                <h3 class="text-xl font-semibold text-[#1F265B] mb-3">Assigned Agent</h3>
-                <p><strong>Name:</strong> <?= htmlspecialchars($data['location']['agent_name']) ?></p>
-                <p><strong>Phone:</strong> <?= htmlspecialchars($data['location']['agent_phone']) ?></p>
-                <p><strong>Email:</strong> <?= htmlspecialchars($data['location']['agent_email']) ?></p>
-                <p><strong>Status:</strong> <?= htmlspecialchars($data['location']['agent_status_name']) ?></p>
-            </div>
+                <div class="bg-gray-50 border rounded-lg p-5 shadow-sm">
+                    <h3 class="text-xl font-semibold text-[#1F265B] mb-3">Assigned Agent</h3>
+                    <p><strong>Name:</strong> <?= htmlspecialchars($data['location']['agent_name']) ?></p>
+                    <p><strong>Phone:</strong> <?= htmlspecialchars($data['location']['agent_phone']) ?></p>
+                    <p><strong>Email:</strong> <?= htmlspecialchars($data['location']['agent_email']) ?></p>
+                    <p><strong>Status:</strong> <?= htmlspecialchars($data['location']['agent_status_name']) ?></p>
+                </div>
             <?php else: ?>
-            <p class="text-gray-500 text-sm">No agent assigned yet.</p>
+                <p class="text-gray-500 text-sm">No agent assigned yet.</p>
             <?php endif; ?>
         </div>
 
@@ -75,21 +75,21 @@ body {
         <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6 shadow-md">
             <h3 class="text-xl font-semibold text-[#1F265B] mb-4">Pending Agents</h3>
             <?php if (!empty($data['pendingagent'])): ?>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                <?php foreach ($data['pendingagent'] as $agent): ?>
-                <div class="agent-card border border-gray-200 p-4 rounded-lg shadow-sm bg-white cursor-pointer hover:bg-blue-50 hover:shadow-md"
-                    data-agent-id="<?= htmlspecialchars($agent['id']) ?>"
-                    data-agent-name="<?= htmlspecialchars($agent['name']) ?>"
-                    data-agent-email="<?= htmlspecialchars($agent['email']) ?>"
-                    data-agent-status="<?= htmlspecialchars($agent['status_name']) ?>">
-                    <p class="font-semibold text-[#1F265B] text-lg"><?= htmlspecialchars($agent['name']) ?></p>
-                    <p class="text-sm text-gray-600">Email: <?= htmlspecialchars($agent['email']) ?></p>
-                    <p class="text-sm text-gray-600">Status: <?= htmlspecialchars($agent['status_name']) ?></p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <?php foreach ($data['pendingagent'] as $agent): ?>
+                        <div class="agent-card border border-gray-200 p-4 rounded-lg shadow-sm bg-white cursor-pointer hover:bg-blue-50 hover:shadow-md"
+                            data-agent-id="<?= htmlspecialchars($agent['id']) ?>"
+                            data-agent-name="<?= htmlspecialchars($agent['name']) ?>"
+                            data-agent-email="<?= htmlspecialchars($agent['email']) ?>"
+                            data-agent-status="<?= htmlspecialchars($agent['status_name']) ?>">
+                            <p class="font-semibold text-[#1F265B] text-lg"><?= htmlspecialchars($agent['name']) ?></p>
+                            <p class="text-sm text-gray-600">Email: <?= htmlspecialchars($agent['email']) ?></p>
+                            <p class="text-sm text-gray-600">Status: <?= htmlspecialchars($agent['status_name']) ?></p>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
-            </div>
             <?php else: ?>
-            <p class="text-red-500 text-sm">No pending agents yet.</p>
+                <p class="text-red-500 text-sm">No pending agents yet.</p>
             <?php endif; ?>
         </div>
 
@@ -138,84 +138,84 @@ body {
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const agentCards = document.querySelectorAll('.agent-card');
-    const summaryAgentSpan = document.getElementById('summaryAgent');
-    const deployButton = document.getElementById('deploy-agent-button');
-    const locationId = document.getElementById('locationWrapper').dataset.locationId;
+    document.addEventListener('DOMContentLoaded', () => {
+        const agentCards = document.querySelectorAll('.agent-card');
+        const summaryAgentSpan = document.getElementById('summaryAgent');
+        const deployButton = document.getElementById('deploy-agent-button');
+        const locationId = document.getElementById('locationWrapper').dataset.locationId;
 
-    let selectedAgent = null;
+        let selectedAgent = null;
 
-    // Select agent
-    agentCards.forEach(card => {
-        card.addEventListener('click', () => {
-            agentCards.forEach(c => c.classList.remove('ring', 'ring-blue-400',
-                'bg-blue-100'));
-            card.classList.add('ring', 'ring-blue-400', 'bg-blue-100');
+        // Select agent
+        agentCards.forEach(card => {
+            card.addEventListener('click', () => {
+                agentCards.forEach(c => c.classList.remove('ring', 'ring-blue-400',
+                    'bg-blue-100'));
+                card.classList.add('ring', 'ring-blue-400', 'bg-blue-100');
 
-            selectedAgent = {
-                id: card.dataset.agentId,
-                name: card.dataset.agentName,
-                email: card.dataset.agentEmail,
-                status: card.dataset.agentStatus
-            };
+                selectedAgent = {
+                    id: card.dataset.agentId,
+                    name: card.dataset.agentName,
+                    email: card.dataset.agentEmail,
+                    status: card.dataset.agentStatus
+                };
 
-            summaryAgentSpan.textContent = `${selectedAgent.name} (${selectedAgent.email})`;
-            deployButton.disabled = false;
+                summaryAgentSpan.textContent = `${selectedAgent.name} (${selectedAgent.email})`;
+                deployButton.disabled = false;
+            });
         });
-    });
 
-    // Deploy agent
-    deployButton.addEventListener('click', () => {
-        if (selectedAgent) {
-            document.getElementById('formAgentID').value = selectedAgent.id;
-            document.getElementById('formAgentName').value = selectedAgent.name;
-            document.getElementById('formAgentEmail').value = selectedAgent.email;
-            document.getElementById('formAgentStatus').value = selectedAgent.status;
-            document.getElementById('formLocationID').value = locationId;
-            document.getElementById('formLocation').value = document.getElementById(
-                'summaryLocation').textContent;
-            document.getElementById('deployForm').submit();
+        // Deploy agent
+        deployButton.addEventListener('click', () => {
+            if (selectedAgent) {
+                document.getElementById('formAgentID').value = selectedAgent.id;
+                document.getElementById('formAgentName').value = selectedAgent.name;
+                document.getElementById('formAgentEmail').value = selectedAgent.email;
+                document.getElementById('formAgentStatus').value = selectedAgent.status;
+                document.getElementById('formLocationID').value = locationId;
+                document.getElementById('formLocation').value = document.getElementById(
+                    'summaryLocation').textContent;
+                document.getElementById('deployForm').submit();
+            }
+        });
+
+        // Handle location status change
+        const locationStatusForm = document.getElementById('locationStatusForm');
+        const locationStatusSpan = document.getElementById('locationStatus');
+
+        function handleLocationStatusChange(newStatus) {
+            document.getElementById('formLocationStatusID').value = locationId;
+            document.getElementById('formLocationNewStatus').value = newStatus;
+            document.getElementById('formCurrentStatusName').value = locationStatusSpan.textContent.trim();
+            locationStatusForm.submit();
         }
+
+        const activateBtn = document.getElementById('activate-location-button');
+        const deactivateBtn = document.getElementById('deactivate-location-button');
+        if (activateBtn) activateBtn.addEventListener('click', () => handleLocationStatusChange('active'));
+        if (deactivateBtn) deactivateBtn.addEventListener('click', () => handleLocationStatusChange(
+            'inactive'));
+
+        // Message box logic
+        const messageBox = document.getElementById('messageBox');
+        const overlay = document.getElementById('messageBoxOverlay');
+        const messageText = document.getElementById('messageBoxText');
+        const closeBtn = document.getElementById('messageBoxClose');
+
+        function showMessage(msg) {
+            messageText.textContent = msg;
+            messageBox.classList.remove('hidden');
+            overlay.classList.remove('hidden');
+        }
+
+        function hideMessage() {
+            messageBox.classList.add('hidden');
+            overlay.classList.add('hidden');
+        }
+
+        closeBtn.addEventListener('click', hideMessage);
+        overlay.addEventListener('click', hideMessage);
     });
-
-    // Handle location status change
-    const locationStatusForm = document.getElementById('locationStatusForm');
-    const locationStatusSpan = document.getElementById('locationStatus');
-
-    function handleLocationStatusChange(newStatus) {
-        document.getElementById('formLocationStatusID').value = locationId;
-        document.getElementById('formLocationNewStatus').value = newStatus;
-        document.getElementById('formCurrentStatusName').value = locationStatusSpan.textContent.trim();
-        locationStatusForm.submit();
-    }
-
-    const activateBtn = document.getElementById('activate-location-button');
-    const deactivateBtn = document.getElementById('deactivate-location-button');
-    if (activateBtn) activateBtn.addEventListener('click', () => handleLocationStatusChange('active'));
-    if (deactivateBtn) deactivateBtn.addEventListener('click', () => handleLocationStatusChange(
-        'inactive'));
-
-    // Message box logic
-    const messageBox = document.getElementById('messageBox');
-    const overlay = document.getElementById('messageBoxOverlay');
-    const messageText = document.getElementById('messageBoxText');
-    const closeBtn = document.getElementById('messageBoxClose');
-
-    function showMessage(msg) {
-        messageText.textContent = msg;
-        messageBox.classList.remove('hidden');
-        overlay.classList.remove('hidden');
-    }
-
-    function hideMessage() {
-        messageBox.classList.add('hidden');
-        overlay.classList.add('hidden');
-    }
-
-    closeBtn.addEventListener('click', hideMessage);
-    overlay.addEventListener('click', hideMessage);
-});
 </script>
 </body>
 

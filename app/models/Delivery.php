@@ -5,7 +5,7 @@ class Delivery
     private $sender_agent_id;
     private $receiver_agent_id;
     private $sender_customer_id;
-    private $receicer_cusomer_id;
+    private $receiver_cusomer_id;
     private $form_city_id;
     private $to_city_id;
     private $from_township_id;
@@ -53,12 +53,12 @@ class Delivery
     }
     public function setReceiveCustomerid($receicer_cusomer_id)
     {
-        $this->receicer_cusomer_id = $receicer_cusomer_id;
+        $this->receiver_cusomer_id = $receicer_cusomer_id;
     }
 
     public function getReceiverCutomerid()
     {
-        return $this->receicer_cusomer_id;
+        return $this->receiver_cusomer_id;
     }
 
     public function setFromcityid($form_city_id)
@@ -232,7 +232,7 @@ class Delivery
             "sender_agent_id" => $this->getSenderagentid(),
             "receiver_agent_id" => $this->getReceiveragentid(),
             "sender_customer_id" => $this->getSendCustomerid(),
-            "receiver_customer_id" => $this->getReceiveragentid(),
+            "receiver_customer_id" => $this->getReceiverCutomerid(),
             "from_city_id" => $this->getFromcityid(),
             "from_township_id" => $this->getFromtownshipid(),
             "to_township_id" => $this->getTotownshipid(),

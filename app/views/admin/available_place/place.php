@@ -4,26 +4,26 @@ require_once APPROOT . '/views/inc/sidebar.php';
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f1f5f9;
-    }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f1f5f9;
+}
 
-    .bg-custom-blue {
-        background-color: #1F265B;
-    }
+.bg-custom-blue {
+    background-color: #1F265B;
+}
 
-    .status-active {
-        background-color: #d1fae5;
-        color: #059669;
-    }
+.status-active {
+    background-color: #d1fae5;
+    color: #059669;
+}
 
-    .status-pending {
-        background-color: #fef3c7;
-        color: #d97706;
-    }
+.status-pending {
+    background-color: #fef3c7;
+    color: #d97706;
+}
 </style>
 
 <!-- Main Content -->
@@ -64,26 +64,26 @@ require_once APPROOT . '/views/inc/sidebar.php';
                     </thead>
                     <tbody>
                         <?php if (!empty($data['availabel_place'])): ?>
-                            <?php foreach ($data['availabel_place'] as $place): ?>
-                                <tr class="border-t border-gray-200">
-                                    <td class="px-4 py-3 text-sm text-gray-800">
-                                        <?= htmlspecialchars($place['region_name']) ?></td>
-                                    <td class="px-4 py-3 text-sm text-gray-800"><?= htmlspecialchars($place['city_name']) ?>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-gray-800">
-                                        <?= htmlspecialchars($place['township_name']) ?></td>
-                                    <td class="px-4 py-3 text-sm text-gray-800">
-                                        <?php if (!empty($place['agent_name'])): ?>
-                                            <?= htmlspecialchars($place['agent_name']) ?>
-                                        <?php else: ?>
-                                            <span
-                                                class="px-2 py-1 rounded-full text-xs font-semibold bg-yellow-200 text-yellow-800">
-                                                Not Yet Assigned
-                                            </span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-gray-800">
-                                        <?php
+                        <?php foreach ($data['availabel_place'] as $place): ?>
+                        <tr class="border-t border-gray-200">
+                            <td class="px-4 py-3 text-sm text-gray-800">
+                                <?= htmlspecialchars($place['region_name']) ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-800"><?= htmlspecialchars($place['city_name']) ?>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-800">
+                                <?= htmlspecialchars($place['township_name']) ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-800">
+                                <?php if (!empty($place['agent_name'])): ?>
+                                <?= htmlspecialchars($place['agent_name']) ?>
+                                <?php else: ?>
+                                <span
+                                    class="px-2 py-1 rounded-full text-xs font-semibold bg-yellow-200 text-yellow-800">
+                                    Not Yet Assigned
+                                </span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-800">
+                                <?php
                                         $status_class = '';
                                         switch (strtolower($place['status_location_name'] ?? 'pending')) {
                                             case 'active':
@@ -98,23 +98,23 @@ require_once APPROOT . '/views/inc/sidebar.php';
                                                 break;
                                         }
                                         ?>
-                                        <span class="px-2 py-1 rounded-full text-xs font-semibold <?= $status_class ?>">
-                                            <?= htmlspecialchars($place['status_location_name'] ?? 'Pending') ?>
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-gray-800">
-                                        <button
-                                            onclick="window.location='<?= URLROOT; ?>/available_place/place_detail?id=<?= htmlspecialchars($place['id'] ?? '') ?>';"
-                                            class="bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 transition-colors duration-200">
-                                            View
-                                        </button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
+                                <span class="px-2 py-1 rounded-full text-xs font-semibold <?= $status_class ?>">
+                                    <?= htmlspecialchars($place['status_location_name'] ?? 'Pending') ?>
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-800">
+                                <button
+                                    onclick="window.location='<?= URLROOT; ?>/available_place/place_detail?id=<?= htmlspecialchars($place['id'] ?? '') ?>';"
+                                    class="bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                                    View
+                                </button>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
                         <?php else: ?>
-                            <tr>
-                                <td colspan="6" class="px-5 py-4 text-center">No place data available.</td>
-                            </tr>
+                        <tr>
+                            <td colspan="6" class="px-5 py-4 text-center">No place data available.</td>
+                        </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

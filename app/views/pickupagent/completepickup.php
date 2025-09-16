@@ -85,6 +85,7 @@
                                                 'arrived_office' => 'bg-teal-500',
                                                 'rejected' => 'bg-red-500',
                                                 'agent_checked' => 'bg-pink-500',
+                                                'arrived_at_office' => 'bg-blue-400',
                                                 'awaiting_payment' => 'bg-orange-500',
                                                 'payment_success' => 'bg-emerald-600',
                                                 'awaiting_cash' => 'bg-amber-500',

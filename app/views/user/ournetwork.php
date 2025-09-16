@@ -1,4 +1,6 @@
-<?php require_once APPROOT . '/views/inc/nav.php' ?>
+<?php require_once APPROOT . '/views/inc/nav.php';
+
+?>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
@@ -16,6 +18,10 @@
     --text-color: #4A5568;
     --tracking-active-bg: #E3F2FD;
     --tracking-active-text: #1F265B;
+}
+
+.bg-primary-blue {
+    background-color: #1F265B;
 }
 
 body {
@@ -366,8 +372,10 @@ body {
 }
 
 .map-container.no-locations img {
-    object-fit: contain;
-    padding: 20px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
 }
 </style>
 
@@ -427,9 +435,9 @@ body {
                 <?php foreach ($data['places'] as $place): ?>
                 <div class="location-card">
                     <h3><?= $place['township_name'] ?></h3>
-                    <p><?= $place['agent_phone'] ?></p>
                     <p><?= $place['region_name'] ?></p>
                     <p><?= $place['agent_name'] ?></p>
+                    <p><?= $place['agent_phone'] ?></p>
                 </div>
                 <?php endforeach; ?>
                 <?php else: ?>
@@ -447,27 +455,39 @@ body {
 </main>
 
 <!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <!-- Left Section: Text Content -->
-        <div class="footer-content">
-            <h2>Fast, Affordable, And Always On Time.</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Egestas semper at integer a quis eget. Diam
-                neque, massa pellentesque pellentesque leo.</p>
-
-            <!-- Action Button and Socials -->
-            <a href="#" class="contact-now">
-                <span>Contact Now</span>
-                <i class="fas fa-arrow-right"></i>
-            </a>
-            <div class="social-icons">
-                <!-- Twitter Icon -->
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <!-- Instagram Icon -->
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <!-- Facebook Icon -->
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
+<footer class="bg-primary-blue text-white py-12">
+    <div
+        class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-start gap-8 text-center md:text-left">
+        <div class="md:w-1/3">
+            <h2 class="text-3xl md:text-5xl font-bold mb-4">GoDelivery</h2>
+            <p class="text-gray-300">Your most reliable partner in logistics and delivery services, dedicated to
+                providing top-notch service with a smile.</p>
+            <div class="mt-6 flex justify-center md:justify-start space-x-4">
+                <a href="#" class="text-white hover:text-gray-300 transition-colors"><i
+                        class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-white hover:text-gray-300 transition-colors"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-white hover:text-gray-300 transition-colors"><i
+                        class="fab fa-instagram"></i></a>
             </div>
+        </div>
+        <div class="md:w-1/3 text-sm text-gray-300">
+            <h3 class="font-bold text-lg mb-2">Quick Links</h3>
+            <ul class="space-y-1">
+                <li><a href="#" class="hover:text-primary-orange transition-colors">Home</a></li>
+                <li><a href="#services" class="hover:text-primary-orange transition-colors">Services</a></li>
+                <li><a href="#about-us" class="hover:text-primary-orange transition-colors">About Us</a></li>
+                <li><a href="#our-impact" class="hover:text-primary-orange transition-colors">Our Impact</a></li>
+                <li><a href="#faq" class="hover:text-primary-orange transition-colors">FAQ</a></li>
+                <li><a href="#" class="hover:text-primary-orange transition-colors">Careers</a></li>
+            </ul>
+        </div>
+        <div class="md:w-1/3 text-sm text-gray-300">
+            <h3 class="font-bold text-lg mb-2">Contact Us</h3>
+            <ul class="space-y-1">
+                <li><i class="fas fa-phone-alt mr-2"></i> +1 234 567 8900</li>
+                <li><i class="fas fa-envelope mr-2"></i> info@godelivery.com</li>
+                <li><i class="fas fa-map-marker-alt mr-2"></i> 123 Delivery St, Suite 400, City, Country</li>
+            </ul>
         </div>
     </div>
 </footer>
@@ -493,7 +513,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <text x="50%" y="220" dominant-baseline="middle" text-anchor="middle" font-family="Poppins, sans-serif" font-size="20" fill="#999">No Locations Found</text>
         </svg>
     `;
-    const defaultMapImage = `data:image/svg+xml;base64,${btoa(noLocationsSVG)}`;
+    const defaultMapImage = "<?= URLROOT ?>/public/images/ournetwork.png";
 
     const allLocations = <?= json_encode($data['places']); ?>; // all locations from PHP
 
@@ -505,9 +525,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 html += `
                     <div class="location-card">
                         <h3>${loc.township_name}</h3>
-                        <p>${loc.address}</p>
                         <p>${loc.region_name}</p>
-                        <p>${loc.phone}</p>
+                        <p>${loc.agent_name}</p>
+                        <p>${loc.agent_phone}</p>
                     </div>
                 `;
             });
@@ -521,14 +541,16 @@ document.addEventListener("DOMContentLoaded", function() {
     function renderMap(location) {
         if (location && location.latitude && location.longitude) {
             const mapHtml =
-                `<iframe width="100%" height="100%" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=${location.latitude},${location.longitude}&hl=en&z=14&output=embed" allowfullscreen></iframe>`;
+                `<iframe width="100%" height="100%" frameborder="0" style="border:0" src="" allowfullscreen></iframe>`;
             mapContainer.innerHTML = mapHtml;
             mapContainer.classList.remove('no-locations');
         } else {
-            mapContainer.innerHTML = `<img src="${defaultMapImage}" alt="No location selected" />`;
+            mapContainer.innerHTML =
+                `<img src="${defaultMapImage}" alt="Our Network Map" class="w-full h-full object-cover rounded-lg shadow-md" />`;
             mapContainer.classList.add('no-locations');
         }
     }
+
 
     // Initial render → all locations and default map image
     renderLocations(allLocations);

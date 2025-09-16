@@ -104,7 +104,7 @@
                             and
                             conditions</label>
                     </div>
-                    <?php require APPROOT . '/views/components/auth_message.php'; ?>
+                    <?php require APPROOT . '/views/components/auth_mess.php'; ?>
 
                     <button type="submit" class="register-button">REGISTER</button>
                 </form>

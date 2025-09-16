@@ -26,10 +26,30 @@ $availableAgents = $data['availableAgents'];
                         <h2 class="text-2xl font-bold text-gray-800">
                             Delivery: <?= htmlspecialchars($delivery['tracking_code']) ?>
                         </h2>
-                        <span class="px-4 py-2 text-sm font-bold rounded-full shadow-md text-white 
-                        <?= $delivery['delivery_status'] == 'Delivered' ? 'bg-green-500' : 'bg-yellow-500' ?>">
-                            <?= htmlspecialchars($delivery['delivery_status']) ?>
+                        <?php
+                        $status = trim($delivery['delivery_status']); // Remove extra spaces
+                        $statusClass = match ($status) {
+                            'Pending' => 'bg-yellow-100 text-yellow-800',
+                            'Ready for Pickup' => 'bg-indigo-100 text-indigo-800',
+                            'Delivered' => 'bg-green-500 text-white',
+                            'Cancelled' => 'bg-red-100 text-red-800',
+                            'Returned' => 'bg-purple-100 text-purple-800',
+                            'Awaiting Acceptance' => 'bg-blue-100 text-blue-800',
+                            'Rejected' => 'bg-red-200 text-red-900',
+                            'Out for Delivery' => 'bg-blue-200 text-blue-900',
+                            'Deliver Parcel' => 'bg-green-200 text-green-900',
+                            'Waiting Payment' => 'bg-yellow-200 text-yellow-900',
+                            'Receipt Submitted' => 'bg-indigo-200 text-indigo-900',
+                            'Payment Success' => 'bg-green-300 text-green-900',
+                            'On the Way' => 'bg-blue-300 text-blue-900',
+                            'Delivery at Office' => 'bg-indigo-300 text-indigo-900',
+                            default => 'bg-gray-100 text-gray-800',
+                        };
+                        ?>
+                        <span class="px-4 py-2 text-sm font-bold rounded-full shadow-md <?= $statusClass ?>">
+                            <?= htmlspecialchars($status) ?>
                         </span>
+
                     </div>
 
                     <input type="hidden" name="code" value="<?= htmlspecialchars($delivery['id']) ?>">
@@ -95,47 +115,54 @@ $availableAgents = $data['availableAgents'];
                         </div>
                     </div>
 
+                    <?php if ($delivery['delivery_status_id'] == 14): ?>
 
                     <!-- Editable Fields -->
                     <div class="space-y-6 pt-6 border-t border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-700 border-b pb-2">Update Delivery</h3>
 
+                        <?php require APPROOT . '/views/components/auth_message.php'; ?>
 
                         <!-- Assign Agent -->
                         <div>
-                            <label class="text-sm font-medium text-gray-700">Assign Delivery Agent</label>
-                            <select name="delivery_agent"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                <option value="">Select Agent</option>
-                                <?php foreach ($availableAgents as $agent): ?>
-                                <option value="<?= $agent['id'] ?>"
-                                    <?= $delivery['id'] == $agent['id'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($agent['name']) ?>
-                                </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <!-- Assign Delivery Agent -->
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">Assign Delivery Agent</label>
+                                <select name="delivery_agent"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                    <option value="">Select Agent</option>
+                                    <?php foreach ($availableAgents as $agent): ?>
+                                    <option value="<?= $agent['id'] ?>"
+                                        <?= $delivery['id'] == $agent['id'] ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($agent['name']) ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- Notes -->
+
+
+                            <!-- Hidden fields -->
+                            <input type="hidden" name="id" value="<?= htmlspecialchars($delivery['id']) ?>">
+                            <input type="hidden" name="tracking_code"
+                                value="<?= htmlspecialchars($delivery['tracking_code']) ?>">
                         </div>
+                        <?php endif; ?>
 
-                        <!-- Notes -->
-                        <div>
-                            <label class="text-sm font-medium text-gray-700">Notes</label>
-                            <textarea name="note" rows="3"
-                                class="w-full rounded-md border-gray-300 shadow-sm"><?= htmlspecialchars($delivery['note'] ?? '') ?></textarea>
+
+                        <!-- Buttons -->
+                        <div class="flex justify-end space-x-4 pt-6 border-t">
+                            <a href="javascript:history.back()"
+                                class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600">Back</a>
+                            <?php if ($delivery['delivery_status_id'] == 14): ?>
+
+                            <button type="submit"
+                                class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Change To Pickup
+                                Agnet
+                            </button>
+                            <?php endif; ?>
                         </div>
-
-                        <input type="hidden" name="id" value="<?= htmlspecialchars($delivery['id']) ?>">
-                        <input type="hidden" name="tracking_code"
-                            value="<?= htmlspecialchars($delivery['tracking_code']) ?>">
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="flex justify-end space-x-4 pt-6 border-t">
-                        <a href="javascript:history.back()"
-                            class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600">Back</a>
-                        <button type="submit"
-                            class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Change To Pickup Agnet
-                        </button>
-                    </div>
                 </form>
             </div>
         </main>

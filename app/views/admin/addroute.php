@@ -59,6 +59,7 @@
                 <form id="routeForm" action="<?= URLROOT; ?>/routepage/createRoute" method="POST">
                     <div class="pb-6 border-b border-gray-300">
                         <h2 class="text-xl font-semibold mb-4 text-gray-800">Define Route</h2>
+                        <?php require APPROOT . '/views/components/auth_message.php'; ?>
                         <div class="grid md:grid-cols-2 gap-6">
                             <!-- From Location -->
                             <div class="space-y-4">
@@ -157,7 +158,7 @@
                     <!-- Form Actions -->
                     <div class="pt-8 flex justify-end space-x-4">
                         <!-- Cancel Button -->
-                        <a href="<?= URLROOT; ?>/routepage"
+                        <a href="<?= URLROOT; ?>/admin/route"
                             class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 bg-gray-100 hover:bg-gray-200 transition">
                             Cancel
                         </a>

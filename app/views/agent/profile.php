@@ -1,190 +1,189 @@
 <?php require_once APPROOT . '/views/inc/agentsidebar.php';
-// var_dump($agent['profile_image']);
-// die();
+$fullinfo = $data['fullinfo'];
 ?>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f3f4f6;
-    }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
 
-    /* Enhanced shadow for cards */
-    .card-shadow {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
+/* Enhanced shadow for cards */
+.card-shadow {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
 
-    /* Custom focus style for inputs */
-    .input-focus-ring:focus {
-        outline: none;
-        border-color: #1F265B;
-        /* Primary blue */
-        box-shadow: 0 0 0 3px rgba(31, 38, 91, 0.3);
-        /* Blue with transparency */
-    }
+/* Custom focus style for inputs */
+.input-focus-ring:focus {
+    outline: none;
+    border-color: #1F265B;
+    /* Primary blue */
+    box-shadow: 0 0 0 3px rgba(31, 38, 91, 0.3);
+    /* Blue with transparency */
+}
 
-    /* Style for the profile image container to allow overlay button */
-    .profile-image-container {
-        position: relative;
-        width: 150px;
-        /* Match image width */
-        height: 150px;
-        /* Match image height */
-        border-radius: 9999px;
-        /* Full rounded for circle */
-        overflow: hidden;
-        /* Ensure content stays within circle */
-        margin: 0 auto;
-        /* Center the image in its flex item */
-        margin-bottom: 1rem;
-        /* Space below the image */
-    }
+/* Style for the profile image container to allow overlay button */
+.profile-image-container {
+    position: relative;
+    width: 150px;
+    /* Match image width */
+    height: 150px;
+    /* Match image height */
+    border-radius: 9999px;
+    /* Full rounded for circle */
+    overflow: hidden;
+    /* Ensure content stays within circle */
+    margin: 0 auto;
+    /* Center the image in its flex item */
+    margin-bottom: 1rem;
+    /* Space below the image */
+}
 
-    /* Style for the change photo overlay button */
-    .change-photo-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        /* Semi-transparent black */
-        color: white;
-        padding: 0.5rem 0;
-        text-align: center;
-        font-size: 0.875rem;
-        /* text-sm */
-        cursor: pointer;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.25rem;
-    }
+/* Style for the change photo overlay button */
+.change-photo-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black */
+    color: white;
+    padding: 0.5rem 0;
+    text-align: center;
+    font-size: 0.875rem;
+    /* text-sm */
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
 
-    .profile-image-container:hover .change-photo-overlay {
-        opacity: 1;
-    }
+.profile-image-container:hover .change-photo-overlay {
+    opacity: 1;
+}
 
-    /* Modal styles */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-    }
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
 
-    .modal-overlay.show {
-        opacity: 1;
-        visibility: visible;
-    }
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
 
-    .modal-content {
-        background-color: white;
-        padding: 2rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        width: 90%;
-        max-width: 400px;
-        text-align: center;
-        transform: translateY(-20px);
-        transition: transform 0.3s ease-in-out;
-    }
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease-in-out;
+}
 
-    .modal-overlay.show .modal-content {
-        transform: translateY(0);
-    }
+.modal-overlay.show .modal-content {
+    transform: translateY(0);
+}
 
-    /* OTP input specific styles */
-    .otp-input-group {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-bottom: 1.5rem;
-    }
+/* OTP input specific styles */
+.otp-input-group {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
 
-    .otp-input {
-        width: 2.5rem;
-        /* Adjust width as needed */
-        height: 2.5rem;
-        /* Adjust height as needed */
-        text-align: center;
-        font-size: 1.25rem;
-        /* text-xl */
-        border: 1px solid #d1d5db;
-        /* gray-300 */
-        border-radius: 0.375rem;
-        /* rounded-md */
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        /* shadow-sm */
-        -moz-appearance: textfield;
-        /* Hide arrows for Firefox */
-    }
+.otp-input {
+    width: 2.5rem;
+    /* Adjust width as needed */
+    height: 2.5rem;
+    /* Adjust height as needed */
+    text-align: center;
+    font-size: 1.25rem;
+    /* text-xl */
+    border: 1px solid #d1d5db;
+    /* gray-300 */
+    border-radius: 0.375rem;
+    /* rounded-md */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    /* shadow-sm */
+    -moz-appearance: textfield;
+    /* Hide arrows for Firefox */
+}
 
-    .otp-input::-webkit-outer-spin-button,
-    .otp-input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+.otp-input::-webkit-outer-spin-button,
+.otp-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
-    .otp-input:focus {
-        outline: none;
-        border-color: #1F265B;
-        box-shadow: 0 0 0 3px rgba(31, 38, 91, 0.3);
-    }
+.otp-input:focus {
+    outline: none;
+    border-color: #1F265B;
+    box-shadow: 0 0 0 3px rgba(31, 38, 91, 0.3);
+}
 
-    /* Custom alert box styling */
-    .custom-alert {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 1rem 2rem;
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        opacity: 0;
-        /* Start hidden for animation */
-        transition: opacity 0.3s ease-in-out;
-    }
+/* Custom alert box styling */
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    /* Start hidden for animation */
+    transition: opacity 0.3s ease-in-out;
+}
 
-    .custom-alert.show {
-        opacity: 1;
-        /* Show when 'show' class is added */
-    }
+.custom-alert.show {
+    opacity: 1;
+    /* Show when 'show' class is added */
+}
 
-    .custom-alert.success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
+.custom-alert.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
 
-    .custom-alert.error {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
+.custom-alert.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
 
-    .custom-alert-close {
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 1.2rem;
-        margin-left: auto;
-    }
+.custom-alert-close {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: auto;
+}
 </style>
 
 
@@ -208,13 +207,13 @@
         <div id="message-box-container"></div>
 
         <?php if (isset($_SESSION['flash_message'])): ?>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    showCustomAlert("<?= $_SESSION['flash_message']['message'] ?>",
-                        "<?= $_SESSION['flash_message']['type'] ?>");
-                });
-            </script>
-            <?php unset($_SESSION['flash_message']); ?>
+        <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            showCustomAlert("<?= $_SESSION['flash_message']['message'] ?>",
+                "<?= $_SESSION['flash_message']['type'] ?>");
+        });
+        </script>
+        <?php unset($_SESSION['flash_message']); ?>
         <?php endif; ?>
 
 
@@ -259,12 +258,13 @@
                 <div>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Personal Information</h3>
                     <div class="space-y-3">
-                        <p class="text-gray-700"><strong class="font-medium">Agent ID:</strong> #007</p>
-                        <p class="text-gray-700"><strong class="font-medium">Date of Birth:</strong> 1990-05-15</p>
-                        <p class="text-gray-700"><strong class="font-medium">Address:</strong> 123 Delivery St,
-                            Cityville, CA 90210</p>
-                        <p class="text-gray-700"><strong class="font-medium">Emergency Contact:</strong> Jane Doe
-                            (555) 987-6543</p>
+                        <p class="text-gray-700"><strong class="font-medium">Agent ID:</strong>
+                            <?= htmlspecialchars($agent['access_code']) ?></p>
+                        <p class="text-gray-700"><strong class="font-medium">Address:</strong>
+                            <?= htmlspecialchars($fullinfo['region_name']) ?>-><?= htmlspecialchars($fullinfo['city_name']) ?>-><?= htmlspecialchars($fullinfo['township_name']) ?>-><?= htmlspecialchars($fullinfo['address'])  ?>
+                        </p>
+                        <p class="text-gray-700"><strong class="font-medium">Emergency Contact:</strong>
+                            J<?= htmlspecialchars($agent['phone']) ?></p>
                     </div>
                 </div>
             </div>
@@ -304,7 +304,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                             <input type="text" id="fullName" name="fullName" value="John Doe"
@@ -317,7 +317,7 @@
                                 class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm input-focus-ring sm:text-sm"
                                 required>
                         </div>
-                    </div>
+                    </div> -->
                     <input type="hidden" name="email" value="<?= htmlspecialchars($agent['email'] ?? '') ?>">
 
 
@@ -488,253 +488,143 @@
 
 
 <script>
-    /**
-     * Displays a custom alert message that auto-dismisses.
-     */
-    function showCustomAlert(message, type) {
-        const container = document.getElementById('message-box-container');
-        if (!container) return;
+/**
+ * Displays a custom alert message that auto-dismisses.
+ */
+function showCustomAlert(message, type) {
+    const container = document.getElementById('message-box-container');
+    if (!container) return;
 
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `custom-alert ${type}`;
-        alertDiv.innerHTML = `
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `custom-alert ${type}`;
+    alertDiv.innerHTML = `
         <span>${message}</span>
         <span class="custom-alert-close" onclick="this.parentElement.remove()">&times;</span>
     `;
-        container.appendChild(alertDiv);
+    container.appendChild(alertDiv);
 
-        setTimeout(() => alertDiv.classList.add('show'), 10);
-        setTimeout(() => {
-            alertDiv.classList.remove('show');
-            setTimeout(() => alertDiv.remove(), 500);
-        }, 5000);
+    setTimeout(() => alertDiv.classList.add('show'), 10);
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+        setTimeout(() => alertDiv.remove(), 500);
+    }, 5000);
+}
+
+/**
+ * Toggle profile forms (edit / password / password_reset)
+ */
+function toggleProfileForm(formType) {
+    const editForm = document.getElementById('editProfileFormContainer');
+    const changePasswordForm = document.getElementById('changePasswordFormContainer');
+    const resetPasswordForm = document.getElementById('resetPasswordFormContainer');
+    const newPasswordResetMessage = document.getElementById('newPasswordResetMessage');
+
+    // Hide all forms by default
+    editForm?.classList.add('hidden');
+    changePasswordForm?.classList.add('hidden');
+    resetPasswordForm?.classList.add('hidden');
+    newPasswordResetMessage?.classList.add('hidden');
+
+    // Show the selected form
+    if (formType === 'edit') {
+        editForm?.classList.remove('hidden');
+    } else if (formType === 'password') {
+        changePasswordForm?.classList.remove('hidden');
+        document.getElementById('newPassword')?.focus();
+    } else if (formType === 'password_reset') {
+        resetPasswordForm?.classList.remove('hidden');
+        newPasswordResetMessage?.classList.remove('hidden');
+        document.getElementById('newPasswordReset')?.focus();
     }
+}
 
-    /**
-     * Toggle profile forms (edit / password / password_reset)
-     */
-    function toggleProfileForm(formType) {
-        const editForm = document.getElementById('editProfileFormContainer');
-        const changePasswordForm = document.getElementById('changePasswordFormContainer');
-        const resetPasswordForm = document.getElementById('resetPasswordFormContainer');
-        const newPasswordResetMessage = document.getElementById('newPasswordResetMessage');
-
-        // Hide all forms by default
-        editForm?.classList.add('hidden');
-        changePasswordForm?.classList.add('hidden');
-        resetPasswordForm?.classList.add('hidden');
-        newPasswordResetMessage?.classList.add('hidden');
-
-        // Show the selected form
-        if (formType === 'edit') {
-            editForm?.classList.remove('hidden');
-        } else if (formType === 'password') {
-            changePasswordForm?.classList.remove('hidden');
-            document.getElementById('newPassword')?.focus();
-        } else if (formType === 'password_reset') {
-            resetPasswordForm?.classList.remove('hidden');
-            newPasswordResetMessage?.classList.remove('hidden');
-            document.getElementById('newPasswordReset')?.focus();
-        }
+/**
+ * Preview images
+ */
+function previewImage(event) {
+    const profileImage = document.getElementById('profileImage');
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            profileImage.src = e.target.result;
+            const editProfileImagePreview = document.getElementById('editProfileImagePreview');
+            if (editProfileImagePreview) editProfileImagePreview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     }
+}
 
-    /**
-     * Preview images
-     */
-    function previewImage(event) {
-        const profileImage = document.getElementById('profileImage');
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                profileImage.src = e.target.result;
-                const editProfileImagePreview = document.getElementById('editProfileImagePreview');
-                if (editProfileImagePreview) editProfileImagePreview.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+function previewEditImage(event) {
+    const editProfileImagePreview = document.getElementById('editProfileImagePreview');
+    const mainProfileImage = document.getElementById('profileImage');
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            editProfileImagePreview.src = e.target.result;
+            mainProfileImage.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     }
+}
 
-    function previewEditImage(event) {
-        const editProfileImagePreview = document.getElementById('editProfileImagePreview');
-        const mainProfileImage = document.getElementById('profileImage');
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                editProfileImagePreview.src = e.target.result;
-                mainProfileImage.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+
+/**
+ * Modal open/close
+ */
+function openForgotPasswordModal(event) {
+    event.preventDefault();
+    document.getElementById('forgotPasswordModal').classList.add('show');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('show');
+}
+
+/**
+ * OTP input helpers
+ */
+function moveToNext(currentInput, nextInputId) {
+    if (currentInput.value.length === currentInput.maxLength && nextInputId) {
+        document.getElementById(nextInputId).focus();
     }
+}
 
-
-    /**
-     * Modal open/close
-     */
-    function openForgotPasswordModal(event) {
-        event.preventDefault();
-        document.getElementById('forgotPasswordModal').classList.add('show');
+function handleBackspace(event, currentInput, prevInputId) {
+    if (event.key === 'Backspace' && currentInput.value === '' && prevInputId) {
+        document.getElementById(prevInputId).focus();
     }
+}
 
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('show');
-    }
+function togglePassword(inputId, iconSpan) {
+    const input = document.getElementById(inputId);
+    const svg = iconSpan.querySelector('svg');
 
-    /**
-     * OTP input helpers
-     */
-    function moveToNext(currentInput, nextInputId) {
-        if (currentInput.value.length === currentInput.maxLength && nextInputId) {
-            document.getElementById(nextInputId).focus();
-        }
-    }
-
-    function handleBackspace(event, currentInput, prevInputId) {
-        if (event.key === 'Backspace' && currentInput.value === '' && prevInputId) {
-            document.getElementById(prevInputId).focus();
-        }
-    }
-
-    function togglePassword(inputId, iconSpan) {
-        const input = document.getElementById(inputId);
-        const svg = iconSpan.querySelector('svg');
-
-        if (input.type === 'password') {
-            input.type = 'text';
-            svg.innerHTML =
-                `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+    if (input.type === 'password') {
+        input.type = 'text';
+        svg.innerHTML =
+            `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                 d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7
                 a10.05 10.05 0 012.131-3.674m3.59-2.468A9.953 9.953 0 0112 5c4.477 0
                 8.268 2.943 9.542 7a9.96 9.96 0 01-1.447 2.395M3 3l18 18"/>`;
-        } else {
-            input.type = 'password';
-            svg.innerHTML =
-                `<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+    } else {
+        input.type = 'password';
+        svg.innerHTML =
+            `<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                  <path d="M2.458 12C3.732 7.943 7.523 5 12 5
                  c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065
                  7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>`;
-        }
     }
+}
 
-    /**
-     * OTP AJAX verification
-     */
-    const otpForm = document.getElementById('otpVerificationForm');
-    if (otpForm) {
-        otpForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-
-            fetch(this.action, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        showCustomAlert(data.message, 'success');
-                        document.getElementById('otpVerificationModal').classList.remove('show');
-                        toggleProfileForm('password_reset');
-                    } else {
-                        showCustomAlert(data.message, 'error');
-                        document.querySelectorAll('#otpVerificationForm .otp-input')
-                            .forEach(input => input.value = '');
-                        document.getElementById('otp1').focus();
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    showCustomAlert('Something went wrong. Try again.', 'error');
-                });
-        });
-    }
-
-    document.getElementById("resetPasswordForm").addEventListener("submit", function(e) {
+/**
+ * OTP AJAX verification
+ */
+const otpForm = document.getElementById('otpVerificationForm');
+if (otpForm) {
+    otpForm.addEventListener('submit', function(e) {
         e.preventDefault();
-
-        const formData = new FormData(this);
-
-        fetch(this.action, {
-                method: "POST",
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "success") {
-                    window.location.href = data.redirect; // ✅ go to profile
-                } else {
-                    showCustomAlert(data.message, "error"); // show error instantly
-                }
-            })
-            .catch(() => {
-                showCustomAlert("Something went wrong", "error");
-            });
-    });
-
-
-    /**
-     * OTP Timer & Resend
-     */
-    let otpCountdown;
-    const otpTime = 30;
-
-    function startOTPTimer() {
-        clearInterval(otpCountdown);
-        const timerDisplay = document.getElementById('otpTimer');
-        const resendBtn = document.querySelector('#otpVerificationForm button[onclick^="resendOTP"]');
-        if (!timerDisplay || !resendBtn) return;
-
-        let timeLeft = otpTime;
-        timerDisplay.textContent = timeLeft;
-        resendBtn.disabled = true;
-        resendBtn.classList.add('opacity-50', 'cursor-not-allowed');
-
-        otpCountdown = setInterval(() => {
-            timeLeft--;
-            timerDisplay.textContent = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(otpCountdown);
-                resendBtn.disabled = false;
-                resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                timerDisplay.textContent = '0';
-            }
-        }, 1000);
-    }
-
-    /**
-     * Reset Password form (AJAX)
-     */
-    const resetPasswordForm = document.getElementById('resetPasswordForm');
-    if (resetPasswordForm) {
-        resetPasswordForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            fetch(this.action || '/agentcontroller/reset_password_submit', {
-                    method: 'POST',
-                    body: new FormData(this)
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        showCustomAlert(data.message, 'success');
-                        resetPasswordForm.reset();
-                    } else {
-                        showCustomAlert(data.message, 'error');
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    showCustomAlert("Something went wrong. Try again.", 'error');
-                });
-        });
-    }
-
-
-    document.querySelector('#changePasswordFormContainer form').addEventListener('submit', function(e) {
-        e.preventDefault(); // prevent form submit
-
         const formData = new FormData(this);
 
         fetch(this.action, {
@@ -743,91 +633,201 @@
             })
             .then(res => res.json())
             .then(data => {
-                // Use your custom alert
-                showCustomAlert(data.message, data.status);
-                if (data.status === 'success') {
-                    // Optional: clear password fields
-                    this.reset();
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                showCustomAlert('Something went wrong', 'error');
-            });
-    });
-
-
-    function resendOTP(event) {
-        event.preventDefault();
-        const btn = event.currentTarget;
-        const url = btn.dataset.url;
-
-        const otpModal = document.getElementById('otpVerificationModal');
-        if (!otpModal.classList.contains('show')) otpModal.classList.add('show');
-
-        document.querySelectorAll('#otpVerificationForm .otp-input').forEach(input => input.value = '');
-        const firstOtpInput = document.getElementById('otp1');
-        if (firstOtpInput) firstOtpInput.focus();
-
-        startOTPTimer();
-
-        btn.disabled = true;
-        btn.classList.add('opacity-50', 'cursor-not-allowed');
-
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
                 if (data.status === 'success') {
                     showCustomAlert(data.message, 'success');
+                    document.getElementById('otpVerificationModal').classList.remove('show');
+                    toggleProfileForm('password_reset');
                 } else {
-                    showCustomAlert(data.message || 'Failed to resend OTP', 'error');
+                    showCustomAlert(data.message, 'error');
+                    document.querySelectorAll('#otpVerificationForm .otp-input')
+                        .forEach(input => input.value = '');
+                    document.getElementById('otp1').focus();
                 }
             })
             .catch(err => {
                 console.error(err);
                 showCustomAlert('Something went wrong. Try again.', 'error');
-            })
-            .finally(() => {
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                }, 30000);
             });
+    });
+}
+
+document.getElementById("resetPasswordForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch(this.action, {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                window.location.href = data.redirect; // ✅ go to profile
+            } else {
+                showCustomAlert(data.message, "error"); // show error instantly
+            }
+        })
+        .catch(() => {
+            showCustomAlert("Something went wrong", "error");
+        });
+});
+
+
+/**
+ * OTP Timer & Resend
+ */
+let otpCountdown;
+const otpTime = 30;
+
+function startOTPTimer() {
+    clearInterval(otpCountdown);
+    const timerDisplay = document.getElementById('otpTimer');
+    const resendBtn = document.querySelector('#otpVerificationForm button[onclick^="resendOTP"]');
+    if (!timerDisplay || !resendBtn) return;
+
+    let timeLeft = otpTime;
+    timerDisplay.textContent = timeLeft;
+    resendBtn.disabled = true;
+    resendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+    otpCountdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(otpCountdown);
+            resendBtn.disabled = false;
+            resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            timerDisplay.textContent = '0';
+        }
+    }, 1000);
+}
+
+/**
+ * Reset Password form (AJAX)
+ */
+const resetPasswordForm = document.getElementById('resetPasswordForm');
+if (resetPasswordForm) {
+    resetPasswordForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        fetch(this.action || '/agentcontroller/reset_password_submit', {
+                method: 'POST',
+                body: new FormData(this)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showCustomAlert(data.message, 'success');
+                    resetPasswordForm.reset();
+                } else {
+                    showCustomAlert(data.message, 'error');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showCustomAlert("Something went wrong. Try again.", 'error');
+            });
+    });
+}
+
+
+document.querySelector('#changePasswordFormContainer form').addEventListener('submit', function(e) {
+    e.preventDefault(); // prevent form submit
+
+    const formData = new FormData(this);
+
+    fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            // Use your custom alert
+            showCustomAlert(data.message, data.status);
+            if (data.status === 'success') {
+                // Optional: clear password fields
+                this.reset();
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            showCustomAlert('Something went wrong', 'error');
+        });
+});
+
+
+function resendOTP(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const url = btn.dataset.url;
+
+    const otpModal = document.getElementById('otpVerificationModal');
+    if (!otpModal.classList.contains('show')) otpModal.classList.add('show');
+
+    document.querySelectorAll('#otpVerificationForm .otp-input').forEach(input => input.value = '');
+    const firstOtpInput = document.getElementById('otp1');
+    if (firstOtpInput) firstOtpInput.focus();
+
+    startOTPTimer();
+
+    btn.disabled = true;
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showCustomAlert(data.message, 'success');
+            } else {
+                showCustomAlert(data.message || 'Failed to resend OTP', 'error');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            showCustomAlert('Something went wrong. Try again.', 'error');
+        })
+        .finally(() => {
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }, 30000);
+        });
+}
+
+/**
+ * On DOM ready: handle modal display and messages
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    toggleProfileForm('hide_all');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const otpSent = urlParams.get('otp_sent');
+    const action = urlParams.get('action');
+    const message = urlParams.get('message');
+    const messageType = urlParams.get('message_type');
+
+    if (otpSent === '1') {
+        const modal = document.getElementById('otpVerificationModal');
+        modal.classList.add('show');
+        document.getElementById('otp1').focus();
+        startOTPTimer();
+        if (message && messageType) {
+            showCustomAlert(decodeURIComponent(message), messageType);
+        } else {
+            showCustomAlert('OTP sent to your registered email/phone.', 'success');
+        }
+    } else if (action === 'reset_password') {
+        toggleProfileForm('password_reset');
+        if (message) showCustomAlert(decodeURIComponent(message), 'success');
+    } else if (message && messageType) {
+        showCustomAlert(decodeURIComponent(message), messageType);
     }
 
-    /**
-     * On DOM ready: handle modal display and messages
-     */
-    document.addEventListener('DOMContentLoaded', () => {
-        toggleProfileForm('hide_all');
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const otpSent = urlParams.get('otp_sent');
-        const action = urlParams.get('action');
-        const message = urlParams.get('message');
-        const messageType = urlParams.get('message_type');
-
-        if (otpSent === '1') {
-            const modal = document.getElementById('otpVerificationModal');
-            modal.classList.add('show');
-            document.getElementById('otp1').focus();
-            startOTPTimer();
-            if (message && messageType) {
-                showCustomAlert(decodeURIComponent(message), messageType);
-            } else {
-                showCustomAlert('OTP sent to your registered email/phone.', 'success');
-            }
-        } else if (action === 'reset_password') {
-            toggleProfileForm('password_reset');
-            if (message) showCustomAlert(decodeURIComponent(message), 'success');
-        } else if (message && messageType) {
-            showCustomAlert(decodeURIComponent(message), messageType);
-        }
-
-        if (otpSent || action || message) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    });
+    if (otpSent || action || message) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
 </script>
 
 

@@ -123,53 +123,75 @@ class Availablecontroller extends Controller
 
     public function addplace()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $regionId = $_POST['region'];
-            $cityName = $_POST['city'];
-            $townshipName = $_POST['township'] . ' Township';
-            echo $townshipName;
-
-
-            $townshipcheck = $this->db->columnFilter('townships', 'name', $townshipName);
-            if ($townshipcheck) {
-                setMessage('error', 'Address is already exit');
-                redirect('available_place/addplace');
-            }
-
-            // Find or create city
-            $city = $this->db->columnFilter('cities', 'name', $cityName);
-            if (!$city) {
-                $cityModel = new CityModel();
-                $cityModel->setRegionId($regionId);
-                $cityModel->setName($cityName);
-                $this->db->create('cities', $cityModel->toArray());
-                $city = $this->db->columnFilter('cities', 'name', $cityName);
-            }
-
-            // Find or create township
-            $township = $this->db->columnFilter('townships', 'name', $townshipName);
-            if (!$township) {
-                $townshipModel = new TownshipModel();
-                $townshipModel->setCityId($city['id']);
-                $townshipModel->setName($townshipName);
-                $this->db->create('townships', $townshipModel->toArray());
-                $township = $this->db->columnFilter('townships', 'name', $townshipName);
-            }
-
-            // Create available_location
-            $location = new Available_locationModel();
-            $location->setRegionId($regionId);
-            $location->setCityId($city['id']);
-            $location->setTownshipId($township['id']);
-            $location->setAgentId(null);
-            date_default_timezone_set('Asia/Yangon');
-            $location->setCreatedAt(date('Y-m-d H:i:s')); // ✅ fix date format
-            $location->setUpdatedAt(null);
-            $location->setStatusLoacationId(3);
-
-            $this->db->create('available_location', $location->toArray());
-
-            redirect('available_place/addplace?success=1');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->view('available_place/addplace', [
+                'regions' => $this->db->readAll('regions')
+            ]);
         }
+
+        $regionId = trim($_POST['region'] ?? '');
+        $cityName = trim($_POST['city'] ?? '');
+        $townshipName = trim($_POST['township'] ?? '') . ' Township';
+
+        // --- Validation ---
+        if (empty($regionId)) {
+            setMessage('error', 'Region is required.');
+            redirect('available_place/addplace');
+            return;
+        }
+        if (empty($cityName)) {
+            setMessage('error', 'City name is required.');
+            redirect('available_place/addplace');
+            return;
+        }
+        if (empty($_POST['township'])) {
+            setMessage('error', 'Township name is required.');
+            redirect('available_place/addplace');
+            return;
+        }
+
+        // Check if township already exists
+        $townshipCheck = $this->db->columnFilter('townships', 'name', $townshipName);
+        if ($townshipCheck) {
+            setMessage('error', 'Address already exists.');
+            redirect('available_place/addplace');
+            return;
+        }
+
+        // --- Find or create city ---
+        $city = $this->db->columnFilter('cities', 'name', $cityName);
+        if (!$city) {
+            $cityModel = new CityModel();
+            $cityModel->setRegionId($regionId);
+            $cityModel->setName($cityName);
+            $this->db->create('cities', $cityModel->toArray());
+            $city = $this->db->columnFilter('cities', 'name', $cityName);
+        }
+
+        // --- Find or create township ---
+        $township = $this->db->columnFilter('townships', 'name', $townshipName);
+        if (!$township) {
+            $townshipModel = new TownshipModel();
+            $townshipModel->setCityId($city['id']);
+            $townshipModel->setName($townshipName);
+            $this->db->create('townships', $townshipModel->toArray());
+            $township = $this->db->columnFilter('townships', 'name', $townshipName);
+        }
+
+        // --- Create available_location ---
+        $location = new Available_locationModel();
+        $location->setRegionId($regionId);
+        $location->setCityId($city['id']);
+        $location->setTownshipId($township['id']);
+        $location->setAgentId(null);
+        date_default_timezone_set('Asia/Yangon');
+        $location->setCreatedAt(date('Y-m-d H:i:s'));
+        $location->setUpdatedAt(null);
+        $location->setStatusLoacationId(3);
+
+        $this->db->create('available_location', $location->toArray());
+
+        setMessage('success', 'Place added successfully!');
+        redirect('available_place/addplace');
     }
 }

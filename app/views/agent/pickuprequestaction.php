@@ -5,17 +5,17 @@ $location = $data['location'];
 $route = $data['route'];
 ?>
 <style>
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f3f4f6;
-    }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
 
-    .status-pending {
-        background-color: #fef3c7;
-        /* yellow-100 */
-        color: #b45309;
-        /* amber-700 */
-    }
+.status-pending {
+    background-color: #fef3c7;
+    /* yellow-100 */
+    color: #b45309;
+    /* amber-700 */
+}
 </style>
 
 
@@ -26,11 +26,9 @@ $route = $data['route'];
             <h1 class="text-3xl font-semibold text-gray-800">Pickup Requests Detail</h1>
             <div x-data="{ open: false }" class="relative">
                 <!-- Button-like Trigger -->
-                <button
-                    @click="open = !open"
+                <button @click="open = !open"
                     class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
-                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>"
-                        alt="Agent Avatar"
+                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
                         class="w-10 h-10 rounded-full border-2 border-blue-500">
                     <div class="text-left">
                         <p class="text-lg font-medium text-gray-800">
@@ -43,10 +41,7 @@ $route = $data['route'];
                 </button>
 
                 <!-- Dropdown -->
-                <div
-                    x-show="open"
-                    @click.away="open = false"
-                    x-transition
+                <div x-show="open" @click.away="open = false" x-transition
                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
                     <!-- Profile -->
                     <a href="<?= URLROOT; ?>/agent/profile"
@@ -58,7 +53,7 @@ $route = $data['route'];
                     <div class="border-t my-1"></div>
 
                     <!-- Logout -->
-                    <a href="<?= URLROOT; ?>/agent/logout"
+                    <a href="<?= URLROOT; ?>/agentcontroller/logout"
                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                         Logout
                     </a>
@@ -103,6 +98,7 @@ $route = $data['route'];
                             'arrived_office'              => 'bg-teal-500',
                             'rejected'                    => 'bg-red-500',
                             'agent_checked'               => 'bg-pink-500',
+                            'arrived_at_office' => 'bg-blue-400',
                             'awaiting_payment'            => 'bg-orange-500',
                             'payment_success'             => 'bg-emerald-600',
                             'awaiting_cash'               => 'bg-amber-500',
@@ -395,20 +391,20 @@ $route = $data['route'];
 
                         <?php
                         // statuses where the Edit button should NOT be shown
-                        $blockedStatuses = ['accepted', 'collected', 'voucher_created', 'rejected', 'agent_checked', 'cash_collected', 'payment_success'];
+                        $blockedStatuses = ['accepted', 'collected', 'voucher_created', 'rejected', 'agent_checked', 'cash_collected', 'arrived_at_office', 'payment_success'];
 
                         if (!in_array($pickup['status'], $blockedStatuses)): ?>
-                            <a href="<?php echo URLROOT; ?>/agent/edit_pickup?request_code=<?= urlencode($pickup['request_code']); ?>"
-                                class="px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200 shadow-md">
-                                Edit Pickup
-                            </a>
+                        <a href="<?php echo URLROOT; ?>/agent/edit_pickup?request_code=<?= urlencode($pickup['request_code']); ?>"
+                            class="px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200 shadow-md">
+                            Edit Pickup
+                        </a>
                         <?php endif; ?>
 
-                        <?php if ($pickup['status'] === 'collected' || $pickup['status'] === 'cash_collected'   || $pickup['status'] === 'payment_success'): ?>
-                            <a href="<?php echo URLROOT; ?>/agentcontroller/create_voucher_pickup?request_code=<?= urlencode($pickup['request_code']); ?>"
-                                class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md">
-                                Create Voucher
-                            </a>
+                        <?php if ($pickup['status'] === 'cash_collected'   || $pickup['status'] === 'payment_success'): ?>
+                        <a href="<?php echo URLROOT; ?>/agentcontroller/create_voucher_pickup?request_code=<?= urlencode($pickup['request_code']); ?>"
+                            class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md">
+                            Create Voucher
+                        </a>
                         <?php endif; ?>
                     </div>
 

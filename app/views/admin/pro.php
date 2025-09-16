@@ -46,7 +46,8 @@ body {
     <header class="bg-white rounded-xl shadow-lg p-4 flex justify-between items-center mb-6">
         <h1 class="text-xl font-semibold text-gray-800">Profile</h1>
         <div class="flex items-center">
-            <span class="mr-2 text-gray-700">Min Thu</span>
+            <span class="mr-2 text-gray-700"> <?= htmlspecialchars($_SESSION['user']['name']) ?>
+            </span>
             <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
                 <i class="fas fa-user"></i>
             </div>
@@ -67,33 +68,33 @@ body {
                 <!-- Name -->
                 <div>
                     <p class="text-gray-500 text-sm">Name</p>
-                    <p class="font-medium text-gray-800">Min Thu</p>
+                    <p class="font-medium text-gray-800"> <?= htmlspecialchars($_SESSION['user']['name']) ?>
+                    </p>
                 </div>
 
                 <!-- Phone -->
                 <div>
                     <p class="text-gray-500 text-sm">Phone</p>
-                    <p class="font-medium text-gray-800">09441386930</p>
+                    <p class="font-medium text-gray-800"> <?= htmlspecialchars($_SESSION['user']['phone']) ?>
+                    </p>
                 </div>
 
                 <!-- Code -->
                 <div>
-                    <p class="text-gray-500 text-sm">Code</p>
-                    <p class="font-medium text-gray-800">mint206202@gmail.com</p>
+                    <p class="text-gray-500 text-sm">Email</p>
+                    <p class="font-medium text-gray-800"> <?= htmlspecialchars($_SESSION['user']['email']) ?>
+                    </p>
                 </div>
 
                 <!-- Role -->
                 <div>
                     <p class="text-gray-500 text-sm">Role</p>
-                    <p class="font-medium text-gray-800">Agent</p>
+                    <p class="font-medium text-gray-800">Admin</p>
                 </div>
             </div>
 
             <!-- Update Button -->
-            <button
-                class="bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors ml-6">
-                Update Info
-            </button>
+
         </div>
     </div>
 
@@ -117,23 +118,20 @@ body {
                 <!-- Full Name -->
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
-                    <input type="text" value="Aung Aung"
-                        class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-100"
-                        readonly>
+                    <input type="text" value="<?= htmlspecialchars($_SESSION['user']['name']) ?>
+" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-100" readonly>
                 </div>
                 <!-- Phone Number -->
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Phone Number</label>
-                    <input type="text" value="09123456789"
-                        class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-100"
-                        readonly>
+                    <input type="text" value="<?= htmlspecialchars($_SESSION['user']['phone']) ?>
+" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-100" readonly>
                 </div>
                 <!-- Code -->
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Code</label>
-                    <input type="text" value="GDAGENT007"
-                        class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-100"
-                        readonly>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="text" value="<?= htmlspecialchars($_SESSION['user']['email']) ?>
+" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-100" readonly>
                 </div>
                 <!-- Region -->
                 <div>
@@ -147,45 +145,53 @@ body {
                     <label class="block text-gray-700 text-sm font-bold mb-2">Address</label>
                     <textarea
                         class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-100"
-                        readonly>No. 123, Main Street, Yangon, Myanmar</textarea>
+                        readonly><?= htmlspecialchars($_SESSION['user']['address']) ?>
+</textarea>
                 </div>
             </div>
         </div>
 
-        <div id="change-password-content" class="tab-content hidden">
-            <div>
-                <h2 class="text-xl font-bold mb-4">Change Password</h2>
-                <p class="text-gray-600 mb-6">Create a strong password to protect your account.</p>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="current-password">
-                        Current Password
-                    </label>
-                    <input
-                        class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="current-password" type="password" placeholder="Enter your current password">
+        <form method="POST" action="<?php echo URLROOT; ?>/admincontroller/changepassword">
+
+            <div id="change-password-content" class="tab-content hidden">
+                <div>
+                    <h2 class="text-xl font-bold mb-4">Change Password</h2>
+                    <?php require APPROOT . '/views/components/auth_message.php'; ?>
+
+                    <p class="text-gray-600 mb-6">Create a strong password to protect your account.</p>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="current-password">
+                            Current Password
+                        </label>
+                        <input
+                            class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="current-password" type="password" placeholder="Enter your current password"
+                            name="current_password">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="new-password">
+                            New Password
+                        </label>
+                        <input
+                            class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="new-password" type="password" placeholder="Enter your new password" name="new_password">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm-password">
+                            Confirm New Password
+                        </label>
+                        <input
+                            class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="confirm-password" type="password" placeholder="Confirm your new password"
+                            name="confirm_password">
+                    </div>
+                    <button
+                        class="bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 w-full transition-colors">
+                        Change Password
+                    </button>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="new-password">
-                        New Password
-                    </label>
-                    <input
-                        class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="new-password" type="password" placeholder="Enter your new password">
-                </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm-password">
-                        Confirm New Password
-                    </label>
-                    <input
-                        class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="confirm-password" type="password" placeholder="Confirm your new password">
-                </div>
-                <button
-                    class="bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 w-full transition-colors">
-                    Change Password
-                </button>
             </div>
-        </div>
+        </form>
     </div>
 </main>
 

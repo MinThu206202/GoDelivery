@@ -83,7 +83,7 @@
                     <div class="border-t my-1"></div>
 
                     <!-- Logout -->
-                    <a href="<?= URLROOT; ?>/agent/logout"
+                    <a href="<?= URLROOT; ?>/agentcontroller/logout"
                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                         Logout
                     </a>
@@ -98,7 +98,16 @@
         <!-- Form Content -->
         <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
             <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-md">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-6">Agent Details</h2>
+
+                <!-- Header with Back Button -->
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800">Agent Details</h2>
+                    <a href="<?= URLROOT; ?>/agent/pickupagentlist"
+                        class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow-sm hover:bg-gray-300 transition">
+                        Back
+                    </a>
+                </div>
+
                 <form id="addAgentForm" class="space-y-6" method="POST"
                     action="<?php echo URLROOT; ?>/agentcontroller/pickupagentadd">
                     <?php require APPROOT . '/views/components/auth_message.php'; ?>
@@ -139,8 +148,7 @@
                         <!-- Assigned Vehicle (optional) -->
                         <div>
                             <label for="assignedVehicle" class="block text-sm font-medium text-gray-700"><i
-                                    class="fa-solid fa-truck-pickup mr-2"></i>Assigned Vehicle
-                                (optional)</label>
+                                    class="fa-solid fa-truck-pickup mr-2"></i>Assigned Vehicle (optional)</label>
                             <select id="assignedVehicle" name="assignedVehicle"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1F265B] focus:ring focus:ring-[#1F265B] focus:ring-opacity-50 p-2">
                                 <option value="None">None</option>
@@ -166,13 +174,13 @@
                         <!-- Vehicle Number -->
                         <div>
                             <label for="vehicleNumber" class="block text-sm font-medium text-gray-700"><i
-                                    class="fa-solid fa-id-card mr-2"></i>Vehicle
-                                Number</label>
+                                    class="fa-solid fa-id-card mr-2"></i>Vehicle Number</label>
                             <input type="text" id="vehicleNumber" name="vehicleNumber"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#1F265B] focus:ring focus:ring-[#1F265B] focus:ring-opacity-50 p-2">
                             <p class="error-message hidden" id="vehicleNumber-error">Vehicle Number is required.</p>
                         </div>
                     </div>
+
                     <!-- Submit Button -->
                     <div class="pt-6">
                         <button type="submit"
@@ -183,6 +191,7 @@
                 </form>
             </div>
         </main>
+
     </div>
 
     <!-- Confirmation Modal -->

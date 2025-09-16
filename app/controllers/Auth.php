@@ -54,18 +54,29 @@ class Auth extends Controller
         }
 
         $user = $this->db->columnFilter('users', 'security_code', $code);
+
         if (!$user || $user['password'] !== base64_encode($password)) {
             setMessage('error', 'Invalid credentials');
             return redirect('pages/login');
         }
 
+        // ✅ Corrected typo
+        if ($user['status_id'] !== 1) {
+            setMessage('error', 'Your account is banned. Please contact support.');
+            return redirect('pages/login');
+        }
+
         $this->db->setLogin($user['id']);
 
-        session_start();
-        $agent = $this->db->columnFilter('user_full_info', 'id', $user['id']);
+        // ✅ Only start session if not already started
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $_SESSION['user'] = $user;
+        $agent = $this->db->columnFilter('user_full_info', 'id', $user['id']);
 
-
+        // ✅ Determine route based on role
         if ($user['role_id'] === ADMIN_ROLE) {
             $route = 'admin/home';
         } elseif ($user['role_id'] === AGENT_ROLE) {
@@ -78,6 +89,7 @@ class Auth extends Controller
 
         redirect($route);
     }
+
 
     public function forgetpassword()
     {
@@ -100,6 +112,11 @@ class Auth extends Controller
         // Check if email exists in DB
         $user = $this->db->columnFilter('users', 'email', $email);
         if (!$user) {
+            setMessage('error', 'Email is not registered');
+            return redirect('pages/forgetpassword');
+        }
+
+        if ($user['status_id'] == null) {
             setMessage('error', 'Email is not registered');
             return redirect('pages/forgetpassword');
         }
@@ -196,18 +213,58 @@ class Auth extends Controller
             }
 
             // Use password_hash for real security instead of base64
-            $hashedPassword = password_hash($newPass, PASSWORD_BCRYPT);
+            $hashedPassword = base64_encode($newPass);
 
             $updated = $this->db->update('users', $user['id'], ['password' => $hashedPassword]);
 
             if ($updated) {
                 unset($_SESSION['post_email']); // optional: clear session
-                return redirect('pages/login');
+
+                // Redirect based on role
+                if (isset($user) && $user['role_id'] == 3) {
+                    // Customer login
+                    return redirect('pages/customerlogin'); // or a dedicated customer login page if different
+                } else {
+                    // Other roles (admin, agent, pickup agent)
+                    return redirect('pages/login'); // or some admin/agent dashboard
+                }
             }
+
 
             setMessage('error', 'Failed to update password.');
             redirect('pages/changepassword');
         }
+    }
+
+    public function getTownshipShortCode($township)
+    {
+        $codes = [
+            'Insein Township'         => 'INS',
+            'Lanmadaw Township'       => 'LMD',
+            'Chanayethazan Township'  => 'CYZ',
+            'South Okkalapa Township' => 'SOK',
+            'North Okkalapa Township' => 'NOK',
+            'Kyauktan Township'       => 'KYT',
+            'Thanlyin Township'       => 'TNL',
+            'Thaketa Township'        => 'TKT',
+            'Pyin Oo Lwin Township'   => 'POL',
+            'Myingyan Township'       => 'MYG',
+            'Amarapura Township'      => 'AMP',
+            'Meiktila Township'       => 'MKL',
+            'Hmawbi Township'         => 'HMB',
+            'Hlaing Township'         => 'HLG',
+            'Halo Township'           => 'HAL',
+            'hi Township'             => 'HI',
+            'dfds Township'           => 'DFD',
+            'kk Township'             => 'KK',
+            'mdm Township'            => 'MDM',
+            'pyawbwe Township'        => 'PYW',
+            'aass Township'           => 'AAS',
+            '5555 Township'           => 'T555',
+            '2 Township'              => 'T2'
+        ];
+
+        return $codes[$township] ?? strtoupper(substr($township, 0, 3));
     }
 
     public function register()
@@ -257,6 +314,14 @@ class Auth extends Controller
                 return;
             }
 
+
+
+            $township = $this->db->getById('townships', $postData['township_id']);
+
+            $shortcode = $this->getTownshipShortCode(($township['name']));
+
+            $access_code = $shortcode . '-' . str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+
             // 5️⃣ All good, insert user
             $securityCode = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
             $param = [
@@ -268,6 +333,7 @@ class Auth extends Controller
                 $postData['township_id'],
                 $postData['ward_id'],
                 $postData['address'],
+
                 base64_encode($password),
                 null,
                 null,
@@ -275,7 +341,8 @@ class Auth extends Controller
                 2,
                 3,
                 date('Y-m-d H:i:s'),
-                0
+                0,
+                $access_code
             ];
 
             $usercreate = $this->db->insertuser(...$param);
@@ -337,7 +404,8 @@ class Auth extends Controller
             3,
             3,
             date('Y-m-d H:i:s'),
-            0
+            0,
+            null
         ];
 
         $this->db->insertuser(...$params);

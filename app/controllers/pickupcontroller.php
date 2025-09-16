@@ -85,20 +85,29 @@ class Pickupcontroller extends Controller
             'receiver_name',
             'receiver_phone',
             'receiver_email',
-            'receiver_region',
-            'receiver_city',
-            'receiver_township',
             'receiver_address'
         ];
 
+        // Only require receiver region/city/township if not type 3
+        if ((int)$_POST['delivery_type'] !== 3) {
+            $required[] = 'receiver_region';
+            $required[] = 'receiver_city';
+            $required[] = 'receiver_township';
+        }
+
+
+        // echo $_POST['delivery_type'];
+        // die();
         // ✅ Check missing fields
         foreach ($required as $field) {
             if (empty($_POST[$field])) {
                 setMessage('error', ucfirst(str_replace('_', ' ', $field)) . " is required");
-                redirect('pages/pickup');
+                redirect('pages/requestpickup');
                 return;
             }
         }
+
+
 
         $delivery_type  = $_POST['delivery_type'];
         $payment_type   = $_POST['payment_type'];
@@ -112,44 +121,52 @@ class Pickupcontroller extends Controller
         $weight          = (float) $_POST['weight'];
         $quantity        = (int) $_POST['quantity'];
 
-        $receiver_name    = trim($_POST['receiver_name']);
-        $receiver_phone   = trim($_POST['receiver_phone']);
-        $receiver_email   = filter_var($_POST['receiver_email'], FILTER_SANITIZE_EMAIL);
-        $receiver_region  = (int) $_POST['receiver_region'];
-        $receiver_city    = (int) $_POST['receiver_city'];
-        $receiver_township = (int) $_POST['receiver_township'];
-        $receiver_address = trim($_POST['receiver_address']);
+        $receiver_name   = trim($_POST['receiver_name']);
+        $receiver_phone  = trim($_POST['receiver_phone']);
+        $receiver_email  = filter_var($_POST['receiver_email'], FILTER_SANITIZE_EMAIL);
 
+        // ✅ If delivery_type = 3 → receiver region/city/township = pickup’s
+        if ((int)$delivery_type === 3) {
+            $receiver_region   = $pickup_region;
+            $receiver_city     = $pickup_city;
+            $receiver_township = $pickup_township;
+        } else {
+            $receiver_region   = (int) $_POST['receiver_region'];
+            $receiver_city     = (int) $_POST['receiver_city'];
+            $receiver_township = (int) $_POST['receiver_township'];
+        }
+
+        $receiver_address = trim($_POST['receiver_address']);
 
 
         if (!filter_var($receiver_email, FILTER_VALIDATE_EMAIL)) {
             setMessage('error', "Invalid receiver email");
-            redirect('pages/pickup');
+            redirect('pages/requestpickup');
             return;
         }
 
 
         if (!preg_match('/^[0-9]{6,15}$/', $receiver_phone)) {
             setMessage('error', "Invalid receiver phone number");
-            redirect('pages/pickup');
+            redirect('pages/requestpickup');
             return;
         }
 
         if ($weight <= 0) {
             setMessage('error', "Weight must be greater than 0");
-            redirect('pages/pickup');
+            redirect('pages/requestpickup');
             return;
         }
 
         if ($quantity < 1) {
             setMessage('error', "Quantity must be at least 1");
-            redirect('pages/pickup');
+            redirect('pages/requestpickup');
             return;
         }
 
         if (!strtotime($preferred_date)) {
             setMessage('error', "Invalid preferred date");
-            redirect('pages/pickup');
+            redirect('pages/requestpickup');
             return;
         }
 
@@ -164,7 +181,7 @@ class Pickupcontroller extends Controller
 
         if (!$checkagent || $checkagent['agent_id'] === null) {
             setMessage('error', "We cannot pickup your address");
-            redirect('pages/pickup');
+            redirect('pages/requestpickup');
             return;
         }
 
@@ -260,11 +277,16 @@ class Pickupcontroller extends Controller
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
         $id = $_POST['id'] ?? null;
+        $code = $this->db->getById('pickup_requests', $id);
+        $pickup_code = $code['request_code'];
         $payment_method_id = $_POST['payment_method_id'] ?? null;
         $payment_image = null;
 
+        // Validate required fields
         if (!$id || !$payment_method_id) {
-            throw new Exception("Missing required fields.");
+            setMessage('error', 'Missing required fields.');
+            redirect('pickupcontroller/detail?request_code=' . urlencode($pickup_code));
+            return;
         }
 
         // --- Handle file upload if exists ---
@@ -272,16 +294,33 @@ class Pickupcontroller extends Controller
             $file = $_FILES['payment_image'];
             $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/Delivery/public/uploads/";
 
-            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-            if (!is_writable($uploadDir)) throw new Exception("Upload folder not writable.");
+            if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true)) {
+                setMessage('error', 'Failed to create upload directory.');
+                redirect('pickupcontroller/detail?request_code=' . urlencode($pickup_code));
+                return;
+            }
 
-            // Validate size (5MB max)
-            if ($file['size'] > 5 * 1024 * 1024) throw new Exception("File too large. Max 5MB.");
+            if (!is_writable($uploadDir)) {
+                setMessage('error', 'Upload folder is not writable.');
+                redirect('pickupcontroller/detail?request_code=' . urlencode($pickup_code));
+                return;
+            }
+
+            // Validate file size (5MB max)
+            if ($file['size'] > 5 * 1024 * 1024) {
+                redirect('pickupcontroller/detail?request_code=' . urlencode($pickup_code));
+                redirect('pages/pickuphistory');
+                return;
+            }
 
             // Validate MIME type
             $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/avif'];
             $mime = mime_content_type($file['tmp_name']);
-            if (!in_array($mime, $allowed)) throw new Exception("Invalid file type.");
+            if (!in_array($mime, $allowed)) {
+                setMessage('error', 'Invalid file type. Only JPG, PNG, GIF, AVIF allowed.');
+                redirect('pages/pickuphistory');
+                return;
+            }
 
             // Generate safe filename
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
@@ -290,7 +329,9 @@ class Pickupcontroller extends Controller
             $newName = uniqid('payment_', true) . '_' . $base . '.' . $ext;
 
             if (!move_uploaded_file($file['tmp_name'], $uploadDir . $newName)) {
-                throw new Exception("Upload failed.");
+                redirect('pickupcontroller/detail?request_code=' . urlencode($pickup_code));
+                redirect('pages/pickuphistory');
+                return;
             }
 
             $payment_image = "public/uploads/" . $newName;
@@ -298,19 +339,19 @@ class Pickupcontroller extends Controller
 
         // --- Update DB ---
         date_default_timezone_set('Asia/Yangon');
-
         $updateData = [
             'status_id' => 13,
-            'updated_at' => date('Y-m-d H:i:s'), // current timestamp
+            'updated_at' => date('Y-m-d H:i:s'),
             'payment_method_id' => $payment_method_id,
             'method_image' => $payment_image
         ];
 
-
         if ($this->db->update('pickup_requests', $id, $updateData)) {
-            redirect('pages/pickuphistory');
+            setMessage('success', 'Payment submitted successfully!');
+            redirect('pickupcontroller/detail?request_code=' . urlencode($pickup_code));
         } else {
-            throw new Exception("Failed to update payment info.");
+            setMessage('error', 'Failed to update payment info.');
+            redirect('pickupcontroller/detail?request_code=' . urlencode($pickup_code));
         }
     }
 }

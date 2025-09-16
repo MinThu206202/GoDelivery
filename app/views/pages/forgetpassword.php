@@ -14,6 +14,14 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/deliverycss/forgetpassword.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="<?php echo URLROOT; ?>/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/vendor/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/css/util.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo URLROOT; ?>/css/main.css">
 
 
 </head>
@@ -26,7 +34,11 @@ if (session_status() === PHP_SESSION_NONE) {
             <div class="instruction-text">
                 Enter your registered mobile number and we'll send you an OTP.
             </div>
-            <?php require APPROOT . '/views/components/auth_message.php'; ?>
+            <div style="color: red;">
+                <?php require APPROOT . '/views/components/auth_mess.php'; ?>
+            </div>
+
+            </style>
             <?php if (!empty($email_err = $data['email-err'] ?? '')) : ?>
             <p class="error"><?= $email_err ?></p>
             <?php endif; ?>

@@ -26,7 +26,7 @@ body {
 <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Header -->
     <header class="flex items-center justify-between p-6 bg-white shadow-md rounded-bl-lg">
-        <h1 class="text-3xl font-semibold text-gray-800">Delivery Requests</h1>
+        <h1 class="text-3xl font-semibold text-gray-800">Out For Delivery</h1>
         <div x-data="{ open: false }" class="relative">
             <button @click="open = !open"
                 class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
@@ -44,7 +44,7 @@ body {
                 <a href="<?= URLROOT; ?>/agent/profile"
                     class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Profile</a>
                 <div class="border-t my-1"></div>
-                <a href="<?= URLROOT; ?>/agent/logout"
+                <a href="<?= URLROOT; ?>/agentcontroller/logout"
                     class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Logout</a>
             </div>
         </div>
@@ -102,34 +102,41 @@ body {
                             <td class="px-4 py-2 text-sm text-gray-700 truncate"
                                 title="<?= htmlspecialchars($delivery['delivery_type_name'] ?? 'N/A') ?>">
                                 <?= htmlspecialchars($delivery['delivery_type_name'] ?? 'N/A') ?></td>
-                            <td class="px-4 py-2 text-sm">
-                                <?php
-                                        $status = strtolower($delivery['delivery_status'] ?? 'default');
-                                        $statusClasses = [
-                                            'pending' => 'bg-yellow-500',
-                                            'picked_up' => 'bg-orange-500',
-                                            'on_the_way' => 'bg-sky-500',
-                                            'delivered' => 'bg-green-500',
-                                            'failed' => 'bg-red-600',
-                                            'default' => 'bg-gray-400'
-                                        ];
-                                        $status_class = $statusClasses[$status] ?? $statusClasses['default'];
-                                        ?>
+                            <?php
+                                    $status = trim($delivery['delivery_status']); // remove extra spaces
+
+                                    $statusClass = match ($status) {
+                                        'Pending' => 'bg-yellow-100 text-yellow-800',
+                                        'Ready for Pickup' => 'bg-indigo-100 text-indigo-800',
+                                        'Delivered' => 'bg-green-100 text-green-800',
+                                        'Cancelled' => 'bg-red-100 text-red-800',
+                                        'Returned' => 'bg-purple-100 text-purple-800',
+                                        'Awaiting Acceptance' => 'bg-blue-100 text-blue-800',
+                                        'Rejected' => 'bg-red-200 text-red-900',
+                                        'Out for Delivery' => 'bg-blue-200 text-blue-900',
+                                        'Deliver Parcel' => 'bg-green-200 text-green-900',
+                                        'Waiting Payment' => 'bg-yellow-200 text-yellow-900',
+                                        'Receipt Submitted' => 'bg-indigo-200 text-indigo-900',
+                                        'Payment Success' => 'bg-green-300 text-green-900',
+                                        'On the Way' => 'bg-blue-300 text-blue-900',
+                                        'Delivery at Office' => 'bg-indigo-300 text-indigo-900',
+                                        default => 'bg-gray-100 text-gray-800',
+                                    };
+                                    ?>
+                            <td class="px-6 py-4 text-sm">
                                 <span
-                                    class="px-3 py-1 inline-flex text-sm font-bold rounded-full shadow-md text-white capitalize <?= $status_class ?>"
-                                    title="<?= htmlspecialchars(str_replace('_', ' ', $status)) ?>"><?= htmlspecialchars(str_replace('_', ' ', $status)) ?></span>
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?> break-words max-w-[120px] text-center">
+                                    <?= htmlspecialchars($status) ?>
+                                </span>
                             </td>
+
+
                             <td class="px-4 py-2 text-right text-sm font-medium flex space-x-2">
-                                <?php if ($delivery['delivery_status_id'] == 3): ?>
                                 <a href="<?= URLROOT; ?>/agent/outfordeliveryaction?delivery_code=<?= htmlspecialchars($delivery['tracking_code']) ?>"
                                     class="px-3 py-1 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200">
                                     Actions
                                 </a>
-                                <?php elseif ($delivery['delivery_status_id'] == 8): ?>
-                                <span class="px-3 py-1 bg-gray-200 text-gray-800 rounded-lg">
-                                    Waiting for Pickup Agent
-                                </span>
-                                <?php endif; ?>
+
                             </td>
 
                         </tr>

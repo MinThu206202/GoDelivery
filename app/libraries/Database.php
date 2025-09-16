@@ -204,7 +204,9 @@ class Database
 
     public function checkroute($table, $fromTownshipId, $toTownshipId)
     {
-        $sql = "SELECT * FROM $table WHERE from_township_id = :from_township_id AND to_township_id = :to_township_id AND status = 'Active'";
+        $sql = "SELECT * FROM $table WHERE from_township_id = :from_township_id AND to_township_id = :to_township_id AND status = 'active'";
+        // var_dump($sql);
+        // die();
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':from_township_id', $fromTownshipId);
         $stmt->bindValue(':to_township_id', $toTownshipId);
@@ -384,9 +386,9 @@ class Database
         return $stmt->execute(); // returns true on success
     }
 
-    public function insertuser($name, $phone, $email, $region_id, $city_id, $township_id, $ward_id, $address, $password, $otp_code, $otp_expiry, $security_code, $role_id, $status_id, $created_at, $is_login)
+    public function insertuser($name, $phone, $email, $region_id, $city_id, $township_id, $ward_id, $address, $password, $otp_code, $otp_expiry, $security_code, $role_id, $status_id, $created_at, $is_login, $access_code)
     {
-        $sql = "CALL Insertuser(:name, :phone, :email, :region_id, :city_id, :township_id, :ward_id, :address, :password, :otp_code, :otp_expiry, :security_code, :role_id, :status_id, :created_at, :is_login)";
+        $sql = "CALL Insertuser(:name, :phone, :email, :region_id, :city_id, :township_id, :ward_id, :address, :password, :otp_code, :otp_expiry, :security_code, :role_id, :status_id, :created_at, :is_login, :access_code)";
 
         $stmt = $this->pdo->prepare($sql);
 
@@ -406,6 +408,7 @@ class Database
         $stmt->bindParam(':status_id', $status_id, PDO::PARAM_INT);
         $stmt->bindParam(':created_at', $created_at);
         $stmt->bindParam(':is_login', $is_login, PDO::PARAM_BOOL);
+        $stmt->bindParam(':access_code', $access_code);
 
         return $stmt->execute();
     }

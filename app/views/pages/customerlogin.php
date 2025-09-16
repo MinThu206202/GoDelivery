@@ -96,7 +96,8 @@
                     </div>
 
                     <div class="flex justify-end">
-                        <a href="#" class="text-sm font-medium text-[#1F265B] hover:text-[#1a237e]">Forgot Password?</a>
+                        <a href=" <?php echo URLROOT; ?>/pages/forgetpassword"
+                            class="text-sm font-medium text-[#1F265B] hover:text-[#1a237e]">Forgot Password?</a>
                     </div>
 
                     <button type="submit"

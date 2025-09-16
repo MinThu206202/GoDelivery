@@ -116,7 +116,7 @@ $currentRoute = $_SERVER['REQUEST_URI'];
             </a>
 
             <a href="<?= URLROOT ?>/admin/pro"
-                class="flex items-center space-x-4 p-3 rounded-lg <?= strpos($currentRoute, '/admin/profile') !== false ? 'active-sidebar-link' : '' ?>">
+                class="flex items-center space-x-4 p-3 rounded-lg <?= strpos($currentRoute, '/admin/pro') !== false ? 'active-sidebar-link' : '' ?>">
                 <i class="fas fa-user text-lg"></i>
                 <span class="font-medium">Profile</span>
             </a>

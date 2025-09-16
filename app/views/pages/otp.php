@@ -20,16 +20,16 @@ $email = $_SESSION['post_email'];
 
 
     <style>
-    .otp-input-container input {
-        width: 40px;
-        text-align: center;
-        font-size: 24px;
-        margin-right: 20px;
-    }
+        .otp-input-container input {
+            width: 40px;
+            text-align: center;
+            font-size: 24px;
+            margin-right: 20px;
+        }
 
-    .otp-input-container input:nth-child(3) {
-        margin-right: 30px;
-    }
+        .otp-input-container input:nth-child(3) {
+            margin-right: 30px;
+        }
     </style>
 </head>
 
@@ -46,11 +46,13 @@ $email = $_SESSION['post_email'];
 
             <!-- OTP Form -->
             <form method="POST" action="<?php echo URLROOT; ?>/auth/otp">
-                <?php require APPROOT . '/views/components/auth_message.php'; ?>
+                <div style="color: red;">
+                    <?php require APPROOT . '/views/components/auth_mess.php'; ?>
+                </div>
                 <div class="otp-input-container">
                     <?php for ($i = 0; $i < 6; $i++): ?>
-                    <input type="text" name="otp[]" maxlength="1" pattern="[0-9]" inputmode="numeric"
-                        autocomplete="one-time-code" required />
+                        <input type="text" name="otp[]" maxlength="1" pattern="[0-9]" inputmode="numeric"
+                            autocomplete="one-time-code" required />
                     <?php endfor; ?>
                 </div>
 
@@ -92,122 +94,122 @@ $email = $_SESSION['post_email'];
 
     <!-- Pass error presence to JS -->
     <?php if (!empty($error)): ?>
-    <script>
-    window.hasOtpError = true;
-    </script>
+        <script>
+            window.hasOtpError = true;
+        </script>
     <?php else: ?>
-    <script>
-    window.hasOtpError = false;
-    </script>
+        <script>
+            window.hasOtpError = false;
+        </script>
     <?php endif; ?>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // OTP input behavior
-        const inputs = document.querySelectorAll('.otp-input-container input');
+        document.addEventListener('DOMContentLoaded', () => {
+            // OTP input behavior
+            const inputs = document.querySelectorAll('.otp-input-container input');
 
-        inputs.forEach((input, index) => {
-            input.addEventListener('keydown', (e) => {
-                if (
-                    (e.key >= '0' && e.key <= '9') ||
-                    e.key === 'Backspace' ||
-                    e.key === 'Tab' ||
-                    e.key === 'ArrowLeft' ||
-                    e.key === 'ArrowRight' ||
-                    e.key === 'Delete'
-                ) {
-                    if (e.key === 'Backspace') {
-                        if (input.value === '') {
-                            if (index > 0) {
-                                inputs[index - 1].focus();
-                                inputs[index - 1].value = '';
+            inputs.forEach((input, index) => {
+                input.addEventListener('keydown', (e) => {
+                    if (
+                        (e.key >= '0' && e.key <= '9') ||
+                        e.key === 'Backspace' ||
+                        e.key === 'Tab' ||
+                        e.key === 'ArrowLeft' ||
+                        e.key === 'ArrowRight' ||
+                        e.key === 'Delete'
+                    ) {
+                        if (e.key === 'Backspace') {
+                            if (input.value === '') {
+                                if (index > 0) {
+                                    inputs[index - 1].focus();
+                                    inputs[index - 1].value = '';
+                                    e.preventDefault();
+                                }
+                            } else {
+                                input.value = '';
                                 e.preventDefault();
                             }
-                        } else {
-                            input.value = '';
-                            e.preventDefault();
                         }
+                    } else {
+                        e.preventDefault();
                     }
-                } else {
+                });
+
+                input.addEventListener('input', () => {
+                    if (input.value.match(/^[0-9]$/)) {
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        }
+                    } else {
+                        input.value = '';
+                    }
+                });
+
+                input.addEventListener('paste', (e) => {
                     e.preventDefault();
-                }
-            });
-
-            input.addEventListener('input', () => {
-                if (input.value.match(/^[0-9]$/)) {
-                    if (index < inputs.length - 1) {
-                        inputs[index + 1].focus();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    if (!/^\d+$/.test(paste)) return;
+                    for (let i = 0; i < inputs.length; i++) {
+                        inputs[i].value = paste[i] || '';
                     }
-                } else {
-                    input.value = '';
-                }
+                    const lastFilledIndex = Math.min(paste.length, inputs.length) - 1;
+                    inputs[lastFilledIndex].focus();
+                });
             });
 
-            input.addEventListener('paste', (e) => {
-                e.preventDefault();
-                const paste = (e.clipboardData || window.clipboardData).getData('text');
-                if (!/^\d+$/.test(paste)) return;
-                for (let i = 0; i < inputs.length; i++) {
-                    inputs[i].value = paste[i] || '';
-                }
-                const lastFilledIndex = Math.min(paste.length, inputs.length) - 1;
-                inputs[lastFilledIndex].focus();
-            });
-        });
+            // Timer logic
+            const timerDuration = 60; // seconds
+            let countdown;
 
-        // Timer logic
-        const timerDuration = 60; // seconds
-        let countdown;
+            function startTimer() {
+                const codeMessage = document.getElementById('codeMessage');
+                codeMessage.innerHTML = `<span id="timer"></span>`;
+                const timerSpan = document.getElementById('timer');
+                let timeLeft = timerDuration;
+                timerSpan.textContent = `(${timeLeft}s)`;
 
-        function startTimer() {
-            const codeMessage = document.getElementById('codeMessage');
-            codeMessage.innerHTML = `<span id="timer"></span>`;
-            const timerSpan = document.getElementById('timer');
-            let timeLeft = timerDuration;
-            timerSpan.textContent = `(${timeLeft}s)`;
-
-            countdown = setInterval(() => {
-                timeLeft--;
-                if (timeLeft <= 0) {
-                    clearInterval(countdown);
-                    timerSpan.textContent = '';
-                    codeMessage.innerHTML = `
+                countdown = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        clearInterval(countdown);
+                        timerSpan.textContent = '';
+                        codeMessage.innerHTML = `
                             DIDN'T GET CODE? 
                             <a href="<?php echo URLROOT ?>/auth/for" id="requestAgainLink" style="color:#FFA500; font-weight:600; text-decoration:none;">
                                 REQUEST AGAIN
                             </a>
                         `;
-                    document.getElementById('requestAgainLink').addEventListener('click', function(e) {
-                        e.preventDefault();
-                        resendCodeAndStartTimer();
-                    });
-                } else {
-                    timerSpan.textContent = `(${timeLeft}s)`;
-                }
-            }, 1000);
-        }
+                        document.getElementById('requestAgainLink').addEventListener('click', function(e) {
+                            e.preventDefault();
+                            resendCodeAndStartTimer();
+                        });
+                    } else {
+                        timerSpan.textContent = `(${timeLeft}s)`;
+                    }
+                }, 1000);
+            }
 
-        function resendCodeAndStartTimer() {
-            const codeMessage = document.getElementById('codeMessage');
-            codeMessage.innerHTML = `<span id="timer"></span>`;
+            function resendCodeAndStartTimer() {
+                const codeMessage = document.getElementById('codeMessage');
+                codeMessage.innerHTML = `<span id="timer"></span>`;
 
-            // TODO: Add AJAX or backend call here to resend OTP
+                // TODO: Add AJAX or backend call here to resend OTP
 
-            startTimer();
-        }
+                startTimer();
+            }
 
-        // Show or hide timer container based on error presence
-        const timerContainer = document.getElementById('timerContainer');
+            // Show or hide timer container based on error presence
+            const timerContainer = document.getElementById('timerContainer');
 
-        if (window.hasOtpError) {
-            // Hide timer and resend link if error exists
-            timerContainer.style.display = 'none';
-        } else {
-            // Show timer container and start timer if no error
-            timerContainer.style.display = 'block';
-            startTimer();
-        }
-    });
+            if (window.hasOtpError) {
+                // Hide timer and resend link if error exists
+                timerContainer.style.display = 'none';
+            } else {
+                // Show timer container and start timer if no error
+                timerContainer.style.display = 'block';
+                startTimer();
+            }
+        });
     </script>
 </body>
 
