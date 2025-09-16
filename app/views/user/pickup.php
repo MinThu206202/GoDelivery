@@ -19,6 +19,10 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+.bg-primary-blue {
+    background-color: #1F265B;
+}
+
 :root {
     --primary-color: #1F265B;
     --secondary-color: #333;
@@ -277,58 +281,39 @@ body {
 </main>
 
 <!-- Footer Section -->
-<footer class="footer-bg text-white p-8 md:p-12">
-    <div class="container mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-            <div class="mb-6 md:mb-0 md:w-1/2">
-                <h2 class="text-3xl font-bold mb-2">Contact Us</h2>
-                <h3 class="text-5xl font-extrabold mb-4">Fast, Affordable, And Always On Time.</h3>
-                <p class="text-sm leading-relaxed mb-4">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Egestas semper sit integer et. At
-                    aliquam tortor lectus commodo ut lectus sed fermentum. Cursus in tincidunt cursus viverra diam.
-                    Praesent feugiat dolor ipsum pharetra laoreet vulputate pellentesque sed.
-                </p>
-                <div class="flex justify-center md:justify-start items-center space-x-4">
-                    <a href="#"
-                        class="flex items-center space-x-2 bg-white text-gray-800 font-semibold py-2 px-4 rounded-full hover:bg-gray-200 transition-colors duration-200">
-                        <span>Contact Now</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                    <a href="#" class="text-white hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-white hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 2.163c3.21 0 3.584.013 4.852.072 1.258.058 1.838.257 2.222.403.491.189.882.415 1.248.78.368.367.594.757.78 1.248.146.384.345.964.403 2.222.059 1.268.072 1.633.072 4.852s-.013 3.584-.072 4.852c-.058 1.258-.257 1.838-.403 2.222-.189.491-.415.882-.78 1.248-.367.368-.757.594-1.248.78-.384.146-.964.345-2.222.403-1.268.059-1.633.072-4.852.072s-3.584-.013-4.852-.072c-1.258-.058-1.838-.257-2.222-.403-.491-.189-.415-.882-.78-1.248-.367-.368-.757-.594-1.248-.78-.384-.146-.964-.345-2.222-.403-1.268-.059-1.633-.072-4.852-.072zM12 0C8.74 0 8.333.014 7.053.073c-1.234.058-2.105.248-2.83.526-.74.276-1.348.674-1.952 1.278-.604.604-1.002 1.212-1.278 1.952-.278.725-.468 1.6-.526 2.83-.059 1.28-.073 1.687-.073 4.907s.014 3.627.073 4.907c.058 1.234.248 2.105.526 2.83.276.74.674 1.348 1.278 1.952.604.604 1.212 1.002 1.952 1.278.725.278 1.6.468 2.83.526 1.28.059 1.687.073 4.907.073s3.627-.014 4.907-.073c1.234-.058 2.105-.248 2.83-.526.276-.74.674-1.348 1.278-1.952.604-.604 1.212-1.002 1.278-1.952-.725-.278-1.6-.468-2.83-.526-1.28-.059-1.687-.073-4.907-.073zM12 6.865a5.135 5.135 0 1 0 0 10.27A5.135 5.135 0 0 0 12 6.865zM12 8.895a3.105 3.105 0 1 1 0 6.21 3.105 3.105 0 0 1 0-6.21z" />
-                        </svg>
-                    </a>
-                    <a href="#" class="text-white hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M19 0H5a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V5a5 5 0 0 0-5-5zm-3 7h-2c-1.087 0-1.85.602-1.85 2.056V11h3l-.48 3H12v8h-3v-8H7V11h2.02v-1.487c0-1.876 1.13-2.915 3.17-2.915h3.81V7z" />
-                        </svg>
-                    </a>
-                </div>
+<footer class="bg-primary-blue text-white py-12">
+    <div
+        class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-start gap-8 text-center md:text-left">
+        <div class="md:w-1/3">
+            <h2 class="text-3xl md:text-5xl font-bold mb-4">GoDelivery</h2>
+            <p class="text-gray-300">Your most reliable partner in logistics and delivery services, dedicated to
+                providing top-notch service with a smile.</p>
+            <div class="mt-6 flex justify-center md:justify-start space-x-4">
+                <a href="#" class="text-white hover:text-gray-300 transition-colors"><i
+                        class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-white hover:text-gray-300 transition-colors"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-white hover:text-gray-300 transition-colors"><i
+                        class="fab fa-instagram"></i></a>
             </div>
-            <div class="hidden md:block">
-                <!-- Placeholder for the image -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-48 w-48 text-white opacity-25" viewBox="0 0 24 24"
-                    fill="currentColor">
-                    <path
-                        d="M4 3h16a2 2 0 012 2v14a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2zM4 5v14h16V5H4zm2 1.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM18 17H6l4-4 4 4 4-4v4z" />
-                </svg>
-            </div>
+        </div>
+        <div class="md:w-1/3 text-sm text-gray-300">
+            <h3 class="font-bold text-lg mb-2">Quick Links</h3>
+            <ul class="space-y-1">
+                <li><a href="#" class="hover:text-primary-orange transition-colors">Home</a></li>
+                <li><a href="#services" class="hover:text-primary-orange transition-colors">Services</a></li>
+                <li><a href="#about-us" class="hover:text-primary-orange transition-colors">About Us</a></li>
+                <li><a href="#our-impact" class="hover:text-primary-orange transition-colors">Our Impact</a></li>
+                <li><a href="#faq" class="hover:text-primary-orange transition-colors">FAQ</a></li>
+                <li><a href="#" class="hover:text-primary-orange transition-colors">Careers</a></li>
+            </ul>
+        </div>
+        <div class="md:w-1/3 text-sm text-gray-300">
+            <h3 class="font-bold text-lg mb-2">Contact Us</h3>
+            <ul class="space-y-1">
+                <li><i class="fas fa-phone-alt mr-2"></i> +1 234 567 8900</li>
+                <li><i class="fas fa-envelope mr-2"></i> info@godelivery.com</li>
+                <li><i class="fas fa-map-marker-alt mr-2"></i> 123 Delivery St, Suite 400, City, Country</li>
+            </ul>
         </div>
     </div>
 </footer>

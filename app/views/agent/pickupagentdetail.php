@@ -2,59 +2,59 @@
 $pickup = $data['pickupagent'];
 ?>
 <style>
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f3f4f6;
-    }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
 
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        border-radius: 9999px;
-        text-align: center;
-    }
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    text-align: center;
+}
 
-    .status-active {
-        background-color: #d1fae5;
-        color: #065f46;
-    }
+.status-active {
+    background-color: #d1fae5;
+    color: #065f46;
+}
 
-    .status-inactive {
-        background-color: #fee2e2;
-        color: #991b1b;
-    }
+.status-inactive {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
 
-    .modal {
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: none;
-        justify-content: center;
-        align-items: center;
-    }
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
 
-    .modal-content {
-        background-color: #fff;
-        padding: 2rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        max-width: 400px;
-        text-align: center;
-    }
+.modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    text-align: center;
+}
 
-    #flashMessage {
-        transition: all 0.5s ease;
-    }
+#flashMessage {
+    transition: all 0.5s ease;
+}
 
-    #flashMessage.hide {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
+#flashMessage.hide {
+    opacity: 0;
+    transform: translateY(-20px);
+}
 </style>
 
 
@@ -93,7 +93,7 @@ $pickup = $data['pickupagent'];
                     <div class="border-t my-1"></div>
 
                     <!-- Logout -->
-                    <a href="<?= URLROOT; ?>/agent/logout"
+                    <a href="<?= URLROOT; ?>/agentcontroller/logout"
                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                         Logout
                     </a>
@@ -111,18 +111,18 @@ $pickup = $data['pickupagent'];
             $flash = $_SESSION['flash_message'];
             unset($_SESSION['flash_message']);
         ?>
-            <div id="flashMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 
+        <div id="flashMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 
             px-6 py-3 rounded shadow-md text-white font-medium 
             <?= $flash['type'] === 'success' ? 'bg-green-500' : 'bg-red-500' ?>">
-                <?= htmlspecialchars($flash['message']) ?>
-            </div>
+            <?= htmlspecialchars($flash['message']) ?>
+        </div>
 
-            <script>
-                setTimeout(() => {
-                    const flash = document.getElementById('flashMessage');
-                    if (flash) flash.style.display = 'none';
-                }, 4000); // Hide after 4 seconds
-            </script>
+        <script>
+        setTimeout(() => {
+            const flash = document.getElementById('flashMessage');
+            if (flash) flash.style.display = 'none';
+        }, 4000); // Hide after 4 seconds
+        </script>
         <?php endif; ?>
 
 
@@ -252,23 +252,23 @@ $pickup = $data['pickupagent'];
 
     <!-- Confirmation Modal -->
     <script>
-        const activateButton = document.getElementById('activateButton');
-        const statusElement = document.getElementById('status');
-        // flash.classList.add('hide');
+    const activateButton = document.getElementById('activateButton');
+    const statusElement = document.getElementById('status');
+    // flash.classList.add('hide');
 
 
-        activateButton.addEventListener('click', () => {
-            let newStatus = statusElement.textContent.trim() === 'Active' ? 'Inactive' : 'Active';
-            statusElement.textContent = newStatus;
+    activateButton.addEventListener('click', () => {
+        let newStatus = statusElement.textContent.trim() === 'Active' ? 'Inactive' : 'Active';
+        statusElement.textContent = newStatus;
 
-            statusElement.classList.toggle('status-active', newStatus === 'Active');
-            statusElement.classList.toggle('status-inactive', newStatus === 'Inactive');
+        statusElement.classList.toggle('status-active', newStatus === 'Active');
+        statusElement.classList.toggle('status-inactive', newStatus === 'Inactive');
 
-            // Redirect immediately with access_code + new status
-            window.location.href =
-                "<?php echo URLROOT; ?>/agentcontroller/updatestatuspickupagent?access_code=<?= $pickup['access_code'] ?>&status=" +
-                newStatus;
-        });
+        // Redirect immediately with access_code + new status
+        window.location.href =
+            "<?php echo URLROOT; ?>/agentcontroller/updatestatuspickupagent?access_code=<?= $pickup['access_code'] ?>&status=" +
+            newStatus;
+    });
     </script>
 
 

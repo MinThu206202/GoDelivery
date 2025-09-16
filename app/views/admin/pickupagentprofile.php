@@ -96,16 +96,19 @@ body {
 
                        <!-- Action Buttons beside name -->
                        <div class="flex space-x-3">
+                           <?php if ($pickupagent['status_name'] === 'Active'): ?>
                            <a href="<?= URLROOT; ?>/admincontroller/rejectpickupagent?id=<?= urlencode($pickupagent['id']) ?>"
                                class="px-6 py-2 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition-colors">
-                               Reject
+                               Deactivate Agent
                            </a>
-
+                           <?php else: ?>
                            <a href="<?= URLROOT; ?>/admincontroller/acceptpickupagent?id=<?= urlencode($pickupagent['id']) ?>"
                                class="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition-colors">
-                               Accept
+                               Activate Agent
                            </a>
+                           <?php endif; ?>
                        </div>
+
 
                    </div>
 
@@ -125,8 +128,16 @@ body {
                        </div>
                        <div>
                            <p class="text-sm font-semibold text-gray-600">Status</p>
+                           <?php
+                            // Set colors based on status
+                            $statusClass = $pickupagent['status_name'] === 'Active'
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-red-100 text-red-800';
+                            ?>
                            <span
-                               class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"><?= htmlspecialchars($pickupagent['status_name']) ?></span>
+                               class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full <?= $statusClass ?>">
+                               <?= htmlspecialchars($pickupagent['status_name']) ?>
+                           </span>
                        </div>
                        <div>
                            <p class="text-sm font-semibold text-gray-600">

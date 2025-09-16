@@ -63,7 +63,7 @@ body {
                 <div class="border-t my-1"></div>
 
                 <!-- Logout -->
-                <a href="<?= URLROOT; ?>/agent/logout"
+                <a href="<?= URLROOT; ?>/agentcontroller/logout"
                     class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                     Logout
                 </a>
@@ -79,40 +79,41 @@ body {
     <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
         <div class="max-w-6xl mx-auto bg-white p-8 rounded-xl shadow-md">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Available Pickup Requests</h2>
-            <!-- Adjusted max-height and overflow for scrollability -->
-            <div class="overflow-x-auto">
+
+            <!-- Scrollable Table Container -->
+            <div class="overflow-x-auto max-h-[500px] border rounded-lg shadow-inner">
                 <table class="min-w-full divide-y divide-gray-200 table-fixed">
-                    <thead class="bg-gray-50 sticky top-0">
+                    <thead class="bg-gray-50 sticky top-0 z-10">
                         <tr>
-                            <th scope="col"
+                            <th
                                 class="w-28 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
                                 Request ID
                             </th>
-                            <th scope="col"
+                            <th
                                 class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Customer Name
                             </th>
-                            <th scope="col"
+                            <th
                                 class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Pickup Location
                             </th>
-                            <th scope="col"
+                            <th
                                 class="w-24 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Contact Number
                             </th>
-                            <th scope="col"
+                            <th
                                 class="w-36 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Requested Date & Time
                             </th>
-                            <th scope="col"
+                            <th
                                 class="w-32 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Parcel Type
                             </th>
-                            <th scope="col"
+                            <th
                                 class="w-36 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Parcel Status
                             </th>
-                            <th scope="col"
+                            <th
                                 class="w-40 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
                                 Actions
                             </th>
@@ -121,7 +122,7 @@ body {
                     <tbody class="bg-white divide-y divide-gray-200">
                         <?php if (!empty($data['pickup_requests'])): ?>
                         <?php foreach ($data['pickup_requests'] as $res): ?>
-                        <tr>
+                        <tr class="hover:bg-gray-50">
                             <td class="px-4 py-2 text-sm font-medium text-gray-900">
                                 <?= htmlspecialchars($res['request_code'] ?? '') ?></td>
                             <td class="px-4 py-2 text-sm text-gray-500">
@@ -149,6 +150,7 @@ body {
                                             'rejected'                    => 'bg-red-500',
                                             'agent_checked'               => 'bg-pink-500',
                                             'awaiting_payment'            => 'bg-orange-500',
+                                            'arrived_at_office' => 'bg-blue-400',
                                             'payment_success'             => 'bg-emerald-600',
                                             'awaiting_cash'               => 'bg-amber-500',
                                             'cash_collected'              => 'bg-lime-600',
@@ -167,7 +169,7 @@ body {
                                         $status_class = $statusClasses[$status] ?? $statusClasses['default'];
                                         ?>
                                 <span
-                                    class="px-3 py-1 inline-flex text-sm font-bold rounded-full shadow-md text-white capitalize <?= $status_class ?>  whitespace-nowrap leading-tight"
+                                    class="px-3 py-1 inline-flex text-sm font-bold rounded-full shadow-md text-white capitalize <?= $status_class ?> whitespace-nowrap leading-tight"
                                     title="<?= htmlspecialchars(str_replace('_', ' ', $status)) ?>">
                                     <?= htmlspecialchars(str_replace('_', ' ', $status)) ?>
                                 </span>
@@ -194,10 +196,9 @@ body {
                     </tbody>
                 </table>
             </div>
-
-
         </div>
     </main>
+
 </div>
 
 <!-- Toast Container -->

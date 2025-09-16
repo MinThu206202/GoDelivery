@@ -214,6 +214,7 @@ class Agentcontroller extends Controller
     $trackingNumber = $user->generateTrackingNumber($agent['city_id'], $receiverAgent['city_id']);
     $arrivalTime = $user->calculateArrivalTime($route['time']);
 
+
     $totalPrice = (float)$_POST['weight'] * (float) $route['price'];
 
     $paymentStatusId = $_POST['payment'];
@@ -253,8 +254,12 @@ class Agentcontroller extends Controller
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $code = $_GET['q'];
       $tracking_code = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
+      $update_status = $this->db->columnFilterAll('view_delivery_status_history', 'tracking_code', $code);
+
       $data = [
-        'tracking_code' => $tracking_code
+        'code' => $code,
+        'tracking_code' => $tracking_code,
+        'update_status' => $update_status,
       ];
       $this->view('agent/result', $data);
     }
@@ -294,6 +299,28 @@ class Agentcontroller extends Controller
     }
   }
 
+  public function requestreject()
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $code = $_POST['tracking_code'];
+      $delivery = $this->db->columnFilter('deliveries', 'tracking_code', $code);
+
+      if ($delivery && $this->db->update('deliveries', $delivery['id'], ['delivery_status_id' => 15])) {
+        $this->db->create('agent_notifications', [
+          'from_agent_id' => $delivery['receiver_agent_id'],
+          'to_agent_id'   => $delivery['sender_agent_id'],
+          'type_id'       => 3,
+          'title'         => 'Delivery Reject!',
+          'message'       => "Your  delivery: $code is Reject.Try Again.",
+          'created_at'    => date('Y-m-d H:i:s', time())
+        ]);
+        return redirect('agent/deliveryrequest?accepted=0');
+      }
+
+      return redirect('agent/deliveryrequest?accepted=1');
+    }
+  }
+
 
   public function get_data($code)
   {
@@ -304,6 +331,64 @@ class Agentcontroller extends Controller
     $this->view('agent/update_status', $data);
   }
 
+  public function request_other_agent()
+  {
+    $id = $_GET['id'];
+    $this->db->update('deliveries', $id, ['delivery_status_id' => 6]);
+    date_default_timezone_set('Asia/Yangon');
+
+    $delivery_info = $this->db->getById('deliveries', $id);
+
+    $code = $delivery_info['tracking_code'];
+
+    date_default_timezone_set('Asia/Yangon');
+    $this->db->create('agent_notifications', [
+      'from_agent_id' => $delivery_info['sender_agent_id'],
+      'to_agent_id'   => $delivery_info['receiver_agent_id'],
+      'type_id'       => 1,
+      'title'         => "New Delivery Request",
+      'message'       => "New request received for Delivery $code",
+      'created_at'    => date('Y-m-d H:i:s')
+    ]);
+
+    header("Location: " . URLROOT . "/agentcontroller/get_data/" . urlencode($code));
+    exit();
+  }
+
+  public function cancel_delivery()
+  {
+    $id = $_GET['id'];
+    $delivery_info = $this->db->getById('deliveries', $id);
+
+    $code = $delivery_info['tracking_code'];
+    $this->db->update('deliveries', $id, ['delivery_status_id' => 4]);
+    header("Location: " . URLROOT . "/agentcontroller/get_data/" . urlencode($code));
+    exit();
+  }
+  public function start_delivery()
+  {
+    $id = $_GET['id'];
+    $this->db->update('deliveries', $id, ['delivery_status_id' => 13]);
+
+    date_default_timezone_set('Asia/Yangon');
+
+    $delivery_info = $this->db->getById('deliveries', $id);
+
+    $code = $delivery_info['tracking_code'];
+
+    date_default_timezone_set('Asia/Yangon');
+    $status_history = new Delivery_status_Model();
+    $status_history->delivery_id = $id;
+    $status_history->status_id = 13;
+    $status_history->changed_by = $delivery_info['sender_agent_id'];
+    $status_history->note = null;
+    $status_history->changed_at = date('Y-m-d H:i:s');
+
+    $status_history_chaged = $this->db->create('delivery_status_history', $status_history->toArray());
+
+    header("Location: " . URLROOT . "/agentcontroller/get_data/" . urlencode($code));
+    exit();
+  }
 
   public function edit_incomedelivery($code)
   {
@@ -381,71 +466,40 @@ class Agentcontroller extends Controller
     exit();
   }
 
-  public function show_updated_status_income()
+
+
+  public function arrived_at_office()
   {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      session_start();
-      $code   = $_POST['tracking_code'];
-      $status = $_POST['new_status'];
-      $notes  = $_POST['notes'];
-      $agent = $_SESSION['user'];
+    $id = $_GET['id'];
+    $this->db->update('deliveries', $id, ['delivery_status_id' => 14]);
+    date_default_timezone_set('Asia/Yangon');
 
-      $delivery = $this->db->columnFilter('deliveries', 'tracking_code', $code);
-      $id = $delivery['id'] ?? null;
+    $delivery_info = $this->db->getById('deliveries', $id);
 
-      $user_info = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
-      // var_dump($user_info['sender_customer_email']);
-      // die();
-      if ($status == 3) {
-        $user = new Mail();
-        $user->deliverysuccess($user_info['sender_customer_email'], $user_info['sender_customer_name'], $code, $user_info['to_township_name']);
-        $user->deliverysuccessforreceiver($user_info['receiver_customer_email'], $user_info['receiver_customer_name'], $code, $user_info['to_township_name']);
-      } elseif ($status == 5) {
-        $user = new Mail();
-        $user->deliveryreturn($user_info['sender_customer_email'], $user_info['sender_customer_name'], $code, $user_info['to_township_name'], $user_info['from_township_name']);
-      }
-
-      date_default_timezone_set('Asia/Yangon');
-
-      $status_history = new Delivery_status_Model();
-      $status_history->delivery_id = $id;
-      $status_history->status_id = $status;
-      $status_history->changed_by = $agent['id'];
-      $status_history->note = $notes;
-      $status_history->changed_at = date('Y-m-d H:i:s');
-
-      $status_history_chaged = $this->db->create('delivery_status_history', $status_history->toArray());
+    $code = $delivery_info['tracking_code'];
 
 
+    $status_history = new Delivery_status_Model();
+    $status_history->delivery_id = $id;
+    $status_history->status_id = 14;
+    $status_history->changed_by = $delivery_info['sender_agent_id'];
+    $status_history->note = null;
+    $status_history->changed_at = date('Y-m-d H:i:s');
 
-      if ($id && $this->db->update('deliveries', $id, ['delivery_status_id' => $status])) {
+    $status_history_chaged = $this->db->create('delivery_status_history', $status_history->toArray());
 
-        $statusNotifications = [
-          '3' => ['title' => 'Delivery Completed', 'message' => "Delivery $code marked as 'Delivered'. Earnings processed.", 'type' => 2],
-          '5' => ['title' => 'Return Initiated', 'message' => "Return started for voucher $code. Please check it.", 'type' => 3]
-        ];
+    date_default_timezone_set('Asia/Yangon');
+    $this->db->create('agent_notifications', [
+      'from_agent_id' => $delivery_info['receiver_agent_id'],
+      'to_agent_id'   => $delivery_info['sender_agent_id'],
+      'type_id'       => 2,
+      'title'         => "Delivery At Office",
+      'message'       => "Delivery $code marked as 'Arrived at Office'. Ready for next processing.",
+      'created_at'    => date('Y-m-d H:i:s')
+    ]);
 
-        if (isset($statusNotifications[$status])) {
-          date_default_timezone_set('Asia/Yangon');
-          $data = $statusNotifications[$status];
-          $this->db->create('agent_notifications', [
-            'from_agent_id' => $delivery['receiver_agent_id'],
-            'to_agent_id'   => $delivery['sender_agent_id'],
-            'type_id'       => $data['type'],
-            'title'         => $data['title'],
-            'message'       => $data['message'],
-            'created_at'    => date('Y-m-d H:i:s')
-          ]);
-        }
-
-        $msg = ['type' => 'success', 'text' => 'Status updated successfully!'];
-      } else {
-        $msg = ['type' => 'error', 'text' => 'Failed to update status.'];
-      }
-
-      header("Location: " . URLROOT . "/agentcontroller/edit_incomedelivery/" . urlencode($code) . "?message_type={$msg['type']}&message=" . urlencode($msg['text']));
-      exit();
-    }
+    header("Location: " . URLROOT . "/agentcontroller/edit_incomedelivery/" . urlencode($code));
+    exit();
   }
 
 
@@ -894,10 +948,29 @@ class Agentcontroller extends Controller
       $pickup_id    = $_POST['id'] ?? null;
       $pickup_code  = $_POST['pickup_code'] ?? null;
 
-      $fullinfo = $this->db->getById('pickup_requests', $pickup_id);
+      // Validation: Ensure required fields are present
+      if (empty($status)) {
+        setMessage('error', 'Please select a status.');
+        redirect('agent/edit_pickup?request_code=' . urlencode($pickup_code));
+        return;
+      }
 
-      if ($status == 2) {
-        // ✅ Accepted
+      if (empty($pickup_agent)) {
+        setMessage('error', 'Please select a pickup agent.');
+        redirect('agent/edit_pickup?request_code=' . urlencode($pickup_code));
+        return;
+      }
+
+      // Validation: Ensure pickup request exists
+      $fullinfo = $this->db->getById('pickup_requests', $pickup_id);
+      if (!$fullinfo) {
+        setMessage('error', 'Pickup request not found.');
+        redirect('agent/action');
+        return;
+      }
+
+      // Send notifications based on status
+      if ($status == 2) { // ✅ Accepted
         $title   = "Pickup Request Confirmed";
         $message = "Your pickup request #" . $fullinfo['request_code'] .
           " has been confirmed. An agent will arrive soon at " . $fullinfo['sender_address'] . ".";
@@ -909,8 +982,7 @@ class Agentcontroller extends Controller
         $noti->setTitle($title);
         $noti->setMessage($message);
         $this->db->create('agent_notifications', $noti->toArray());
-      } elseif ($status == 5) {
-        // ❌ Rejected
+      } elseif ($status == 5) { // ❌ Rejected
         $title   = "Pickup Request Rejected";
         $message = "Sorry, your pickup request #" . $fullinfo['request_code'] .
           " has been rejected. Please contact support or submit a new request.";
@@ -924,25 +996,36 @@ class Agentcontroller extends Controller
         $this->db->create('agent_notifications', $noti->toArray());
       }
 
-
+      // Notify assigned pickup agent
       $title1 = "New Pickup Assignment Confirmed";
       $message1 = "You have been assigned to pickup request #" . $fullinfo['request_code'] .
         ". Please collect the parcel from " . $fullinfo['sender_address'] . ".";
 
       $noti1 = new Notification();
       $noti1->setFromagentid($fullinfo['agent_id']);
-      $noti1->setToagentid($fullinfo['pickup_agent_id']);
+      $noti1->setToagentid($pickup_agent);
       $noti1->setTypeid(8);
       $noti1->setTitle($title1);
       $noti1->setMessage($message1);
       $this->db->create('agent_notifications', $noti1->toArray());
 
-      $result = $this->db->update('pickup_requests', $pickup_id, ['pickup_agent_id' => $pickup_agent, 'status_id' => $status]);
+      // Update pickup request
+      $result = $this->db->update('pickup_requests', $pickup_id, [
+        'pickup_agent_id' => $pickup_agent,
+        'status_id'       => $status
+      ]);
 
-      redirect('agent/action?request_code=' . $pickup_code);
+      if ($result) {
+        setMessage('success', 'Pickup request updated successfully.');
+      } else {
+        setMessage('error', 'Failed to update pickup request.');
+      }
+
+      redirect('agent/action?request_code=' . urlencode($pickup_code));
       return;
     }
   }
+
 
   public function pickupverify()
   {
@@ -965,16 +1048,35 @@ class Agentcontroller extends Controller
   public function addpayment()
   {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      session_start();
 
       try {
         // --- Get inputs ---
-        $agent_id = $_POST['agent_id'];
-        $payment_type   = $_POST['payment_type'] ?? '';
-        $payment_name   = $_POST['payment_name'] ?? '';
-        $payment_holder = $_POST['payment_holder']  ?? '';
-        $payment_number = $_POST['payment_number'] ?? '';
+        $agent_id       = $_POST['agent_id'] ?? '';
+        $payment_type   = trim($_POST['payment_type'] ?? '');
+        $payment_name   = trim($_POST['payment_name'] ?? '');
+        $payment_holder = trim($_POST['payment_holder'] ?? '');
+        $payment_number = trim($_POST['payment_number'] ?? '');
 
-        // --- Default image path (none if no upload) ---
+        // --- Validation ---
+        if (empty($payment_type)) {
+          throw new Exception("Payment type is required.");
+        }
+        if (empty($payment_name)) {
+          throw new Exception("Payment method name is required.");
+        }
+        if (empty($payment_holder)) {
+          throw new Exception("Account holder name is required.");
+        }
+        if (empty($payment_number)) {
+          throw new Exception("Payment number is required.");
+        }
+        // Optional: only digits, 8-20 characters
+        if (!preg_match('/^\d{8,20}$/', $payment_number)) {
+          throw new Exception("Payment number must be 8-20 digits.");
+        }
+
+        // --- Default image path ---
         $payment_image = null;
 
         // --- Handle file upload ---
@@ -984,25 +1086,20 @@ class Agentcontroller extends Controller
           // Upload directory
           $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/Delivery/public/uploads/";
 
-          // Ensure folder exists
-          if (!is_dir($uploadDir)) {
-            if (!mkdir($uploadDir, 0755, true)) {
-              throw new Exception("Failed to create upload folder: " . $uploadDir);
-            }
+          if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true)) {
+            throw new Exception("Failed to create upload folder.");
           }
 
-          // Check writable
           if (!is_writable($uploadDir)) {
-            throw new Exception("Upload folder is not writable: " . $uploadDir);
+            throw new Exception("Upload folder is not writable.");
           }
 
-          // Validate file size (max 5MB)
-          $maxFileSize = 5 * 1024 * 1024; // 5MB
-          if ($file['size'] > $maxFileSize) {
+          // File size max 5MB
+          if ($file['size'] > 5 * 1024 * 1024) {
             throw new Exception("File is too large. Max 5MB.");
           }
 
-          // Validate MIME type
+          // Allowed MIME types
           $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/avif'];
           $finfo = finfo_open(FILEINFO_MIME_TYPE);
           $mimeType = finfo_file($finfo, $file['tmp_name']);
@@ -1012,7 +1109,7 @@ class Agentcontroller extends Controller
             throw new Exception("Invalid file type. Only JPG, PNG, AVIF, GIF allowed.");
           }
 
-          // Sanitize and create unique filename
+          // Sanitize filename
           $originalName  = pathinfo($file['name'], PATHINFO_FILENAME);
           $extension     = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
           $sanitizedBase = preg_replace("/[^A-Za-z0-9_\-]/", '', $originalName);
@@ -1021,26 +1118,24 @@ class Agentcontroller extends Controller
 
           $targetPath = $uploadDir . $newFileName;
 
-          // Move uploaded file
           if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
             throw new Exception("Failed to move uploaded file.");
           }
 
-          // Save path relative to project
           $payment_image = 'public/uploads/' . $newFileName;
         }
 
         // --- Insert payment record into DB ---
         $payment = new paymentModel();
         $payment->create_by_agent_id = $agent_id;
-        $payment->payment_type_id = $payment_type;
-        $payment->method_name = $payment_name;
-        $payment->method_image = $payment_image;
-        $payment->method_number = $payment_number;
-        $payment->account_holder = $payment_holder;
+        $payment->payment_type_id   = $payment_type;
+        $payment->method_name       = $payment_name;
+        $payment->method_image      = $payment_image;
+        $payment->method_number     = $payment_number;
+        $payment->account_holder    = $payment_holder;
+
         $this->db->create('payment_methods', $payment->toArray());
 
-        session_start();
         $_SESSION['flash_message'] = [
           'type'    => 'success',
           'message' => 'Payment added successfully!'
@@ -1048,10 +1143,15 @@ class Agentcontroller extends Controller
 
         redirect('agent/paymenttype');
       } catch (Exception $e) {
-        die("Error: " . $e->getMessage());
+        $_SESSION['flash_message'] = [
+          'type' => 'error',
+          'message' => $e->getMessage()
+        ];
+        redirect('agent/paymenttype'); // redirect back to the form
       }
     }
   }
+
 
   public function confirmpayment()
   {
@@ -1083,6 +1183,38 @@ class Agentcontroller extends Controller
     redirect('agent/paymentlist');
   }
 
+
+  public function confirmDeliveryPayment()
+  {
+    $code = $_GET['tracking_code'];
+    $id = $_GET['id'];
+    $status = $_GET['status'];
+    if ($status == 'accepted') {
+      $status_id = 12;
+      $message = "Payment with Request Code $code has been accepted successfully.";
+      $type = "success";
+    } else {
+      $status_id = 16;
+      $message = "Payment with Request Code $code has been rejected.";
+      $type = "error";
+    }
+
+    $code_id = $this->db->columnFilter('deliveries', 'tracking_code', $code);
+
+    // Update database
+    $result = $this->db->update('deliveries', $code_id['id'], ['delivery_status_id' => $status_id]);
+
+    // Set flash message in session
+    session_start();
+    $_SESSION['flash_message'] = [
+      'message' => $message,
+      'type' => $type
+    ];
+
+    // Redirect back to payment list
+    redirect('agent/paymentlist');
+  }
+
   public function create_voucher_pickup()
   {
     require_once APPROOT . '/helpers/Voucher_helper.php';
@@ -1090,11 +1222,14 @@ class Agentcontroller extends Controller
     $request_code = $_GET['request_code'];
     $fullinfo = $this->db->columnFilter('pickup_requests', 'request_code', $request_code);
 
+    $sender_full_info = $this->db->getById('users', $fullinfo['sender_id']);
+
 
     $helper = new Voucher_helper();
     $tracking_code = $helper->generateTrackingNumber($fullinfo['sender_city_id'], $fullinfo['receiver_city_id']);
 
     $route = $this->db->checkroute('route', $fullinfo['sender_township_id'], $fullinfo['receiver_township_id']);
+
     $arrivalTime = $helper->calculateArrivalTime($route['time']);
 
     $user = new UserModel();
@@ -1105,14 +1240,27 @@ class Agentcontroller extends Controller
     $user->township_id = $fullinfo['receiver_township_id'];
     $user->city_id = $fullinfo['receiver_city_id'];
     $user->role_id = 3;
+    $user->address = $fullinfo['receiver_address'];
     $result = $this->db->create('users', $user->toArray());
+
+    $user1 = new UserModel();
+    $user1->name = $sender_full_info['name'];
+    $user1->phone = $sender_full_info['phone'];
+    $user1->email = $sender_full_info['email'];
+    $user1->region_id = $fullinfo['sender_region_id'];
+    $user1->township_id = $fullinfo['sender_township_id'];
+    $user1->city_id = $fullinfo['sender_city_id'];
+    $user1->role_id = 3;
+    $user1->address = $fullinfo['sender_address'];
+    $result1 = $this->db->create('users', $user1->toArray());
+
 
     $checkadmin = $this->db->checkadmin('users', 'township_id', $fullinfo['receiver_township_id']);
 
     $deli = new Delivery();
     $deli->setSenderagentid($fullinfo['agent_id']);
     $deli->setReceiveragentid($checkadmin['id']);
-    $deli->setSendCustomerid($fullinfo['sender_id']);
+    $deli->setSendCustomerid($result1);
     $deli->setReceiveCustomerid($result);
     $deli->setWeight($fullinfo['weight']);
     $deli->setAmount($fullinfo['amount']);
@@ -1134,6 +1282,7 @@ class Agentcontroller extends Controller
     $deli->setPiececount($fullinfo['quantity']);
     $deliresult = $this->db->create('deliveries', $deli->toArray());
 
+
     $this->db->update('pickup_requests', $fullinfo['id'], ['status_id' => 15]);
     redirect('agent/action?request_code=' . $fullinfo['request_code']);
     return;
@@ -1142,14 +1291,42 @@ class Agentcontroller extends Controller
   public function outofdelivery()
   {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      $agent = $_POST['delivery_agent'];
-      $code = $_POST['code'];
+      $agent = $_POST['delivery_agent'] ?? null;
+      $code  = $_POST['tracking_code'] ?? null;
+      $id = $_POST['id'];
 
-      $result = $this->db->update('deliveries', $code, ['pickupagent_id' => $agent, 'delivery_status_id' => 8]);
+      // Validation: ensure an agent is selected
+      if (empty($agent)) {
+        setMessage('error', 'Please select a delivery agent.');
+        redirect('agent/outfordeliveryaction?delivery_code=' . urlencode($code));
+        return;
+      }
+
+      // Validation: ensure delivery code exists
+      $delivery = $this->db->columnFilter('deliveries', 'tracking_code', $code);
+      if (!$delivery) {
+        setMessage('error', 'Invalid delivery code.');
+        redirect('agent/outfordelivery');
+        return;
+      }
+
+      // Update delivery record
+      $result = $this->db->update('deliveries', $id, [
+        'pickupagent_id'     => $agent,
+        'delivery_status_id' => 8
+      ]);
+
+      if ($result) {
+        setMessage('success', 'Delivery assigned successfully.');
+      } else {
+        setMessage('error', 'Failed to assign delivery. Please try again.');
+      }
+
       redirect('agent/outfordelivery');
       return;
     }
   }
+
 
   public function logout()
   {
@@ -1164,5 +1341,106 @@ class Agentcontroller extends Controller
 
     $this->view('pages/login');
     exit();
+  }
+
+  public function deletepayment()
+  {
+    $id = $_GET['id'];
+    $this->db->delete('payment_methods', $id);
+    redirect('agent/paymenttype');
+    return;
+  }
+
+  public function editpayment()
+  {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $id = intval($_GET['id'] ?? 0);
+      if ($id <= 0) throw new Exception("Invalid Payment ID.");
+
+      $payment_name   = trim($_POST['payment_name']);
+      $payment_number = trim($_POST['payment_number']);
+      $payment_holder = trim($_POST['payment_holder']);
+      $payment_image  = null;
+
+      $errors = [];
+
+      if (empty($payment_name)) $errors[] = "Payment Name is required.";
+      if (empty($payment_number) || !preg_match('/^[0-9]+$/', $payment_number)) $errors[] = "Payment Number must be numeric.";
+      if (empty($payment_holder)) $errors[] = "Payment Holder is required.";
+
+      if (!empty($errors)) {
+        if (session_status() == PHP_SESSION_NONE) session_start();
+        $_SESSION['flash_message'] = ['type' => 'error', 'message' => implode(" ", $errors)];
+        redirect('agent/paymenttype');
+        exit;
+      }
+
+      // --- Handle file upload ---
+      if (isset($_FILES['payment_image']) && $_FILES['payment_image']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $file = $_FILES['payment_image'];
+        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/Delivery/public/uploads/";
+        if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true)) {
+          throw new Exception("Failed to create upload folder.");
+        }
+        if (!is_writable($uploadDir)) throw new Exception("Upload folder is not writable.");
+        if ($file['size'] > 5 * 1024 * 1024) throw new Exception("File is too large. Max 5MB.");
+
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/avif'];
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+
+        $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'avif'];
+        if (!in_array($mimeType, $allowedMimeTypes) || !in_array($extension, $allowedExtensions)) {
+          throw new Exception("Invalid file type. Only JPG, PNG, GIF, AVIF allowed.");
+        }
+
+        $sanitizedBase = preg_replace("/[^A-Za-z0-9_\-]/", '', pathinfo($file['name'], PATHINFO_FILENAME));
+        $sanitizedBase = substr($sanitizedBase, 0, 50);
+        $newFileName = uniqid('payment_', true) . '_' . $sanitizedBase . '.' . $extension;
+        $targetPath = $uploadDir . $newFileName;
+
+        if (!move_uploaded_file($file['tmp_name'], $targetPath)) throw new Exception("Failed to move uploaded file.");
+        $payment_image = 'public/uploads/' . $newFileName;
+      }
+
+      // --- Update DB ---
+      $dataToUpdate = [
+        'method_name' => $payment_name,
+        'method_number' => $payment_number,
+        'account_holder' => $payment_holder
+      ];
+      if ($payment_image) $dataToUpdate['method_image'] = $payment_image;
+
+      $this->db->update('payment_methods', $id, $dataToUpdate);
+
+      if (session_status() == PHP_SESSION_NONE) session_start();
+      $_SESSION['flash_message'] = ['type' => 'success', 'message' => 'Payment edited successfully!'];
+
+      redirect('agent/paymenttype');
+    }
+  }
+
+  public function return_page()
+  {
+    $id = $_GET['id'];
+    $fullinfo = $this->db->getById('deliveries', $id);
+    $code = $fullinfo['tracking_code'];
+    date_default_timezone_set('Asia/Yangon');
+    if ($this->db->update('deliveries', $id, ['delivery_status_id' => 17, 'sender_agent_id' => $fullinfo['receiver_agent_id'], 'receiver_agent_id' => $fullinfo['sender_agent_id']])) {
+      $this->db->create('agent_notifications', [
+        'from_agent_id' => $fullinfo['receiver_agent_id'],
+        'to_agent_id'   => $fullinfo['sender_agent_id'],
+        'type_id'       => 3,
+        'title'   => 'Delivery Returned!',
+        'message' => "Your delivery with tracking code $code has been returned. Please proceed to pick it up.",
+
+        'created_at'    => date('Y-m-d H:i:s', time())
+      ]);
+
+      header("Location: " . URLROOT . "/agentcontroller/edit_incomedelivery/" . urlencode($fullinfo['tracking_code']));
+      exit();
+    }
   }
 }

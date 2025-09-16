@@ -118,7 +118,7 @@ body {
                 <div class="border-t my-1"></div>
 
                 <!-- Logout -->
-                <a href="<?= URLROOT; ?>/agent/logout"
+                <a href="<?= URLROOT; ?>/agentcontroller/logout"
                     class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                     Logout
                 </a>
@@ -352,7 +352,7 @@ const deliveryTypeHandler = () => {
     const type = $('deliveryType').value;
     const importantNote = $('importantNoteContainer');
     const agentLocation = document.querySelector(
-    '.voucher-container .grid.grid-cols-1.md\\:grid-cols-2.gap-6.mb-8');
+        '.voucher-container .grid.grid-cols-1.md\\:grid-cols-2.gap-6.mb-8');
 
     importantNote.classList.toggle('hidden', type !== '4'); // Important
     agentLocation.classList.toggle('hidden', type === '3'); // In-City

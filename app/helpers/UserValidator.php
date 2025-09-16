@@ -74,7 +74,7 @@ class UserValidator
 
         if (empty($phone)) {
             $this->addError('phone-err', 'Phone number can not be empty!');
-        } elseif (!preg_match('/^(097|098|096|092)\d{5,6}$/', $phone)) {
+        } elseif (!preg_match('/^(097|098|096|092|094)\d{6,13}$/', $phone)) {
             $this->addError('phone-err', 'Phone number must start with 097, 098, 096, or 092 and be 8-9 digits long.');
         }
     }

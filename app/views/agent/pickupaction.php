@@ -76,7 +76,7 @@ body {
                 <div x-show="open" @click.away="open = false" x-transition
                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
                     <!-- Profile -->
-                    <a href="<?= URLROOT; ?>/agent/profile"
+                    <a href="<?= URLROOT; ?>/agentcontroller/profile"
                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                         Profile
                     </a>
@@ -504,6 +504,8 @@ body {
                     <!-- Editable Fields: Update Status & Pickup Agent -->
                     <div class="space-y-6 pt-6 border-t border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-700 border-b pb-2">Update Request</h3>
+                        <?php require APPROOT . '/views/components/auth_message.php'; ?>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                             <!-- Update Status -->
                             <div class="space-y-4">
@@ -561,22 +563,6 @@ body {
                         </div>
                     </div>
 
-
-
-                    <!-- Notes field -->
-                    <div class="space-y-4 pt-6 border-t border-gray-200">
-                        <label for="note" class="flex items-center text-sm font-medium text-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-gray-500"
-                                viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 2h2v4H6V6zm5 0h2v4h-2V6z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            Notes
-                        </label>
-                        <textarea id="note" name="note" rows="4"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
-                    </div>
                     <?php endif; ?>
 
                     <!-- Action Buttons -->

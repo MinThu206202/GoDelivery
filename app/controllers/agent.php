@@ -30,7 +30,7 @@ class Agent extends Controller
 
     public function incoming()
     {
-        $status = ['Delivered', 'In Transit', 'Cancelled', 'Returned'];
+        $status = ['Delivered', 'In Transit', 'Cancelled', 'Returned', 'On the Way', 'Delivery at Office', 'Return Back'];
         $delivery = $this->db->getByDeliveryIdAndStatuses('view_deliveries_detailed',  $this->agent['id'], $status);
         // $delivery = $this->db->columnFilterAll('view_deliveries_detailed', 'receiver_agent_id', $this->agent['id']);
 
@@ -51,7 +51,11 @@ class Agent extends Controller
 
     public function profile()
     {
-        $this->view('agent/profile');
+        $fullinfo = $this->db->getById('user_full_info', $this->agent['id']);
+        $data = [
+            'fullinfo' => $fullinfo,
+        ];
+        $this->view('agent/profile', $data);
     }
 
 
@@ -231,10 +235,9 @@ class Agent extends Controller
         // Filter only where payment_method is not null/empty
         $agentId = $this->agent['id'];
 
-
         $payment = array_filter($allPayments, function ($row) use ($agentId) {
-            $method = $row['payment_method'] ?? '';
-            return !empty($method) && $row['agent_id'] == $agentId;
+            // Only include rows where agent matches and status_id is 6, 7, or 14
+            return $row['agent_id'] == $agentId && in_array($row['status_id'] ?? null, [6, 7, 13, 14]);
         });
 
         $alldeliverypayment = $this->db->readAll('payment_history_view');
@@ -269,25 +272,29 @@ class Agent extends Controller
     {
         $allDeliveries = $this->db->readAll('view_deliveries_detailed');
 
-        $deliveriesOutForDelivery = array_filter($allDeliveries, function ($delivery) {
-            return $delivery['delivery_status_id'] == 3 || $delivery['delivery_status_id'] == 8
+        $statusesToShow = [3, 8, 9, 10, 11, 12, 14];
+
+        $deliveriesOutForDelivery = array_filter($allDeliveries, function ($delivery) use ($statusesToShow) {
+            return in_array($delivery['delivery_status_id'], $statusesToShow)
                 && $delivery['receiver_agent_id'] == $this->agent['id'];
         });
+
         $data = [
             'deliveries' => $deliveriesOutForDelivery,
         ];
+
         $this->view('agent/out_for_delivery', $data);
     }
 
     public function outfordeliveryaction()
     {
-        require_once APPROOT . '/helpers/Voucher_helper.php';
 
         $request_code = $_GET['delivery_code'];
         $allrequestdata = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $request_code);
         $availablepickupagent = $this->db->columnFilterAll('users', 'created_by_agent', $this->agent['id']);
-        // $checklocation = $this->db->columnFilter('view_available_locations', 'township_name', $allrequestdata['receiver_township']);
-        // $checkroute = $this->db->checkroutename('route_full_info', $allrequestdata['sender_township'], $allrequestdata['receiver_township']);
+        $availablepickupagent = array_filter($availablepickupagent, function ($agent) {
+            return isset($agent['status_id']) && $agent['status_id'] === 1;
+        });
 
         $data = [
             'pickup' => $allrequestdata,

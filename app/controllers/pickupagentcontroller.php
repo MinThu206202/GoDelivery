@@ -11,6 +11,7 @@ class pickupagentcontroller extends Controller
         $this->db = new Database();
         $this->model('notification');
         $this->model('paymenthistoryModel');
+        $this->model('notification');
         $this->pickup_agent = $_SESSION['user'];
     }
 
@@ -39,8 +40,10 @@ class pickupagentcontroller extends Controller
     public function pickupagentprofile()
     {
         $profile = $this->db->getById('user_full_info', $this->pickup_agent['id']);
+        $allpickupdata = $this->db->columnFilterAll('pickup_requests_view', 'pickup_agent_id', $this->pickup_agent['id']);
         $data = [
             'profile' => $profile,
+            'allpickupdata' => $allpickupdata,
         ];
         $this->view('pickupagent/agentpickupprofile', $data);
     }
@@ -240,22 +243,60 @@ class pickupagentcontroller extends Controller
             return;
         }
 
-        $delivery = $this->db->getById('deliveries', $id);
+        $delivery = $this->db->getById('view_deliveries_detailed', $id);
 
         if ($delivery) {
             // Map payment status to delivery status
             $statusMap = [
-                1 => 3, // e.g., prepaid
-                2 => 10  // e.g., COD
+                1 => 3,  // prepaid → delivered
+                2 => 10  // COD → some other status
             ];
 
+            date_default_timezone_set('Asia/Yangon');
+
+            // ✅ Only send email if delivery status will be 3
+            if (isset($statusMap[$delivery['payment_status_id']]) && $statusMap[$delivery['payment_status_id']] == 3) {
+                $this->db->create(
+                    'agent_notifications',
+                    [
+                        'from_agent_id' => $delivery['receiver_agent_id'],
+                        'to_agent_id'   => $delivery['sender_agent_id'],
+                        'type_id'       => 2,
+                        'title'         => 'Delivery Successful!',
+                        'message'       => "Your delivery with tracking code $request_code has been successfully delivered to the customer.",
+                        'created_at'    => date('Y-m-d H:i:s')
+                    ]
+                );
+
+                // Send mail only when status = 3
+                (new Mail)->deliverysuccess(
+                    $delivery['sender_customer_email'],
+                    $delivery['sender_customer_name'],
+                    $delivery['tracking_code'],
+                    $delivery['to_township_name']
+                );
+
+                (new Mail)->deliverysuccessforreceiver(
+                    $delivery['receiver_customer_email'],
+                    $delivery['receiver_customer_name'],
+                    $delivery['tracking_code'],
+                    $delivery['to_township_name']
+                );
+            }
+
+            // ✅ Always update delivery status (regardless of mail)
             if (isset($statusMap[$delivery['payment_status_id']])) {
-                $this->db->update('deliveries', $id, ['delivery_status_id' => $statusMap[$delivery['payment_status_id']]]);
+                $this->db->update(
+                    'deliveries',
+                    $id,
+                    ['delivery_status_id' => $statusMap[$delivery['payment_status_id']]]
+                );
             }
         }
 
         redirect('pickupagentcontroller/outofdeliverydetail?request_code=' . $request_code);
     }
+
 
 
     public function outofdeliveryreturn()
@@ -413,6 +454,51 @@ class pickupagentcontroller extends Controller
         }
         $redult = $this->db->update('users', $id, ['name' => $name, 'profile_image' => $profile_image]);
         redirect('pickupagentcontroller/pickupagentprofile');
+        return;
+    }
+
+    public function arrived_at_office()
+    {
+        $id = $_GET['id'];
+        $request_code = $_GET['request_code'] ?? null;
+        $this->db->update('pickup_requests', $id, ['status_id' => 18]);
+        redirect('pickupagentcontroller/pickupdetail?request_code=' . $request_code);
+        return;
+    }
+
+    public function completedelivery()
+    {
+        $id = $_GET['id'];
+        $request_code = $_GET['request_code'];
+        $delivery = $this->db->getById('view_deliveries_detailed', $id);
+        $this->db->create(
+            'agent_notifications',
+            [
+                'from_agent_id' => $delivery['receiver_agent_id'],
+                'to_agent_id'   => $delivery['sender_agent_id'],
+                'type_id'       => 2,
+                'title'         => 'Delivery Successful!',
+                'message'       => "Your delivery with tracking code $request_code has been successfully delivered to the customer.",
+                'created_at'    => date('Y-m-d H:i:s')
+            ]
+        );
+
+        // Send mail only when status = 3
+        (new Mail)->deliverysuccess(
+            $delivery['sender_customer_email'],
+            $delivery['sender_customer_name'],
+            $delivery['tracking_code'],
+            $delivery['to_township_name']
+        );
+
+        (new Mail)->deliverysuccessforreceiver(
+            $delivery['receiver_customer_email'],
+            $delivery['receiver_customer_name'],
+            $delivery['tracking_code'],
+            $delivery['to_township_name']
+        );
+        $this->db->update('deliveries', $id, ['delivery_status_id' => 3]);
+        redirect('pickupagentcontroller/outofdeliverydetail?request_code=' . $request_code);
         return;
     }
 }

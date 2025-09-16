@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once APPROOT . '/views/inc/sidebar.php';
 
 $name = isset($_SESSION['user']) ? $_SESSION['user'] : ['name' => 'Admin', 'id' => 0];
@@ -37,7 +38,7 @@ body {
         </div>
         <div class="flex items-center space-x-2">
             <i class="fas fa-user-circle text-2xl text-gray-600"></i>
-            <span class="hidden md:inline-block font-medium">Min Thu</span>
+            <span class="hidden md:inline-block font-medium"><?= htmlspecialchars($name['name']) ?></span>
         </div>
     </header>
 
@@ -47,6 +48,7 @@ body {
         <form id="placeForm" action="<?= URLROOT; ?>/availablecontroller/addplace" method="POST"
             onsubmit="return validateForm(event)">
             <div>
+                <?php require APPROOT . '/views/components/auth_message.php'; ?>
                 <label for="region" class="block text-gray-700 font-medium mb-1">Region</label>
                 <select id="region" name="region"
                     class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">

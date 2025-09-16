@@ -1,4 +1,17 @@
-<?php require_once APPROOT . '/views/inc/pickupagentsiderbar.php'; ?>
+<?php require_once APPROOT . '/views/inc/pickupagentsiderbar.php';
+$alldata = $data['allpickupdata'];
+// Total pickups
+$totalPickups = count($alldata);
+
+// Total delivered
+$totalDelivered = count(array_filter($alldata, function ($item) {
+    return strtolower($item['status'] ?? '') === 'collected';
+}));
+
+// Total not delivered
+$totalNotDelivered = $totalPickups - $totalDelivered;
+
+?>
 
 <!-- Main Content Wrapper: Contains the header and the dashboard content -->
 <div class="flex flex-1 flex-col">
@@ -36,18 +49,19 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     <div class="bg-white rounded-lg p-4 shadow-lg flex flex-col items-start">
                         <i class="fas fa-truck-loading text-blue-500 text-2xl mb-2"></i>
-                        <span class="text-3xl font-bold text-gray-900">12</span>
+                        <span class="text-3xl font-bold text-gray-900"><?= htmlspecialchars($totalPickups) ?></span>
                         <p class="text-sm text-gray-600">Assigned Pickups</p>
                     </div>
                     <div class="bg-white rounded-lg p-4 shadow-lg flex flex-col items-start">
                         <i class="fas fa-check-circle text-green-500 text-2xl mb-2"></i>
-                        <span class="text-3xl font-bold text-gray-900">5</span>
+                        <span class="text-3xl font-bold text-gray-900"><?= htmlspecialchars($totalDelivered) ?></span>
                         <p class="text-sm text-gray-600">Completed Today</p>
                     </div>
                     <div class="bg-white rounded-lg p-4 shadow-lg flex flex-col items-start">
                         <i class="fas fa-clock text-yellow-500 text-2xl mb-2"></i>
-                        <span class="text-3xl font-bold text-gray-900">1</span>
-                        <p class="text-sm text-gray-600">Overdue</p>
+                        <span
+                            class="text-3xl font-bold text-gray-900"><?= htmlspecialchars($totalNotDelivered) ?></span>
+                        <p class="text-sm text-gray-600">Pending</p>
                     </div>
                 </div>
 
@@ -106,6 +120,7 @@
                                                         'awaiting_payment' => 'bg-orange-500',
                                                         'payment_success' => 'bg-emerald-600',
                                                         'awaiting_cash' => 'bg-amber-500',
+                                                        'arrived_at_office' => 'bg-blue-400',
                                                         'cash_collected' => 'bg-lime-600',
                                                         'pickup_verification_pending' => 'bg-orange-500',
                                                         'pickup_verified' => 'bg-blue-500',

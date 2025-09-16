@@ -34,7 +34,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <!-- ✅ FORM TAG ADDED -->
             <form method="POST" action="<?php echo URLROOT; ?>/auth/changepassword">
-                <?php require APPROOT . '/views/components/auth_message.php'; ?>
+                <div style="color: red;">
+                    <?php require APPROOT . '/views/components/auth_mess.php'; ?>
+                </div>
 
                 <div class="input-container">
                     <input type="password" name="new_password" placeholder="Enter New Password" required>

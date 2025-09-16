@@ -60,7 +60,7 @@ $user = $_SESSION['user'];
     <!-- Sidebar -->
     <div
         class="w-64 bg-[--main-bg-color] text-white p-6 rounded-r-lg shadow-lg h-screen sticky top-0 overflow-y-auto custom-scrollbar">
-        <h1 class="text-3xl font-bold mb-1 text-blue-500 text-shadow-md">GoDelivery</h1>
+        <h1 class="text-2xl font-bold">GO <span class="text-yellow-400">|</span> DELIVERY</h1>
         <h2 class="text-xl md:text-2xl font-bold text-white mb-6 text-shadow-md">Delivery Agent</h2>
         <div class="space-y-2">
             <a href="<?php echo URLROOT; ?>/pickupagentcontroller/Dashboard" class="flex items-center py-3 px-4 rounded-lg font-semibold transition duration-200 hover:bg-gray-800 

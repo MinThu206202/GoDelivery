@@ -13,6 +13,10 @@ body {
     background-color: #f8f9fa;
 }
 
+.bg-primary-blue {
+    background-color: #1F265B;
+}
+
 .hero-bg {
     background-color: #f0f4f7;
 }
@@ -200,13 +204,14 @@ body {
 
 
 <!-- Footer -->
-<footer class="bg-[#1F265B] text-white py-12">
+<!-- Footer -->
+<footer class="bg-primary-blue text-white py-12">
     <div
-        class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
-        <div class="md:w-1/2">
+        class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-start gap-8 text-center md:text-left">
+        <div class="md:w-1/3">
             <h2 class="text-3xl md:text-5xl font-bold mb-4">GoDelivery</h2>
-            <p class="text-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua.</p>
+            <p class="text-gray-300">Your most reliable partner in logistics and delivery services, dedicated to
+                providing top-notch service with a smile.</p>
             <div class="mt-6 flex justify-center md:justify-start space-x-4">
                 <a href="#" class="text-white hover:text-gray-300 transition-colors"><i
                         class="fab fa-facebook-f"></i></a>
@@ -215,13 +220,27 @@ body {
                         class="fab fa-instagram"></i></a>
             </div>
         </div>
-        <div class="md:w-1/2">
-            <img src="https://placehold.co/400x300/E5E7EB/4B5563?text=Footer+Illustration" alt="Footer Illustration"
-                class="w-full h-auto rounded-lg">
+        <div class="md:w-1/3 text-sm text-gray-300">
+            <h3 class="font-bold text-lg mb-2">Quick Links</h3>
+            <ul class="space-y-1">
+                <li><a href="#" class="hover:text-primary-orange transition-colors">Home</a></li>
+                <li><a href="#services" class="hover:text-primary-orange transition-colors">Services</a></li>
+                <li><a href="#about-us" class="hover:text-primary-orange transition-colors">About Us</a></li>
+                <li><a href="#our-impact" class="hover:text-primary-orange transition-colors">Our Impact</a></li>
+                <li><a href="#faq" class="hover:text-primary-orange transition-colors">FAQ</a></li>
+                <li><a href="#" class="hover:text-primary-orange transition-colors">Careers</a></li>
+            </ul>
+        </div>
+        <div class="md:w-1/3 text-sm text-gray-300">
+            <h3 class="font-bold text-lg mb-2">Contact Us</h3>
+            <ul class="space-y-1">
+                <li><i class="fas fa-phone-alt mr-2"></i> +1 234 567 8900</li>
+                <li><i class="fas fa-envelope mr-2"></i> info@godelivery.com</li>
+                <li><i class="fas fa-map-marker-alt mr-2"></i> 123 Delivery St, Suite 400, City, Country</li>
+            </ul>
         </div>
     </div>
 </footer>
-
 <!-- Include jQuery and Select2 JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

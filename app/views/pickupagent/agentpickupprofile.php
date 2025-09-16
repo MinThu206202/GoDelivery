@@ -1,5 +1,17 @@
 <?php require_once APPROOT . '/views/inc/pickupagentsiderbar.php';
 $vehicle = $data['profile'];
+$alldata = $data['allpickupdata'];
+// Total pickups
+$totalPickups = count($alldata);
+
+// Total delivered
+$totalDelivered = count(array_filter($alldata, function ($item) {
+    return strtolower($item['status'] ?? '') === 'collected';
+}));
+
+// Total not delivered
+$totalNotDelivered = $totalPickups - $totalDelivered;
+
 ?>
 
 
@@ -96,41 +108,26 @@ $vehicle = $data['profile'];
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Completed Pickups Card -->
                     <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-center">
-                        <div class="text-4xl font-bold text-blue-600 mb-2">156</div>
-                        <div class="text-gray-500 text-sm">Completed Pickups</div>
+                        <div class="text-4xl font-bold text-blue-600 mb-2"><?= htmlspecialchars($totalPickups) ?></div>
+                        <div class="text-gray-500 text-sm">Total Pickups</div>
                     </div>
                     <!-- Average Rating Card -->
                     <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-center">
-                        <div class="text-4xl font-bold text-blue-600 mb-2">4.8 <i
-                                class="fas fa-star text-yellow-400 text-xl ml-1"></i></div>
-                        <div class="text-gray-500 text-sm">Average Rating</div>
+                        <div class="text-4xl font-bold text-blue-600 mb-2"><?= htmlspecialchars($totalDelivered) ?>
+                        </div>
+                        <div class="text-gray-500 text-sm">Complete Pickups</div>
                     </div>
                     <!-- On-Time Rate Card -->
                     <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-center">
-                        <div class="text-4xl font-bold text-blue-600 mb-2">98%</div>
-                        <div class="text-gray-500 text-sm">On-Time Rate</div>
+                        <div class="text-4xl font-bold text-blue-600 mb-2"><?= htmlspecialchars($totalNotDelivered) ?>
+                        </div>
+                        <div class="text-gray-500 text-sm">Assigned Pickup</div>
                     </div>
                 </div>
             </div>
 
             <!-- Badges & Achievements (optional) -->
-            <div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Badges & Achievements</h3>
-                <div class="flex flex-wrap gap-4">
-                    <span
-                        class="flex items-center bg-gray-100 text-gray-800 text-sm font-medium px-4 py-2 rounded-full shadow-sm">
-                        <i class="fas fa-medal text-yellow-500 mr-2"></i> Top Performer
-                    </span>
-                    <span
-                        class="flex items-center bg-gray-100 text-gray-800 text-sm font-medium px-4 py-2 rounded-full shadow-sm">
-                        <i class="fas fa-award text-blue-500 mr-2"></i> Star Agent
-                    </span>
-                    <span
-                        class="flex items-center bg-gray-100 text-gray-800 text-sm font-medium px-4 py-2 rounded-full shadow-sm">
-                        <i class="fas fa-gem text-purple-500 mr-2"></i> 100+ Pickups
-                    </span>
-                </div>
-            </div>
+
 
         </div>
     </main>

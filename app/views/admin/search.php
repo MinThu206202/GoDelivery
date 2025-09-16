@@ -41,7 +41,8 @@ body {
         <h2 class="text-xl font-semibold text-gray-800 hidden md:block">Delivery Detail</h2>
         <div class="ml-auto flex items-center space-x-2 mt-4 md:mt-0">
             <i class="fas fa-user-circle text-2xl text-gray-600"></i>
-            <span class="font-medium">Min Thu</span>
+            <span class="font-medium"> <?= htmlspecialchars($_SESSION['user']['name']) ?>
+            </span>
         </div>
     </header>
 

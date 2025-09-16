@@ -34,7 +34,7 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                     <div x-show="open" @click.away="open = false" x-transition
                         class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
                         <!-- Profile -->
-                        <a href="<?= URLROOT; ?>/agent/profile"
+                        <a href="<?= URLROOT; ?>/agentcontroller/profile"
                             class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                             Profile
                         </a>
@@ -116,6 +116,10 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                                     class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                     Screenshot
                                 </th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Actions
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -123,8 +127,8 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-3 text-sm font-medium max-w-[150px]">
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full
-                    <?= strtolower($res['name']) === 'banking' ? 'bg-blue-100 text-blue-800' : '' ?>
-                    <?= strtolower($res['name']) === 'online' ? 'bg-green-100 text-green-800' : '' ?>">
+                        <?= strtolower($res['name']) === 'banking' ? 'bg-blue-100 text-blue-800' : '' ?>
+                        <?= strtolower($res['name']) === 'online' ? 'bg-green-100 text-green-800' : '' ?>">
                                         <?= htmlspecialchars($res['name']) ?>
                                     </span>
                                 </td>
@@ -147,14 +151,107 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                                     <span class="text-gray-400 text-xs italic">No image</span>
                                     <?php endif; ?>
                                 </td>
+                                <!-- Actions Column -->
+                                <!-- Actions Column: Edit button opens modal -->
+                                <td class="px-6 py-3 text-sm space-x-2">
+                                    <button
+                                        class="px-3 py-1 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
+                                        onclick='openEditModal(<?= htmlspecialchars(json_encode($res), ENT_QUOTES) ?>)'>
+                                        Edit
+                                    </button>
+
+                                    <a href="<?= URLROOT ?>/agentcontroller/deletepayment?id=<?= $res['id'] ?>"
+                                        class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">Delete</a>
+                                </td>
+
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </main>
     </div>
+
+    <!-- Edit Payment Modal -->
+    <div id="editPaymentModal"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+        <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Edit Payment</h3>
+
+            <form :action="`<?= URLROOT ?>/agentcontroller/editpayment?id=${id}`" id="editPaymentForm" method="POST"
+                enctype="multipart/form-data" class="space-y-4">
+                <input type="hidden" name="agent_id" value="<?= htmlspecialchars($agent['id']) ?>">
+
+                <!-- Payment Name -->
+                <div>
+                    <label for="payment_name_edit" class="block text-sm font-medium text-gray-700">Payment Name</label>
+                    <input type="text" id="payment_name_edit" name="payment_name" required
+                        class="mt-1 block w-full border border-gray-300 rounded-lg p-2 focus:ring-[#1F265B] focus:border-[#1F265B]">
+                </div>
+
+                <!-- Payment Number -->
+                <div>
+                    <label for="payment_number_edit" class="block text-sm font-medium text-gray-700">Payment
+                        Number</label>
+                    <input type="number" id="payment_number_edit" name="payment_number"
+                        class="mt-1 block w-full border border-gray-300 rounded-lg p-2 focus:ring-[#1F265B] focus:border-[#1F265B]">
+                </div>
+
+                <!-- Payment Holder -->
+                <div>
+                    <label for="payment_holder_edit" class="block text-sm font-medium text-gray-700">Payment
+                        Holder</label>
+                    <input type="text" id="payment_holder_edit" name="payment_holder"
+                        class="mt-1 block w-full border border-gray-300 rounded-lg p-2 focus:ring-[#1F265B] focus:border-[#1F265B]">
+                </div>
+
+                <!-- Screenshot -->
+                <div>
+                    <label for="payment_image_edit" class="block text-sm font-medium text-gray-700">Payment
+                        Image</label>
+                    <input type="file" id="payment_image_edit" name="payment_image" accept="image/*"
+                        class="mt-1 block w-full border border-gray-300 rounded-lg p-2 focus:ring-[#1F265B] focus:border-[#1F265B]">
+                </div>
+
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeEditModal()"
+                        class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-[#1F265B] text-white hover:bg-[#2A346C]">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    function openEditModal(data) {
+        // Convert string to object if needed
+        if (typeof data === "string") data = JSON.parse(data);
+
+        // Show the modal
+        document.getElementById('editPaymentModal').classList.remove('hidden');
+
+        // Set form action dynamically
+        const form = document.getElementById('editPaymentForm');
+        form.action = '<?= URLROOT ?>/agentcontroller/editpayment?id=' + data.id;
+
+        // Fill the form fields with actual data
+        document.getElementById('payment_name_edit').value = data.method_name;
+        document.getElementById('payment_number_edit').value = data.method_number;
+        document.getElementById('payment_holder_edit').value = data.account_holder ?? data.method_name;
+    }
+
+    function closeEditModal() {
+        document.getElementById('editPaymentModal').classList.add('hidden');
+    }
+    </script>
+
+
 
 
     <!-- Realistic Image Modal -->
@@ -260,6 +357,7 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
         if (e.target.id === 'imageModal') closeImageModal();
     });
     </script>
+
 
 </body>
 

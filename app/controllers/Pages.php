@@ -132,6 +132,7 @@ class Pages extends Controller
         $tracking_code = $this->db->columnFilter('view_deliveries_detailed', 'tracking_code', $code);
         $update_status = $this->db->columnFilterAll('view_delivery_status_history', 'tracking_code', $code);
         $data = [
+            'code' => $code,
             'tracking_code' => $tracking_code,
             'update_status' => $update_status
         ];

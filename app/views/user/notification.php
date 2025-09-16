@@ -23,6 +23,10 @@ body {
     --section-bg-color: #f0f4f7;
 }
 
+.bg-primary-blue {
+    background-color: #1F265B;
+}
+
 .header-bg {
     background-color: var(--primary-color);
 }
@@ -121,32 +125,39 @@ body {
     </div>
 </main>
 
-<!-- Footer Section -->
-<footer class="footer-bg text-white p-8 md:p-12 mt-auto">
-    <div class="container mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-            <div class="mb-6 md:mb-0 md:w-1/2">
-                <h2 class="text-3xl font-bold mb-2">Contact Us</h2>
-                <h3 class="text-2xl font-extrabold mb-4">Fast, Affordable, And Always On Time.</h3>
-                <p class="text-sm leading-relaxed mb-4">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Egestas semper sit integer et. At
-                    aliquam tortor lectus commodo ut lectus sed fermentum. Cursus in tincidunt cursus viverra diam.
-                    Praesent feugiat dolor ipsum pharetra laoreet vulputate pellentesque sed.
-                </p>
-                <div class="flex justify-center md:justify-start items-center space-x-4">
-                    <a href="#"
-                        class="flex items-center space-x-2 bg-white text-gray-800 font-semibold py-2 px-4 rounded-full hover:bg-gray-200 transition-colors duration-200">
-                        <span>Contact Now</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                    <!-- Add your social icons here as needed -->
-                </div>
+<footer class="bg-primary-blue text-white py-12">
+    <div
+        class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-start gap-8 text-center md:text-left">
+        <div class="md:w-1/3">
+            <h2 class="text-3xl md:text-5xl font-bold mb-4">GoDelivery</h2>
+            <p class="text-gray-300">Your most reliable partner in logistics and delivery services, dedicated to
+                providing top-notch service with a smile.</p>
+            <div class="mt-6 flex justify-center md:justify-start space-x-4">
+                <a href="#" class="text-white hover:text-gray-300 transition-colors"><i
+                        class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-white hover:text-gray-300 transition-colors"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-white hover:text-gray-300 transition-colors"><i
+                        class="fab fa-instagram"></i></a>
             </div>
+        </div>
+        <div class="md:w-1/3 text-sm text-gray-300">
+            <h3 class="font-bold text-lg mb-2">Quick Links</h3>
+            <ul class="space-y-1">
+                <li><a href="#" class="hover:text-primary-orange transition-colors">Home</a></li>
+                <li><a href="#services" class="hover:text-primary-orange transition-colors">Services</a></li>
+                <li><a href="#about-us" class="hover:text-primary-orange transition-colors">About Us</a></li>
+                <li><a href="#our-impact" class="hover:text-primary-orange transition-colors">Our Impact</a></li>
+                <li><a href="#faq" class="hover:text-primary-orange transition-colors">FAQ</a></li>
+                <li><a href="#" class="hover:text-primary-orange transition-colors">Careers</a></li>
+            </ul>
+        </div>
+        <div class="md:w-1/3 text-sm text-gray-300">
+            <h3 class="font-bold text-lg mb-2">Contact Us</h3>
+            <ul class="space-y-1">
+                <li><i class="fas fa-phone-alt mr-2"></i> +1 234 567 8900</li>
+                <li><i class="fas fa-envelope mr-2"></i> info@godelivery.com</li>
+                <li><i class="fas fa-map-marker-alt mr-2"></i> 123 Delivery St, Suite 400, City, Country</li>
+            </ul>
         </div>
     </div>
 </footer>

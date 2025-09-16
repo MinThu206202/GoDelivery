@@ -59,7 +59,7 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
                     <div class="border-t my-1"></div>
 
                     <!-- Logout -->
-                    <a href="<?= URLROOT; ?>/agent/logout"
+                    <a href="<?= URLROOT; ?>/agentcontroller/logout"
                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                         Logout
                     </a>
@@ -110,7 +110,7 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
             <!-- Metric Card 3 -->
             <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-500">Total Earnings (Week)</p>
+                    <p class="text-sm text-gray-500">Total Earnings</p>
                     <p class="text-3xl font-bold text-gray-900">
                         <span><?= number_format((float)$totalAmount, 0, '.', ',') ?> MMK</span>
                     </p>
@@ -173,19 +173,29 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <?php
-                                        $statusClass = match ($delivery['delivery_status']) {
-                                            'Delivered' => 'bg-green-100 text-green-800',
+                                        $statusClass = match (trim($delivery['delivery_status'])) {
                                             'Pending' => 'bg-yellow-100 text-yellow-800',
-                                            'In Transit' => 'bg-blue-100 text-blue-800',
+                                            'Ready for Pickup' => 'bg-indigo-100 text-indigo-800',
+                                            'Delivered' => 'bg-green-100 text-green-800',
                                             'Cancelled' => 'bg-red-100 text-red-800',
-                                            'Return' => 'bg-purple-100 text-purple-800',
+                                            'Returned' => 'bg-purple-100 text-purple-800',
+                                            'Awaiting Acceptance' => 'bg-blue-100 text-blue-800',
+                                            'Rejected' => 'bg-red-200 text-red-900',
+                                            'Out for Delivery' => 'bg-blue-200 text-blue-900',
+                                            'Deliver Parcel' => 'bg-green-200 text-green-900',
+                                            'Waiting Payment' => 'bg-yellow-200 text-yellow-900',
+                                            'Receipt Submitted' => 'bg-indigo-200 text-indigo-900',
+                                            'Payment Success' => 'bg-green-300 text-green-900',
+                                            'On the Way' => 'bg-blue-300 text-blue-900',
+                                            'Delivery at Office' => 'bg-indigo-300 text-indigo-900',
                                             default => 'bg-gray-100 text-gray-800',
                                         };
                                         ?>
                                     <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
+                                        class="px-3 py-1 inline-flex text-xs font-semibold rounded-full <?= $statusClass ?>">
                                         <?= htmlspecialchars($delivery['delivery_status']) ?>
                                     </span>
+
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <a href="<?= URLROOT; ?>/agentcontroller/delivery_detail/<?= htmlspecialchars($delivery['tracking_code']) ?>"
@@ -223,9 +233,7 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Status</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
-                                    Action</th>
+
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -281,12 +289,7 @@ $totalAmount = array_sum(array_column($data['delivery'], 'amount'));
                                         <?= htmlspecialchars($request['status']) ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a href="<?= URLROOT; ?>/agentcontroller/pickup_detail/<?= htmlspecialchars($request['request_code']) ?>"
-                                        class="px-4 py-2 bg-[#1F265B] text-white rounded-lg hover:bg-[#2A346C] transition-colors duration-200">
-                                        View
-                                    </a>
-                                </td>
+
                             </tr>
                             <?php endforeach; ?>
                             <?php else: ?>

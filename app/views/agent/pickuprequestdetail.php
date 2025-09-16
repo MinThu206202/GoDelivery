@@ -27,11 +27,9 @@ $pickup = $data['pickup'];
             <h1 class="text-3xl font-semibold text-gray-800">Pickup Request Details</h1>
             <div x-data="{ open: false }" class="relative">
                 <!-- Button-like Trigger -->
-                <button
-                    @click="open = !open"
+                <button @click="open = !open"
                     class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
-                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>"
-                        alt="Agent Avatar"
+                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
                         class="w-10 h-10 rounded-full border-2 border-blue-500">
                     <div class="text-left">
                         <p class="text-lg font-medium text-gray-800">
@@ -44,10 +42,7 @@ $pickup = $data['pickup'];
                 </button>
 
                 <!-- Dropdown -->
-                <div
-                    x-show="open"
-                    @click.away="open = false"
-                    x-transition
+                <div x-show="open" @click.away="open = false" x-transition
                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
                     <!-- Profile -->
                     <a href="<?= URLROOT; ?>/agent/profile"
@@ -59,7 +54,7 @@ $pickup = $data['pickup'];
                     <div class="border-t my-1"></div>
 
                     <!-- Logout -->
-                    <a href="<?= URLROOT; ?>/agent/logout"
+                    <a href="<?= URLROOT; ?>/agentcontroller/logout"
                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                         Logout
                     </a>
@@ -95,6 +90,7 @@ $pickup = $data['pickup'];
                             'agent_checked'               => 'bg-pink-500',
                             'awaiting_payment'            => 'bg-orange-500',
                             'payment_success'             => 'bg-emerald-600',
+                            'arrived_at_office' => 'bg-blue-400',
                             'awaiting_cash'               => 'bg-amber-500',
                             'cash_collected'              => 'bg-lime-600',
                             'pickup_verification_pending' => 'bg-orange-500',

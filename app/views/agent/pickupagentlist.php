@@ -9,11 +9,9 @@
             <h1 class="text-3xl font-semibold text-gray-800">Pickup Agents</h1>
             <div x-data="{ open: false }" class="relative">
                 <!-- Button-like Trigger -->
-                <button
-                    @click="open = !open"
+                <button @click="open = !open"
                     class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
-                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>"
-                        alt="Agent Avatar"
+                    <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
                         class="w-10 h-10 rounded-full border-2 border-blue-500">
                     <div class="text-left">
                         <p class="text-lg font-medium text-gray-800">
@@ -26,10 +24,7 @@
                 </button>
 
                 <!-- Dropdown -->
-                <div
-                    x-show="open"
-                    @click.away="open = false"
-                    x-transition
+                <div x-show="open" @click.away="open = false" x-transition
                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
                     <!-- Profile -->
                     <a href="<?= URLROOT; ?>/agent/profile"
@@ -41,7 +36,7 @@
                     <div class="border-t my-1"></div>
 
                     <!-- Logout -->
-                    <a href="<?= URLROOT; ?>/agent/logout"
+                    <a href="<?= URLROOT; ?>/agentcontroller/logout"
                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                         Logout
                     </a>
@@ -92,17 +87,17 @@
                         <tbody id="agentsTableBody" class="bg-white divide-y divide-gray-200">
                             <!-- Agent Data is now directly in the HTML -->
                             <?php foreach ($data['pickupAgents'] as $res): ?>
-                                <tr data-status="Active">
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words max-w-[120px]">
-                                        <?= htmlspecialchars($res['access_code'] ?? 'N/A') ?></td>
-                                    <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
-                                        <?= htmlspecialchars($res['name']) ?></td>
-                                    <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
-                                        <?= htmlspecialchars($res['phone']) ?></td>
-                                    <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
-                                        <?= htmlspecialchars($res['vehicle_type_name']) ?></td>
-                                    <td class="px-6 py-4 text-sm">
-                                        <?php
+                            <tr data-status="Active">
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words max-w-[120px]">
+                                    <?= htmlspecialchars($res['access_code'] ?? 'N/A') ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
+                                    <?= htmlspecialchars($res['name']) ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
+                                    <?= htmlspecialchars($res['phone']) ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
+                                    <?= htmlspecialchars($res['vehicle_type_name']) ?></td>
+                                <td class="px-6 py-4 text-sm">
+                                    <?php
                                         $statusClass = '';
                                         switch (strtolower($res['status_name'])) {
                                             case 'active':
@@ -119,18 +114,18 @@
                                                 break;
                                         }
                                         ?>
-                                        <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?> break-words max-w-[120px] text-center">
-                                            <?= ucfirst(htmlspecialchars($res['status_name'])) ?>
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3 flex flex-wrap gap-2">
-                                        <a href="<?php echo URLROOT; ?>/agent/pickupagentdetail?access_code=<?= urlencode($res['access_code']) ?>"
-                                            class="text-white bg-[#1F265B] px-3 py-2 rounded hover:bg-[#2A346C] text-sm break-words text-center w-[60px]">
-                                            View
-                                        </a>
-                                    </td>
-                                </tr>
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?> break-words max-w-[120px] text-center">
+                                        <?= ucfirst(htmlspecialchars($res['status_name'])) ?>
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 flex flex-wrap gap-2">
+                                    <a href="<?php echo URLROOT; ?>/agent/pickupagentdetail?access_code=<?= urlencode($res['access_code']) ?>"
+                                        class="text-white bg-[#1F265B] px-3 py-2 rounded hover:bg-[#2A346C] text-sm break-words text-center w-[60px]">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -140,7 +135,7 @@
     </div>
 
     <script>
-        // No JavaScript is needed for rendering, as the data is now in the HTML.
+    // No JavaScript is needed for rendering, as the data is now in the HTML.
     </script>
 </body>
 

@@ -46,7 +46,6 @@ body {
                             <th class="px-4 py-3 font-medium text-white text-sm">Pickup Status</th>
                             <th class="px-4 py-3 font-medium text-white text-sm">Date</th>
                             <th class="px-4 py-3 font-medium text-white text-sm">Pickup Agent</th>
-                            <th class="px-4 py-3 font-medium text-white text-sm">View</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,13 +98,7 @@ body {
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-800">
                                 <?= htmlspecialchars($pickup['pickup_agent_name'] ?? 'N/A') ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-800">
-                                <button
-                                    onclick="window.location='<?= URLROOT; ?>/pickup/view?id=<?= htmlspecialchars($pickup['id'] ?? '') ?>';"
-                                    class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition-colors duration-200">
-                                    View
-                                </button>
-                            </td>
+
                         </tr>
                         <?php endforeach; ?>
                         <?php else: ?>

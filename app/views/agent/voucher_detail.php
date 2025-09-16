@@ -6,117 +6,117 @@ $voucher = $data['create_data'];
 <!-- Inter Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
+
+/* Styles for print */
+@media print {
     body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f3f4f6;
+        background-color: #fff;
+        padding: 0 !important;
+        /* Ensure no padding on body for print */
+        overflow: visible !important;
+        /* Allow content to flow without scrollbars */
+        height: auto !important;
+        /* Allow body to expand to content height */
+        display: block;
+        /* Override flex for print to avoid layout issues */
     }
 
-    /* Styles for print */
-    @media print {
-        body {
-            background-color: #fff;
-            padding: 0 !important;
-            /* Ensure no padding on body for print */
-            overflow: visible !important;
-            /* Allow content to flow without scrollbars */
-            height: auto !important;
-            /* Allow body to expand to content height */
-            display: block;
-            /* Override flex for print to avoid layout issues */
-        }
-
-        .no-print {
-            display: none !important;
-        }
-
-        #printable-voucher {
-            box-shadow: none !important;
-            /* Remove shadow for print */
-            border: 1px solid #ccc !important;
-            /* Add a border for print */
-            margin: 0 auto !important;
-            /* Center the voucher on the page */
-            width: 100% !important;
-            /* Ensure it takes available width within max-width */
-            max-width: 700px !important;
-            /* Increased max-width for print */
-            min-height: auto !important;
-            /* Allow height to adjust */
-            padding: 0.75rem !important;
-            /* Reduce padding for print */
-        }
-
-        /* Ensure main content area also allows full content flow */
-        main {
-            overflow-y: visible !important;
-            flex: none !important;
-            /* Remove flex-1 property */
-            height: auto !important;
-            /* Allow height to adjust */
-            padding: 0 !important;
-            /* Remove padding from main for print */
-        }
-
-        /* Adjust font sizes for print */
-        #printable-voucher h1 {
-            font-size: 2rem !important;
-            /* Smaller h1 */
-        }
-
-        #printable-voucher h2 {
-            font-size: 1.25rem !important;
-            /* Smaller h2 */
-        }
-
-        #printable-voucher label,
-        #printable-voucher input,
-        #printable-voucher textarea,
-        #printable-voucher select,
-        #printable-voucher p,
-        #printable-voucher span,
-        #printable-voucher strong,
-        #printable-voucher div:not(.grid) {
-            /* Target direct text containers */
-            font-size: 0.8rem !important;
-            /* Smaller text for all content */
-            line-height: 1.2 !important;
-            /* Tighter line spacing */
-        }
-
-        #printable-voucher .text-lg {
-            font-size: 0.9rem !important;
-            /* Adjust specific large texts */
-        }
-
-        #printable-voucher .text-sm {
-            font-size: 0.7rem !important;
-            /* Adjust specific small texts */
-        }
-
-        #printable-voucher .text-xs {
-            font-size: 0.6rem !important;
-            /* Adjust specific extra small texts */
-        }
-
-        /* Ensure form elements look clean when printed */
-        input,
-        textarea,
-        select {
-            border: none !important;
-            padding: 0 !important;
-            background-color: transparent !important;
-            box-shadow: none !important;
-            outline: none !important;
-        }
-
-        /* Ensure inputs don't take up too much space */
-        #printable-voucher input,
-        #printable-voucher textarea,
-        #printable-voucher select {
-            min-height: auto !important;
-            /* Prevent minimum height issues */
-        }
+    .no-print {
+        display: none !important;
     }
+
+    #printable-voucher {
+        box-shadow: none !important;
+        /* Remove shadow for print */
+        border: 1px solid #ccc !important;
+        /* Add a border for print */
+        margin: 0 auto !important;
+        /* Center the voucher on the page */
+        width: 100% !important;
+        /* Ensure it takes available width within max-width */
+        max-width: 700px !important;
+        /* Increased max-width for print */
+        min-height: auto !important;
+        /* Allow height to adjust */
+        padding: 0.75rem !important;
+        /* Reduce padding for print */
+    }
+
+    /* Ensure main content area also allows full content flow */
+    main {
+        overflow-y: visible !important;
+        flex: none !important;
+        /* Remove flex-1 property */
+        height: auto !important;
+        /* Allow height to adjust */
+        padding: 0 !important;
+        /* Remove padding from main for print */
+    }
+
+    /* Adjust font sizes for print */
+    #printable-voucher h1 {
+        font-size: 2rem !important;
+        /* Smaller h1 */
+    }
+
+    #printable-voucher h2 {
+        font-size: 1.25rem !important;
+        /* Smaller h2 */
+    }
+
+    #printable-voucher label,
+    #printable-voucher input,
+    #printable-voucher textarea,
+    #printable-voucher select,
+    #printable-voucher p,
+    #printable-voucher span,
+    #printable-voucher strong,
+    #printable-voucher div:not(.grid) {
+        /* Target direct text containers */
+        font-size: 0.8rem !important;
+        /* Smaller text for all content */
+        line-height: 1.2 !important;
+        /* Tighter line spacing */
+    }
+
+    #printable-voucher .text-lg {
+        font-size: 0.9rem !important;
+        /* Adjust specific large texts */
+    }
+
+    #printable-voucher .text-sm {
+        font-size: 0.7rem !important;
+        /* Adjust specific small texts */
+    }
+
+    #printable-voucher .text-xs {
+        font-size: 0.6rem !important;
+        /* Adjust specific extra small texts */
+    }
+
+    /* Ensure form elements look clean when printed */
+    input,
+    textarea,
+    select {
+        border: none !important;
+        padding: 0 !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+    /* Ensure inputs don't take up too much space */
+    #printable-voucher input,
+    #printable-voucher textarea,
+    #printable-voucher select {
+        min-height: auto !important;
+        /* Prevent minimum height issues */
+    }
+}
 </style>
 
 
@@ -127,11 +127,9 @@ $voucher = $data['create_data'];
         <h1 class="text-3xl font-semibold text-gray-800">Delivery Details</h1>
         <div x-data="{ open: false }" class="relative">
             <!-- Button-like Trigger -->
-            <button
-                @click="open = !open"
+            <button @click="open = !open"
                 class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
-                <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>"
-                    alt="Agent Avatar"
+                <img src="/Delivery/<?= htmlspecialchars($agent['profile_image']) ?>" alt="Agent Avatar"
                     class="w-10 h-10 rounded-full border-2 border-blue-500">
                 <div class="text-left">
                     <p class="text-lg font-medium text-gray-800">
@@ -144,10 +142,7 @@ $voucher = $data['create_data'];
             </button>
 
             <!-- Dropdown -->
-            <div
-                x-show="open"
-                @click.away="open = false"
-                x-transition
+            <div x-show="open" @click.away="open = false" x-transition
                 class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
                 <!-- Profile -->
                 <a href="<?= URLROOT; ?>/agent/profile"
@@ -159,7 +154,7 @@ $voucher = $data['create_data'];
                 <div class="border-t my-1"></div>
 
                 <!-- Logout -->
-                <a href="<?= URLROOT; ?>/agent/logout"
+                <a href="<?= URLROOT; ?>/agentcontroller/logout"
                     class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                     Logout
                 </a>
@@ -198,7 +193,8 @@ $voucher = $data['create_data'];
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Estimated Delivery:</p>
-                    <p class="text-lg font-semibold text-gray-900">2024-07-26 17:00</p>
+                    <p class="text-lg font-semibold text-gray-900">
+                        <?= htmlspecialchars($voucher['duration']) ?></p>
                 </div>
             </div>
 
@@ -288,13 +284,13 @@ $voucher = $data['create_data'];
 
 
 <script>
-    function printVoucher() {
-        // Get only voucher content
-        const printContent = document.getElementById('printable-voucher').innerHTML;
+function printVoucher() {
+    // Get only voucher content
+    const printContent = document.getElementById('printable-voucher').innerHTML;
 
-        // Open a new window for clean print
-        const win = window.open('', '', 'height=700,width=900');
-        win.document.write(`
+    // Open a new window for clean print
+    const win = window.open('', '', 'height=700,width=900');
+    win.document.write(`
             <html>
                 <head>
                     <title>Print Voucher</title>
@@ -311,11 +307,11 @@ $voucher = $data['create_data'];
             </html>
         `);
 
-        win.document.close();
-        win.focus();
-        win.print();
-        win.close();
-    }
+    win.document.close();
+    win.focus();
+    win.print();
+    win.close();
+}
 </script>
 
 </body>

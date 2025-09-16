@@ -4,10 +4,10 @@ ini_set('display_errors', 1);
 
 require_once APPROOT . '/views/inc/agentsidebar.php';
 
-
 ?>
 
 <body class="flex flex-col min-h-screen">
+
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col overflow-hidden">
         <!-- Header -->
@@ -33,49 +33,36 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                     <!-- Dropdown -->
                     <div x-show="open" @click.away="open = false" x-transition
                         class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
-                        <!-- Profile -->
                         <a href="<?= URLROOT; ?>/agent/profile"
-                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
-                            Profile
-                        </a>
-
-                        <!-- Divider -->
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Profile</a>
                         <div class="border-t my-1"></div>
-
-                        <!-- Logout -->
-                        <a href="<?= URLROOT; ?>/agent/logout"
-                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
-                            Logout
-                        </a>
+                        <a href="<?= URLROOT; ?>/agentcontroller/logout"
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Logout</a>
                     </div>
                 </div>
-
                 <!-- Alpine.js -->
                 <script src="//unpkg.com/alpinejs" defer></script>
-
             </div>
         </header>
 
+        <!-- Flash Message -->
         <?php if (!empty($_SESSION['flash_message'])): ?>
             <?php
             $flash = $_SESSION['flash_message'];
-            unset($_SESSION['flash_message']); // clear after showing
+            unset($_SESSION['flash_message']); // Clear after showing
             ?>
-            <div id="flashMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 
-        px-6 py-3 rounded shadow-md text-white font-medium 
-        <?= $flash['type'] === 'success' ? 'bg-green-500' : 'bg-red-500' ?>">
+            <div id="flashMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded shadow-md text-white font-medium 
+            <?= $flash['type'] === 'success' ? 'bg-green-500' : 'bg-red-500' ?>">
                 <?= htmlspecialchars($flash['message']) ?>
             </div>
         <?php endif; ?>
-
 
         <!-- Payment List Content -->
         <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
             <div class="max-w-6xl mx-auto bg-white p-8 rounded-xl shadow-md">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-semibold text-gray-800">All Payments</h2>
-                    <!-- New Button added here -->
-                    <a href="<?php echo URLROOT; ?>/agent/paymenttype"
+                    <a href="<?= URLROOT; ?>/agent/paymenttype"
                         class="text-white bg-[#1F265B] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#2A346C] transition-colors duration-200">
                         Go to Payment Types
                     </a>
@@ -88,32 +75,25 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                             <tr>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    ID
-                                </th>
+                                    ID</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Date
-                                </th>
+                                    Date</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Customer Name
-                                </th>
+                                    Customer Name</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Payment Type
-                                </th>
+                                    Payment Type</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Amount
-                                </th>
+                                    Amount</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Screenshot
-                                </th>
+                                    Screenshot</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions
-                                </th>
+                                    Actions</th>
                             </tr>
                         </thead>
                         <tbody id="paymentsTableBody" class="bg-white divide-y divide-gray-200">
@@ -121,14 +101,11 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                             <?php foreach ($data['paymentdelivery'] as $res): ?>
                                 <tr>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words max-w-[120px]">
-                                        <?= htmlspecialchars($res['tracking_code'] ?? 'N/A') ?>
-                                    </td>
+                                        <?= htmlspecialchars($res['tracking_code'] ?? 'N/A') ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
-                                        <?= (new DateTime($res['created_at']))->format('Y-m-d g:i A') ?>
-                                    </td>
+                                        <?= (new DateTime($res['created_at']))->format('Y-m-d g:i A') ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
-                                        <?= htmlspecialchars($res['receiver_customer_name']) ?>
-                                    </td>
+                                        <?= htmlspecialchars($res['receiver_customer_name']) ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500">
                                         <p class="font-semibold text-gray-900">
                                             <?= htmlspecialchars($res['payment_type_name']) ?></p>
@@ -137,38 +114,32 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                                             <?= htmlspecialchars($res['payment_method_number']) ?></p>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
-                                        $<?= htmlspecialchars($res['amount'] ?? 'N/A') ?>
-                                    </td>
+                                        $<?= htmlspecialchars($res['amount'] ?? 'N/A') ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500">
                                         <img src="/Delivery/<?= htmlspecialchars($res['receipt_image']) ?>"
                                             alt="Payment Screenshot" class="w-16 h-16 rounded-lg"
                                             onclick="openImageModal(this.src)">
                                     </td>
                                     <td class="px-4 py-3 flex gap-2">
-                                        <?php if ($res['delivery_status_name'] === 'payment_success'): ?>
+                                        <?php if ($res['delivery_status_name'] === 'Payment Success'): ?>
                                             <span class="bg-green-100 text-green-600 px-2 py-1 rounded font-semibold">Payment
                                                 Success</span>
-                                        <?php elseif ($res['delivery_status_name'] === 'payment_reject'): ?>
+                                        <?php elseif ($res['delivery_status_name'] === 'Payment Reject'): ?>
                                             <span class="bg-red-100 text-red-600 px-2 py-1 rounded font-semibold">Payment
                                                 Rejected</span>
                                         <?php endif; ?>
 
-                                        <?php if (($res['delivery_status_name'] ?? '') === 'Waiting Payment'): ?>
+                                        <?php if (($res['delivery_status_name'] ?? '') === 'Receipt Submitted'): ?>
                                             <!-- Accept Button -->
                                             <button
-                                                onclick="openConfirmationModal('<?= htmlspecialchars((string)($res['id'] ?? '')) ?>', '<?= urlencode($res['tracking_code'] ?? $res['request_code'] ?? 'N/A') ?>', 'accepted')"
-                                                class="text-white bg-green-600 px-4 py-2 rounded hover:bg-green-700 text-sm min-w-[80px]">
-                                                Accept
-                                            </button>
+                                                onclick="openConfirmationModal('<?= htmlspecialchars($res['id'] ?? '') ?>', '<?= urlencode($res['tracking_code'] ?? $res['request_code'] ?? 'N/A') ?>', 'accepted', 'paymentdelivery')"
+                                                class="text-white bg-green-600 px-4 py-2 rounded hover:bg-green-700 text-sm min-w-[80px]">Accept</button>
 
                                             <!-- Reject Button -->
                                             <button
-                                                onclick="openConfirmationModal('<?= htmlspecialchars((string)($res['id'] ?? '')) ?>', '<?= urlencode($res['tracking_code'] ?? $res['request_code'] ?? 'N/A') ?>', 'rejected')"
-                                                class="text-white bg-red-500 px-4 py-2 rounded hover:bg-red-600 text-sm min-w-[80px]">
-                                                Reject
-                                            </button>
+                                                onclick="openConfirmationModal('<?= htmlspecialchars($res['id'] ?? '') ?>', '<?= urlencode($res['tracking_code'] ?? $res['request_code'] ?? 'N/A') ?>', 'rejected', 'paymentdelivery')"
+                                                class="text-white bg-red-500 px-4 py-2 rounded hover:bg-red-600 text-sm min-w-[80px]">Reject</button>
                                         <?php endif; ?>
-
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -177,14 +148,11 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                             <?php foreach ($data['payment'] as $res): ?>
                                 <tr>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words max-w-[120px]">
-                                        <?= htmlspecialchars($res['request_code'] ?? 'N/A') ?>
-                                    </td>
+                                        <?= htmlspecialchars($res['request_code'] ?? 'N/A') ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
-                                        <?= (new DateTime($res['updated_at']))->format('Y-m-d g:i A') ?>
-                                    </td>
+                                        <?= (new DateTime($res['updated_at']))->format('Y-m-d g:i A') ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[150px]">
-                                        <?= htmlspecialchars($res['sender_name']) ?>
-                                    </td>
+                                        <?= htmlspecialchars($res['sender_name']) ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500">
                                         <p class="font-semibold text-gray-900"><?= htmlspecialchars($res['payment_type']) ?>
                                         </p>
@@ -192,8 +160,7 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                                         <p class="text-xs text-gray-400"><?= htmlspecialchars($res['method_number']) ?></p>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[120px]">
-                                        $<?= htmlspecialchars($res['amount'] ?? 'N/A') ?>
-                                    </td>
+                                        $<?= htmlspecialchars($res['amount'] ?? 'N/A') ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500">
                                         <img src="/Delivery/<?= htmlspecialchars($res['method_image']) ?>"
                                             alt="Payment Screenshot" class="w-16 h-16 rounded-lg"
@@ -208,13 +175,12 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                                                 Rejected</span>
                                         <?php endif; ?>
 
-                                        <!-- Accept/Reject Buttons for Regular Payment -->
                                         <?php if (($res['status'] ?? '') === 'receipt_submitted'): ?>
                                             <button
-                                                onclick="openConfirmationModal('<?= addslashes($res['id']) ?>', '<?= addslashes($res['request_code']) ?>', 'accepted')"
+                                                onclick="openConfirmationModal('<?= htmlspecialchars($res['id']) ?>', '<?= htmlspecialchars($res['request_code']) ?>', 'accepted', 'payment')"
                                                 class="text-white bg-green-600 px-4 py-2 rounded hover:bg-green-700 text-sm min-w-[80px]">Accept</button>
                                             <button
-                                                onclick="openConfirmationModal('<?= addslashes($res['id']) ?>', '<?= addslashes($res['request_code']) ?>', 'rejected')"
+                                                onclick="openConfirmationModal('<?= htmlspecialchars($res['id']) ?>', '<?= htmlspecialchars($res['request_code']) ?>', 'rejected', 'payment')"
                                                 class="text-white bg-red-500 px-4 py-2 rounded hover:bg-red-600 text-sm min-w-[80px]">Reject</button>
                                         <?php endif; ?>
                                     </td>
@@ -227,21 +193,21 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
         </main>
     </div>
 
+    <!-- Image Modal -->
     <div id="imageModal"
         class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-50">
         <div class="relative max-w-[90%] max-h-[90%]">
-            <!-- Close Button -->
             <button onclick="closeImageModal()"
                 class="absolute top-2 right-2 text-white text-3xl font-bold hover:text-red-500">&times;</button>
             <img id="modalImage" src="" class="w-full h-auto max-h-[90vh] rounded-lg shadow-2xl">
         </div>
     </div>
 
+    <!-- Confirmation Modal -->
     <div id="confirmationModal"
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 transition-opacity duration-300">
         <div
             class="bg-white rounded-xl w-96 p-6 relative shadow-lg transform transition-transform duration-300 scale-95">
-            <!-- Icon & Title -->
             <div class="flex items-center gap-3 mb-4">
                 <svg id="modalIcon" class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -251,10 +217,8 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                 <h3 class="text-lg font-semibold" id="modalTitle">Confirm Action</h3>
             </div>
 
-            <!-- Message -->
             <p class="mb-6 text-gray-700" id="modalText">Are you sure?</p>
 
-            <!-- Buttons -->
             <div class="flex justify-end gap-3">
                 <button onclick="closeModal()"
                     class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">Cancel</button>
@@ -262,15 +226,13 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                     class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition">Confirm</a>
             </div>
 
-            <!-- Close X -->
             <button onclick="closeModal()"
                 class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 font-bold text-xl">&times;</button>
         </div>
     </div>
 
-
-
     <script>
+        // Image Modal Logic
         function openImageModal(src) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
@@ -285,21 +247,28 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
             modal.classList.add('opacity-0', 'pointer-events-none');
         }
 
-        function openConfirmationModal(id, requestCode, status) {
+        // Confirmation Modal Logic
+        function openConfirmationModal(id, code, status, type) {
             const modal = document.getElementById('confirmationModal');
             const confirmLink = document.getElementById('confirmLink');
             const modalText = document.getElementById('modalText');
             const modalTitle = document.getElementById('modalTitle');
             const modalIcon = document.getElementById('modalIcon');
 
-            // Update the confirm link dynamically using both ID and request_code
-            confirmLink.href =
-                `<?= URLROOT; ?>/agentcontroller/confirmpayment?id=${id}&request_code=${requestCode}&status=${status}`;
+            let confirmURL = '';
 
-            // Update modal text
-            modalText.textContent = `Are you sure you want to ${status} payment with Request Code: ${requestCode}?`;
+            if (type === 'paymentdelivery') {
+                confirmURL =
+                    `<?= URLROOT; ?>/agentcontroller/confirmDeliveryPayment?id=${id}&tracking_code=${code}&status=${status}`;
+                modalText.textContent = `Are you sure you want to ${status} delivery payment with tracking code: ${code}?`;
+            } else if (type === 'payment') {
+                confirmURL =
+                    `<?= URLROOT; ?>/agentcontroller/confirmpayment?id=${id}&request_code=${code}&status=${status}`;
+                modalText.textContent = `Are you sure you want to ${status} payment with request code: ${code}?`;
+            }
 
-            // Style based on action
+            confirmLink.href = confirmURL;
+
             if (status === 'accepted') {
                 confirmLink.className = "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition";
                 modalIcon.className = "w-6 h-6 text-green-600";
@@ -314,7 +283,6 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                 modalTitle.textContent = "Confirm Action";
             }
 
-            // Show modal with animation
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.querySelector('div').classList.remove('scale-95');
@@ -336,7 +304,7 @@ require_once APPROOT . '/views/inc/agentsidebar.php';
                 setTimeout(() => {
                     flash.classList.add('opacity-0', 'transition', 'duration-500');
                     setTimeout(() => flash.remove(), 500);
-                }, 3000); // hide after 3 seconds
+                }, 3000); // Hide after 3 seconds
             }
         });
     </script>
